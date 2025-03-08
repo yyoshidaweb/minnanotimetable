@@ -20,7 +20,7 @@
     <%= stylesheet_link_tag "tailwind", "inter-font", "material_symbols", "data-turbo-track": "reload" %>
 
     <%# Material Symbols の追加 %>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=person" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=content_copy,person,share" />
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
@@ -34,14 +34,16 @@
                     <%= link_to "みんなのタイムテーブル", root_path, class: "inline-flex items-center text-sm text-gray-800 hover:text-gray-700 font-bold transition-colors duration-150" %>
                 </div>
                 <div class="flex items-center space-x-4">
+                    <%# 未ログイン %>
                     <% unless authenticated? %>
                     <%= link_to "ログイン", new_session_path, class: "inline-flex items-center text-sm font-bold text-gray-800 hover:text-gray-400 transition-colors duration-150" %>
                     <% else %>
+                    <%# ログイン中 %>
                     <%# ユーザーメニュー %>
                     <div class="relative" data-controller="dropdown">
                         <button type="button" class="flex justify-center items-center gap-x-1 text-sm font-bold text-gray-800 hover:text-gray-600" data-action="click->dropdown#toggle">
                             <%# Googleマテリアル person %>
-                            <span class="material-symbols-outlined">person</span>
+                            <span class="material-symbols-outlined" style="font-size: 1.5rem;">person</span>
                         </button>
 
                         <div class="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-[160]" data-dropdown-target="menu">
