@@ -1,0 +1,109 @@
+<%# アーティスト詳細ページのメインコンテナ %>
+<div class="h-[calc(100vh-3rem)] flex flex-col overflow-hidden">
+    <%# ヘッダー部分 - 画面上部に固定 %>
+    <header class="bg-white shadow-sm z-10">
+        <%# ヘッダー部分 - レイアウト %>
+        <div class="flex items-center justify-between px-4 py-2">
+            <%# 戻るボタン %>
+            <div class="w-8">
+                <a href="/timetables/1" class="text-gray-800 hover:text-gray-700">
+                    <span class="material-symbols-outlined" style="font-size: 1.125rem;">arrow_back_ios</span>
+                </a>
+            </div>
+            <h1 class="pr-3 text-sm text-gray-800 font-bold">アーティスト詳細</h1>
+            <%# シェアボタンとメニュー %>
+            <div class="relative" data-controller="dropdown">
+                <button type="button" class="w-4 h-4 flex items-center justify-center text-gray-800 hover:text-gray-600 transition-colors duration-150" data-action="click->dropdown#toggle">
+                    <span class="material-symbols-outlined" style="font-size: 1.125rem;">share</span>
+                </button>
+
+                <%# シェアメニュー %>
+                <div class="absolute right-0 mt-2 w-72 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-[160]" data-dropdown-target="menu">
+                    <div class="p-2">
+                        <div class="flex items-center space-x-2">
+                            <input type="text" value="<%= request.original_url %>" readonly class="w-full text-sm text-gray-800 bg-gray-100 px-2 py-1 rounded border-none focus:ring-0" data-dropdown-target="urlInput">
+                            <button type="button" class="p-1 text-gray-500 hover:text-gray-700 transition-colors duration-150" data-action="click->dropdown#copyUrl">
+                                <span class="material-symbols-outlined">content_copy</span>
+                            </button>
+                        </div>
+                        <%# コピー完了メッセージ %>
+                        <div data-dropdown-target="copyMessage" class="hidden mt-1">
+                            <p class="text-sm text-gray-800">コピーしました！</p>
+                        </div>
+                        <%# QRコード %>
+                        <div class="p-2">
+                            <div class="flex justify-center">
+                                <%= raw RQRCode::QRCode.new(request.original_url).as_svg(
+                                    color: "000",
+                                    shape_rendering: "crispEdges",
+                                    module_size: 4,
+                                    standalone: true,
+                                    use_path: true
+                                ) %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <%# アーティスト詳細カード %>
+    <div class="w-full overflow-auto">
+        <div class="max-w-4xl mx-auto px-4 py-8">
+            <div class="bg-white shadow-md rounded-lg">
+                <%# 画像 %>
+                <div class="flex justify-center items-center h-40 mb-2 bg-gray-100">
+                    <span class=" material-symbols-outlined" style="font-size: 3rem;">image</span>
+                </div>
+                <%# ヘッダーセクション %>
+                <div class="bg-white mx-6 pb-6 border-b border-gray-100">
+                    <%# アーティスト名 %>
+                    <h1 class="mb-6 text-2xl font-bold text-gray-800">Demo Artist</h1>
+                    <%# 日時・時間 %>
+                    <div class="flex items-center mb-2">
+                        <p class="flex items-center mr-3 text-gray-800">
+                            <span class="material-symbols-outlined mr-0.5" style="font-size: 1.25rem;">event</span>
+                            1/1(月)
+                        </p>
+                        <p class="flex items-center text-gray-800">
+                            <span class="material-symbols-outlined mr-0.5" style="font-size: 1.25rem;">schedule</span>
+                            14:00~
+                        </p>
+                    </div>
+
+                    <%# ステージ情報 %>
+                    <div class="pb-1 flex items-center">
+                        <a href="#" class="inline-flex items-center text-indigo-600 hover:text-indigo-500">
+                            Demo Stage
+                            <span class="material-symbols-outlined">
+                                moved_location
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <%# メイン情報 %>
+                <div class="p-6">
+                    <%# 説明 %>
+                    <div class="pb-6 border-b border-gray-100">
+                        <p class="text-gray-600">
+                            ここにアーティストについての説明が入ります。ここにアーティストについての説明が入ります。ここにアーティストについての説明が入ります。
+                        </p>
+                    </div>
+
+                    <div class="py-6">
+                        <%# リンク %>
+                        <div class="flex items-center mb-2">
+                            <span class="material-symbols-outlined mr-0.5">link</span>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-500">Official Web Site</a>
+                        </div>
+                        <div class="flex items-center mb-2">
+                            <span class="material-symbols-outlined mr-0.5">link</span>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-500">Spotify</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

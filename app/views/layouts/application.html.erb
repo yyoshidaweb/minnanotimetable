@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-full overflow-hidden">
+<html class="h-full">
 
 <head>
     <title><%= content_for(:title) || "Everyones Timetable" %></title>
@@ -19,8 +19,8 @@
     <link rel="apple-touch-icon" href="/icon.png">
     <%= stylesheet_link_tag "tailwind", "inter-font", "material_symbols", "data-turbo-track": "reload" %>
 
-    <%# Material Symbols の追加 %>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=content_copy,person,share" />
+    <%# Google Material Symbols の読み込み %>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_back_ios,content_copy,event,image,link,moved_location,person,schedule,share" />
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>

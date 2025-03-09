@@ -141,15 +141,16 @@
                         <%# アーティストカードの表示 %>
                         <% mock_artists[stage_index]&.each do |artist_time| %>
                         <% if artist_time[0] == hour && artist_time[1] == minute %>
-                        <div class="absolute inset-x-[1px] top-0 z-[10]" style="height: <%= duration_to_rows(artist_time[2]) %>rem">
-                            <%# アーティストカードの内容 %>
-                            <div class="bg-white rounded-lg p-1 w-full h-full">
-                                <%# 時間表示 %>
-                                <div class="text-xs font-light leading-xs line-clamp-1 text-gray-800">
-                                    <%= format("%02d:%02d", hour, minute) %>
-                                </div>
-                                <%# アーティスト名 - 公演時間に応じて行数制限 %>
-                                <% line_clamp = if artist_time[2] <= 15
+                        <%# アーティストカードのリンク（リンク先は仮の値） %>
+                        <%= link_to "/artists/1", class: "block absolute inset-x-[1px] top-0 z-[10] hover:scale-[1.02] transition-transform duration-150", style: "height: #{duration_to_rows(artist_time[2])}rem" do %>
+                        <%# アーティストカードの内容 %>
+                        <div class="bg-white rounded-lg p-1 w-full h-full shadow-sm hover:shadow transition-shadow duration-150">
+                            <%# 時間表示 %>
+                            <div class="text-xs font-light leading-xs line-clamp-1 text-gray-800">
+                                <%= format("%02d:%02d", hour, minute) %>
+                            </div>
+                            <%# アーティスト名 - 公演時間に応じて行数制限 %>
+                            <% line_clamp = if artist_time[2] <= 15
                                         'line-clamp-1'
                                     elsif artist_time[2] <= 30
                                         'line-clamp-4'
@@ -157,11 +158,11 @@
                                         'line-clamp-6'
                                     end
                                 %>
-                                <div class="font-semibold text-xs leading-xs text-gray-800 <%= line_clamp %>">
-                                    <%= "#{artist_time[2]}分枠のアーティスト" %>
-                                </div>
+                            <div class="font-semibold text-xs leading-xs text-gray-800 <%= line_clamp %>">
+                                <%= "#{artist_time[2]}分枠のアーティスト" %>
                             </div>
                         </div>
+                        <% end %>
                         <% end %>
                         <% end %>
                     </td>
