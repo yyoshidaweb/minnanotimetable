@@ -133,7 +133,7 @@ erDiagram
     TIMETABLES {
         string id PK "主キー"
         string user_id FK "外部キー(USERS.id)"
-        string title "タイトル"
+        string name "タイトル"
         string description "説明"
         boolean is_published "公開フラグ"
         datetime created_at "作成日時"
