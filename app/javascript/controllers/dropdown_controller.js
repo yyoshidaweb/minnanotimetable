@@ -1,10 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["menu"]
+  static targets = ["menu", "urlInput", "copyMessage"]
 
   connect() {
-    // クリック以外の場所をクリックした時にメニューを閉じる
     document.addEventListener('click', this.handleClickOutside.bind(this))
   }
 
@@ -19,6 +18,30 @@ export default class extends Controller {
   handleClickOutside(event) {
     if (!this.element.contains(event.target)) {
       this.menuTarget.classList.add('hidden')
+      this.hideCopyMessage()
     }
+  }
+
+  // URLをクリップボードにコピー
+  async copyUrl(event) {
+    try {
+      await navigator.clipboard.writeText(this.urlInputTarget.value)
+      this.showCopyMessage()
+    } catch (err) {
+      console.error('Failed to copy:', err)
+    }
+  }
+
+  // コピー完了メッセージを表示
+  showCopyMessage() {
+    this.copyMessageTarget.classList.remove('hidden')
+    setTimeout(() => {
+      this.hideCopyMessage()
+    }, 3000)
+  }
+
+  // コピー完了メッセージを非表示
+  hideCopyMessage() {
+    this.copyMessageTarget.classList.add('hidden')
   }
 }

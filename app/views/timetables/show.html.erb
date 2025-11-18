@@ -1,8 +1,54 @@
 <%# タイムテーブル表示画面のメインコンテナ %>
 <div class="h-[calc(100vh-3rem)] flex flex-col overflow-hidden">
     <%# ヘッダー部分 - 画面上部に固定 %>
-    <header class=" p-3 bg-gray-800 text-white">
-        <h1 class="text-2xl font-bold text-center">DEMO FESTIVAL 2024</h1>
+    <header class="bg-gray-800">
+        <%# フェスタイトル - メニューボタンと配置調整 %>
+        <div class="flex items-center justify-between px-4 py-2">
+            <div class="w-8"><%# 左側のスペーサー %></div>
+            <h1 class="pr-3 text-xl text-white font-bold">DEMO FESTIVAL 2024</h1>
+            <%# シェアボタンとメニュー %>
+            <div class="relative" data-controller="dropdown">
+                <button type="button" class="w-4 h-4 flex items-center justify-center text-white hover:text-gray-300 transition-colors duration-150" data-action="click->dropdown#toggle">
+                    <span class="material-symbols-outlined" style="font-size: 1.125rem;">share</span>
+                </button>
+
+                <%# シェアメニュー %>
+                <div class="absolute right-0 mt-2 w-72 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-[160]" data-dropdown-target="menu">
+                    <div class="p-2">
+                        <div class="flex items-center space-x-2">
+                            <input type="text" value="<%= request.original_url %>" readonly class="w-full text-sm text-gray-800 bg-gray-100 px-2 py-1 rounded border-none focus:ring-0" data-dropdown-target="urlInput">
+                            <button type="button" class="p-1 text-gray-500 hover:text-gray-700 transition-colors duration-150" data-action="click->dropdown#copyUrl">
+                                <span class="material-symbols-outlined">content_copy</span>
+                            </button>
+                        </div>
+                        <%# コピー完了メッセージ %>
+                        <div data-dropdown-target="copyMessage" class="hidden mt-1">
+                            <p class="text-sm text-gray-800">コピーしました！</p>
+                        </div>
+                        <%# QRコード %>
+                        <div class="p-2">
+                            <div class="flex justify-center">
+                                <%= raw RQRCode::QRCode.new(request.original_url).as_svg(
+                                    color: "000",
+                                    shape_rendering: "crispEdges",
+                                    module_size: 4,
+                                    standalone: true,
+                                    use_path: true
+                                ) %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%# 日付選択タブ %>
+        <nav class="flex justify-around overflow-x-auto bg-white">
+            <% ["1/1(土)", "1/2(日)", "1/3(月)"].each_with_index do |date, index| %>
+            <button class="w-full px-2 py-2 text-xs text-gray-800 font-bold border-b-4 <%= index == 0 ? 'border-gray-800' : 'border-transparent' %> hover:border-gray-300 transition-colors duration-150">
+                <%= date %>
+            </button>
+            <% end %>
+        </nav>
     </header>
 
     <%# タイムテーブル表示エリア - スクロール可能 %>
@@ -20,7 +66,7 @@
                     </th>
                     <% stages.each_with_index do |stage, stage_index| %>
                     <%# ステージ名 %>
-                    <th class="w-[calc((100%-2rem)/<%= stages.length %>)] py-4 text-center text-xs font-bold text-gray-800 tracking-wider sticky top-0 z-[100] relative <%= stage_index != stages.length-1 ? 'border-r border-white' : '' %>">
+                    <th class="w-[calc((100%-2rem)/<%= stages.length %>)] py-2 text-center text-xs font-bold text-gray-800 tracking-wider sticky top-0 z-[100] relative <%= stage_index != stages.length-1 ? 'border-r border-white' : '' %>">
                         <div class=" absolute inset-0 <%= stage_index.odd? ? 'bg-gray-200' : 'bg-gray-300' %> z-[95]">
                         </div>
                         <%# ステージ名 %>
@@ -95,15 +141,16 @@
                         <%# アーティストカードの表示 %>
                         <% mock_artists[stage_index]&.each do |artist_time| %>
                         <% if artist_time[0] == hour && artist_time[1] == minute %>
-                        <div class="absolute inset-x-[1px] top-0 z-[10]" style="height: <%= duration_to_rows(artist_time[2]) %>rem">
-                            <%# アーティストカードの内容 %>
-                            <div class="bg-white rounded-lg p-1 w-full h-full">
-                                <%# 時間表示 %>
-                                <div class="text-xs font-light leading-xs line-clamp-1 text-gray-800">
-                                    <%= format("%02d:%02d", hour, minute) %>
-                                </div>
-                                <%# アーティスト名 - 公演時間に応じて行数制限 %>
-                                <% line_clamp = if artist_time[2] <= 15
+                        <%# アーティストカードのリンク（リンク先は仮の値） %>
+                        <%= link_to "/artists/1", class: "block absolute inset-x-[1px] top-0 z-[10] hover:scale-[1.02] transition-transform duration-150", style: "height: #{duration_to_rows(artist_time[2])}rem" do %>
+                        <%# アーティストカードの内容 %>
+                        <div class="bg-white rounded-lg p-1 w-full h-full shadow-sm hover:shadow transition-shadow duration-150">
+                            <%# 時間表示 %>
+                            <div class="text-xs font-light leading-xs line-clamp-1 text-gray-800">
+                                <%= format("%02d:%02d", hour, minute) %>
+                            </div>
+                            <%# アーティスト名 - 公演時間に応じて行数制限 %>
+                            <% line_clamp = if artist_time[2] <= 15
                                         'line-clamp-1'
                                     elsif artist_time[2] <= 30
                                         'line-clamp-4'
@@ -111,11 +158,11 @@
                                         'line-clamp-6'
                                     end
                                 %>
-                                <div class="font-semibold text-xs leading-xs text-gray-800 <%= line_clamp %>">
-                                    <%= "#{artist_time[2]}分枠のアーティスト" %>
-                                </div>
+                            <div class="font-semibold text-xs leading-xs text-gray-800 <%= line_clamp %>">
+                                <%= "#{artist_time[2]}分枠のアーティスト" %>
                             </div>
                         </div>
+                        <% end %>
                         <% end %>
                         <% end %>
                     </td>
