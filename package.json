@@ -1,10 +1,10 @@
 {
-  "name": "everyones_timetable",
+  "name": "minnanotimetable",
   "private": true,
   "scripts": {
     "build:css": "tailwindcss -i ./app/assets/stylesheets/application.css -o ./app/assets/builds/application.css --minify --config ./config/tailwind.config.js"
   },
-  "repository": "git@github.com:yyoshidaweb/everyones_timetable.git",
+  "repository": "git@github.com:yyoshidaweb/minnanotimetable.git",
   "author": "yyoshidaweb <yoshidayumajob@gmail.com>",
   "license": "MIT",
   "dependencies": {
