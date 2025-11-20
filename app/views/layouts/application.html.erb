@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html class="h-full">
-
-<head>
-    <title><%= content_for(:title) || "Everyones Timetable" %></title>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Minnanotimetable" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Minnanotimetable">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -17,50 +17,16 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-    <%= stylesheet_link_tag "tailwind", "inter-font", "material_symbols", "data-turbo-track": "reload" %>
 
-    <%# Google Material Symbols の読み込み %>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_back_ios,content_copy,event,image,link,moved_location,person,schedule,share" />
-
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-</head>
+  </head>
 
-<body class="h-full overflow-hidden">
-    <nav class="flex items-center h-12 bg-white border-b border-gray-100">
-        <div class=" w-full mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center">
-                <div class="flex">
-                    <%= link_to "みんなのタイムテーブル", root_path, class: "inline-flex items-center text-sm text-gray-800 hover:text-gray-700 font-bold transition-colors duration-150" %>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <%# 未ログイン %>
-                    <% unless authenticated? %>
-                    <%= link_to "ログイン", new_session_path, class: "inline-flex items-center text-sm font-bold text-gray-800 hover:text-gray-400 transition-colors duration-150" %>
-                    <% else %>
-                    <%# ログイン中 %>
-                    <%# ユーザーメニュー %>
-                    <div class="relative" data-controller="dropdown">
-                        <button type="button" class="flex justify-center items-center gap-x-1 text-sm font-bold text-gray-800 hover:text-gray-600" data-action="click->dropdown#toggle">
-                            <%# Googleマテリアル person %>
-                            <span class="material-symbols-outlined" style="font-size: 1.5rem;">person</span>
-                        </button>
-
-                        <div class="absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-[160]" data-dropdown-target="menu">
-                            <%= link_to "アカウント", "#", class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
-                            <div class="border-t border-gray-100"></div>
-                            <%= button_to "ログアウト", session_path, method: :delete, class: "block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700" %>
-                        </div>
-                    </div>
-                    <% end %>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <main class="h-full">
-        <%= yield %>
+  <body>
+    <main class="container mx-auto mt-28 px-5 flex">
+      <%= yield %>
     </main>
-</body>
-
+  </body>
 </html>
