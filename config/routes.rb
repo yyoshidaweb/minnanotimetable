@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "static_pages/index"
+
   # トップページ
   root to: "static_pages#index"
 
