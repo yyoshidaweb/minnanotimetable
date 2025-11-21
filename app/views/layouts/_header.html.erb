@@ -1,0 +1,23 @@
+<!-- 固定ヘッダー (position: fixed) -->
+<header class="fixed top-0 left-0 w-full h-12 bg-white border-b border-gray-100 z-50 flex items-center">
+    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+
+        <!-- 左側: タイトル -->
+        <%= link_to "みんなのタイムテーブル", root_path, class: "inline-flex items-center text-sm font-bold text-gray-800 hover:text-gray-700 transition" %>
+
+        <!-- 中央: バッジ（ステージングのみ） -->
+        <% if Rails.env.staging? %>
+        <span class="text-xs bg-red-600 text-white px-2 py-0.5 rounded">
+            ステージング環境
+        </span>
+        <% end %>
+
+        <!-- 右側：ハンバーガーメニュー（動作未実装） -->
+        <div class="space-y-1 w-6 cursor-pointer">
+            <div class="h-0.5 bg-gray-700"></div> <!-- ハンバーガー1本目 -->
+            <div class="h-0.5 bg-gray-700"></div> <!-- ハンバーガー2本目 -->
+            <div class="h-0.5 bg-gray-700"></div> <!-- ハンバーガー3本目 -->
+        </div>
+
+    </div>
+</header>
