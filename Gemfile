@@ -49,10 +49,10 @@ gem "rexml", ">= 3.4"
 gem "thor", ">= 1.4"
 
 # Google OAuth2認証
-gem 'omniauth-google-oauth2' 
+gem "omniauth-google-oauth2"
 
 # ユーザー認証
-gem 'devise'
+gem "devise"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
