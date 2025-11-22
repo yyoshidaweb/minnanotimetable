@@ -275,11 +275,11 @@ Devise.setup do |config|
 
   # Google OAuth2の設定
   config.omniauth :google_oauth2,
-  Rails.application.credentials.dig(:google, :client_id), # Google APIのクライアントID
-  Rails.application.credentials.dig(:google, :client_secret), # Google APIのクライアントシークレット
-  scope: "email,profile", # 取得する情報の範囲
-  prompt: "select_account"  # アカウント選択を毎回促す
-
+                  Rails.application.credentials.dig(:google, :client_id), # Google APIのクライアントID
+                  Rails.application.credentials.dig(:google, :client_secret), # Google APIのクライアントシークレット
+                  { scope: "email,profile", # 取得する情報の範囲
+                    prompt: "select_account"  # アカウント選択を毎回促す
+                  }
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
