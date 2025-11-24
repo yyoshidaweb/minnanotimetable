@@ -1,0 +1,16 @@
+<%- if devise_mapping.omniauthable? %>
+  <%- resource_class.omniauth_providers.each do |provider| %>
+    <% if provider == :google_oauth2 %>
+      <%= button_to omniauth_authorize_path(resource_name, provider), method: :post, data: { turbo: false }, class: "flex items-center justify-center px-4 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-500 mb-3" do %>
+        <!-- Google SVGロゴ -->
+        <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 533.5 544.3">
+          <path fill="#4285F4" d="M533.5 278.4c0-17.6-1.4-34.5-4-50.9H272v95.8h147c-6.3 33.9-25 62.7-53.3 82v68h86.1c50.3-46.3 79.7-114.9 79.7-195.9z"/>
+          <path fill="#34A853" d="M272 544.3c72.5 0 133.3-24 177.8-65.1l-86.1-68c-24 16.1-54.7 25.6-91.7 25.6-70.7 0-130.7-47.7-152.1-111.6H32v69.9c44.3 88 135.4 149.2 240 149.2z"/>
+          <path fill="#FBBC05" d="M119.9 321.2c-10.7-32-10.7-66.5 0-98.5V152.8H32c-43.2 85.2-43.2 186.2 0 271.4l87.9-69z"/>
+          <path fill="#EA4335" d="M272 107.2c39.3-.6 76.9 14.1 105.8 40.7l79.2-79.2C406.1 24.4 345.3 0 272 0 167.4 0 76.3 61.2 32 149.2l87.9 69c21.4-63.9 81.4-111.6 152.1-111.6z"/>
+        </svg>
+        Googleアカウントでログイン
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
