@@ -1,12 +1,7 @@
 <div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-  <%# 成功メッセージまたはエラーメッセージ %>
-  <% flash.each do |key, message| %>
-    <div class="max-w-md mx-auto my-4 p-4 rounded-md
-              <%= key == 'notice' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
-      <%= message %>
-    </div>
-  <% end %>
   <%= form_with model: current_user, url: profile_path, method: :patch, class: "space-y-6" do |f| %>
+    <%# エラーメッセージ %>
+    <%= render "devise/shared/error_messages", resource: current_user %>
     <!-- 名前入力 -->
     <div>
       <%= f.label :name, "名前", class: "block text-sm font-semibold text-gray-800 mb-1" %>
