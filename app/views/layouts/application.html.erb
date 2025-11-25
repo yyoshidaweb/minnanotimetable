@@ -26,8 +26,10 @@
   <body>
     <!-- 共通ヘッダーを適用 -->
     <%= render "layouts/header" %>
-    <%# 固定ヘッダーの高さ（h-12）と同じ幅のマージンを指定する %>
-    <main class="mt-12">
+    <div class="h-12"></div>
+    <%# セカンドヘッダー（@page_title が設定されている場合のみ表示する） %>
+    <%= render "layouts/secondary-header" %>
+    <main>
       <%= yield %>
     </main>
   </body>

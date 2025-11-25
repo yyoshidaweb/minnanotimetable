@@ -5,10 +5,12 @@ class ProfilesController < ApplicationController
   def show
     # 現在のユーザーのプロフィールを取得
     @user = current_user
+    @page_title = "プロフィール"
   end
 
   def edit
     @user = current_user
+    @page_title = "プロフィール編集"
   end
 
   def update
