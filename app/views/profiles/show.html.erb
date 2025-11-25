@@ -1,4 +1,11 @@
 <div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+  <%# 成功メッセージまたはエラーメッセージ %>
+  <% flash.each do |key, message| %>
+    <div class="max-w-md mx-auto my-4 p-4 rounded-md
+              <%= key == 'notice' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' %>">
+      <%= message %>
+    </div>
+  <% end %>
   <!-- 名前 -->
   <div class="mb-4">
     <label class="block text-sm font-semibold text-gray-800 mb-1">名前</label>

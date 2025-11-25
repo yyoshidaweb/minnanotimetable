@@ -19,6 +19,8 @@ class ProfilesController < ApplicationController
     if @user.update(user_params)
       redirect_to profile_path, notice: "プロフィールを更新しました。"
     else
+      # モデルのバリデーションエラーを alert に渡す
+      flash.now[:alert] = @user.errors.full_messages.join(", ")
       # 更新に失敗した場合、編集ページを再表示
       render :edit, status: :unprocessable_entity
     end
