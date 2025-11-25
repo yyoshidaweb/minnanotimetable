@@ -8,6 +8,9 @@ Bundler.require(*Rails.groups)
 
 module Minnanotimetable
   class Application < Rails::Application
+    # 多言語対応設定
+    config.i18n.default_locale = :ja
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
 
