@@ -1,6 +1,6 @@
 <%# 成功メッセージ %>
 <% if flash[:notice] %>
-  <div class="max-w-md mx-auto my-4 p-4 bg-green-100 text-green-800 rounded-md">
+  <div data-controller="flash" class="max-w-md mx-auto my-4 p-4 bg-green-100 text-green-800 rounded-md">
     <%= flash[:notice] %>
   </div>
 <% end %>
