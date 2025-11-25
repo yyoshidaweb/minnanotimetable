@@ -4,12 +4,14 @@
 # model remove the "{}" from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-# テストユーザー1
-user_one:
+# テストユーザー1（Googleログイン用）
+one:
   email: user1@example.com
+  provider: google_oauth2
+  uid: "google-uid-12345"
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>
 
-# テストユーザー2
+# テストユーザー2（独自ログイン用）
 user_two:
   email: user2@example.com
   encrypted_password: <%= Devise::Encryptor.digest(User, 'password') %>

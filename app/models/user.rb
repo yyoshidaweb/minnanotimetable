@@ -6,6 +6,10 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
+  # バリデーション設定
+  validates :name, presence: true, length: { maximum: 50 }
+  validates :email, presence: true, uniqueness: true, length: { maximum: 255 }
+
   # Googleログイン時に呼ばれるユーザー検索 or 生成メソッド
   def self.from_omniauth(auth)
     # providerとuidの一致するユーザーを検索し、存在しない場合は新規作成

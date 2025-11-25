@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* GoogleログインボタンのCSSを読み込む */
+@import "google-sign-in-btn";
+
 /*
 
 @layer components {

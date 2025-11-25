@@ -18,6 +18,9 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+    <%# Googleアイコン読み込み%>
+    <link rel="stylesheet" 
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_back" />
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -26,8 +29,10 @@
   <body>
     <!-- 共通ヘッダーを適用 -->
     <%= render "layouts/header" %>
-    <%# 固定ヘッダーの高さ（h-12）と同じ幅のマージンを指定する %>
-    <main class="mt-12">
+    <div class="h-12"></div>
+    <%# セカンドヘッダー（@page_title が設定されている場合のみ表示する） %>
+    <%= render "layouts/secondary-header" %>
+    <main class="m-2">
       <%= yield %>
     </main>
   </body>
