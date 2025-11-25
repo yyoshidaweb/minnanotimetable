@@ -1,0 +1,12 @@
+<h1>プロフィール編集</h1>
+<%= form_with model: current_user, url: profile_path, method: :patch do |f| %>
+  <div>
+    <%= f.label "名前" %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div>
+    <p><strong>メールアドレス:</strong> <%= current_user.email %></p>
+    <small>メールアドレスの変更はGoogleで行ってください。</small>
+  </div>
+  <%= f.submit "更新" %>
+<% end %>

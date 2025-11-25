@@ -1,0 +1,9 @@
+<h1>プロフィール</h1>
+<p><strong>名前:</strong> <%= current_user.name %></p>
+<p><strong>メールアドレス:</strong> <%= current_user.email %></p>
+<%= link_to "編集", edit_profile_path %><br>
+<br>
+<%= button_to "ログアウト", destroy_user_session_path,
+              method: :delete %><br>
+<%= button_to "アカウント削除", profile_path,
+              method: :delete, data: { confirm: "本当に削除しますか？" } %>

@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # ユーザープロフィール用のルーティング
+  resource :profile, only: [ :show, :edit, :update, :destroy ]
+
   # Deviseのルーティング設定でOmniauthコールバック用コントローラーを指定
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks"
