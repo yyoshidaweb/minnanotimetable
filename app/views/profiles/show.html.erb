@@ -4,6 +4,6 @@
 <%= link_to "編集", edit_profile_path %><br>
 <br>
 <%= button_to "ログアウト", destroy_user_session_path,
-              method: :delete %><br>
+              method: :delete, data: { turbo_confirm: "⚠️ ログアウトしますか？" }  %><br>
 <%= button_to "アカウント削除", profile_path,
-              method: :delete, data: { confirm: "本当に削除しますか？" } %>
+              method: :delete, data: { turbo_confirm: "⚠️ 削除しますか？ アカウントは一度削除すると元に戻せません" } %>
