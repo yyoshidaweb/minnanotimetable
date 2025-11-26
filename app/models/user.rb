@@ -18,7 +18,6 @@ class User < ApplicationRecord
     # providerとuidの一致するユーザーを検索し、存在しない場合は新規作成
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email # Googleから取得したメールアドレスを設定
-      user.password = Devise.friendly_token[0, 20] # ランダムなパスワードを自動生成
       user.name = auth.info.name if auth.info.respond_to?(:name) # 名前があれば設定
     end
   end
