@@ -27,10 +27,11 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
   # プロフィール更新アクションのテスト
   test "should update profile when logged in" do
     # PATCHリクエスト（プロフィール更新処理）
-    patch profile_url, params: { user: { name: "New Name", user_id: "new_user_id" } }
+    patch profile_url, params: { user: { name: "New Name", user_id: "new_user_id", description: "説明" } }
     @user.reload
     assert_equal "New Name", @user.name
     assert_equal "new_user_id", @user.user_id
+    assert_equal "説明", @user.description
   end
 
   # プロフィール更新アクションのuser_idが重複した場合のテスト

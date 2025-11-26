@@ -13,6 +13,7 @@ class User < ApplicationRecord
   validates :name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :user_id, presence: true, uniqueness: true, length: { maximum: 20 }
+  validates :description, length: { maximum: 500 }
 
   # Googleログイン時に呼ばれるユーザー検索 or 生成メソッド
   def self.from_omniauth(auth)
