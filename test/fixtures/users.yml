@@ -10,3 +10,10 @@ one:
   provider: google_oauth2
   uid: "google-uid-12345"
   user_id: "abcd1234"
+  
+# テストユーザー2（Googleログイン用）
+two:
+  email: user2@example.com
+  provider: google_oauth2
+  uid: "google-uid-67890"
+  user_id: "efgh5678"
