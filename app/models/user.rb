@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   # ユーザーIDを生成するメソッドを呼び出す
-  before_create :generate_user_id
+  before_validation :generate_user_id, on: :create
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -12,6 +12,7 @@ class User < ApplicationRecord
   # バリデーション設定
   validates :name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, uniqueness: true, length: { maximum: 255 }
+  validates :user_id, presence: true, uniqueness: true, length: { maximum: 20 }
 
   # Googleログイン時に呼ばれるユーザー検索 or 生成メソッド
   def self.from_omniauth(auth)
@@ -31,6 +32,7 @@ class User < ApplicationRecord
 
   # ユーザーIDを生成するメソッド
   def generate_user_id
+    return if user_id.present? # 既に設定されていれば生成しない
     loop do
       # 8バイト（11文字程度）のランダムなURLセーフ文字列を生成
       random_id = SecureRandom.urlsafe_base64(8)
