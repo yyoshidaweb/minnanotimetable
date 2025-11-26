@@ -27,9 +27,20 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
   # プロフィール更新アクションのテスト
   test "should update profile when logged in" do
     # PATCHリクエスト（プロフィール更新処理）
-    patch profile_url, params: { user: { name: "New Name" } }
+    patch profile_url, params: { user: { name: "New Name", user_id: "new_user_id" } }
     @user.reload
-    assert_equal "New Name", @user.name # 値が更新されているか確認
+    assert_equal "New Name", @user.name
+    assert_equal "new_user_id", @user.user_id
+  end
+
+  # プロフィール更新アクションのuser_idが重複した場合のテスト
+  test "should not update user_id when duplicated" do
+    # PATCHリクエスト（プロフィール更新処理）
+    patch profile_url, params: { user: { user_id: "efgh5678" } }
+    @user.reload
+    assert_not_equal "efgh5678", @user.user_id
+    # HTTPステータスが422（バリデーションエラー）であることを確認
+    assert_response :unprocessable_entity
   end
 
   # プロフィール更新後のリダイレクトのテスト
