@@ -7,7 +7,7 @@ class UserTest < ActiveSupport::TestCase
       email: "user3@example.com",
       name: "Test User",
       provider: "google_oauth2",
-      uid: "google-uid-67890",
+      uid: "test-google-uid-67890",
     )
     # 8バイト以上であること
     assert user.user_id.bytesize >= 8
