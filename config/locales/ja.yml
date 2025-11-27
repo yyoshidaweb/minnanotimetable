@@ -7,4 +7,4 @@ ja:
         name: "名前"
         email: "メールアドレス"
         user_id: "ユーザーID"
-        :description: "自己紹介"
+        description: "自己紹介"
