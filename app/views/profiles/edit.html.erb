@@ -9,9 +9,10 @@
     </div>
     <!-- 説明欄入力（文字数に応じて自動リサイズ） -->
     <div>
+      <%= f.label :description, "自己紹介", class: "block text-sm font-semibold text-gray-800 mb-1" %>
       <%= f.text_area :description, 
       rows: 1, 
-      class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800 resize-none",
+      class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800 min-h-24 resize-none",
       data: {
         controller: "autosize",
         action: "input->autosize#resize",
