@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  # ユーザー詳細ページ（/users/:user_id）
+  resources :users, only: [ :show ], param: :user_id
+
+
   # ユーザープロフィール用のルーティング
   resource :profile, only: [ :show, :edit, :update, :destroy ]
 
