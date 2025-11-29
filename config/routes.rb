@@ -1,8 +1,4 @@
 Rails.application.routes.draw do
-  # ユーザー詳細ページ（/users/:user_id）
-  resources :users, only: [ :show ], param: :user_id
-
-
   # ユーザープロフィール用のルーティング
   resource :profile, only: [ :show, :edit, :update, :destroy ]
 
@@ -10,6 +6,9 @@ Rails.application.routes.draw do
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks"
   }
+
+  # ユーザー詳細ページ（/users/:user_id）
+  resources :users, only: [ :show ], param: :user_id
 
   get "static_pages/index"
 

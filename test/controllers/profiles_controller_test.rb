@@ -44,6 +44,15 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
+  # user_idが予約語の場合のプロフィール更新テスト
+  test "should not update user_id when reserved word" do
+    patch profile_url, params: { user: { user_id: "sign_in" } }
+    @user.reload
+    assert_not_equal "sign_in", @user.user_id
+    # HTTPステータスが422（バリデーションエラー）であることを確認
+    assert_response :unprocessable_entity
+  end
+
   # プロフィール更新後のリダイレクトのテスト
   test "should redirect after update profile when logged in" do
     # PATCHリクエスト（プロフィール更新処理）
