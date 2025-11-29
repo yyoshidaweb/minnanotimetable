@@ -1,4 +1,20 @@
 class User < ApplicationRecord
+  # 予約語として使用禁止の user_id リスト
+  MANUAL_RESERVED_USER_IDS = %w[
+    sign_in
+    sign_out
+    sign_up
+    auth
+    password
+    new
+    edit
+    cancel
+    admin
+    login
+    logout
+    settings
+  ].freeze
+
   # ユーザーIDを生成するメソッドを呼び出す
   before_validation :generate_user_id, on: :create
 
@@ -14,6 +30,8 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, length: { maximum: 255 }
   validates :user_id, presence: true, uniqueness: true, length: { maximum: 20 }
   validates :description, length: { maximum: 500 }
+  # user_id が予約語でないことを確認するカスタムバリデーション
+  validate :user_id_must_not_be_reserved
 
   # Googleログイン時に呼ばれるユーザー検索 or 生成メソッド
   def self.from_omniauth(auth)
@@ -39,6 +57,13 @@ class User < ApplicationRecord
       random_id = SecureRandom.urlsafe_base64(8)
       # 作成したIDが既に存在しないか場合は保存
       break self.user_id = random_id unless User.exists?(user_id: random_id)
+    end
+  end
+
+  # user_id が予約語でないことを確認するカスタムバリデーション
+  def user_id_must_not_be_reserved
+    if MANUAL_RESERVED_USER_IDS.include?(user_id)
+      errors.add(:user_id, "は使用できません。別のIDを登録してください。")
     end
   end
 end
