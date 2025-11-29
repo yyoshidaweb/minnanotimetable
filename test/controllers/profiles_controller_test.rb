@@ -27,28 +27,28 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
   # プロフィール更新アクションのテスト
   test "should update profile when logged in" do
     # PATCHリクエスト（プロフィール更新処理）
-    patch profile_url, params: { user: { name: "New Name", user_id: "new_user_id", description: "説明" } }
+    patch profile_url, params: { user: { name: "New Name", username: "new_username", description: "説明" } }
     @user.reload
     assert_equal "New Name", @user.name
-    assert_equal "new_user_id", @user.user_id
+    assert_equal "new_username", @user.username
     assert_equal "説明", @user.description
   end
 
-  # プロフィール更新アクションのuser_idが重複した場合のテスト
-  test "should not update user_id when duplicated" do
+  # プロフィール更新アクションのusernameが重複した場合のテスト
+  test "should not update username when duplicated" do
     # PATCHリクエスト（プロフィール更新処理）
-    patch profile_url, params: { user: { user_id: "efgh5678" } }
+    patch profile_url, params: { user: { username: "efgh5678" } }
     @user.reload
-    assert_not_equal "efgh5678", @user.user_id
+    assert_not_equal "efgh5678", @user.username
     # HTTPステータスが422（バリデーションエラー）であることを確認
     assert_response :unprocessable_entity
   end
 
-  # user_idが予約語の場合のプロフィール更新テスト
-  test "should not update user_id when reserved word" do
-    patch profile_url, params: { user: { user_id: "sign_in" } }
+  # usernameが予約語の場合のプロフィール更新テスト
+  test "should not update username when reserved word" do
+    patch profile_url, params: { user: { username: "sign_in" } }
     @user.reload
-    assert_not_equal "sign_in", @user.user_id
+    assert_not_equal "sign_in", @user.username
     # HTTPステータスが422（バリデーションエラー）であることを確認
     assert_response :unprocessable_entity
   end

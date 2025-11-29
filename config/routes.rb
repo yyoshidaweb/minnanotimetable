@@ -7,8 +7,8 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
-  # ユーザー詳細ページ（/users/:user_id）
-  resources :users, only: [ :show ], param: :user_id
+  # ユーザー詳細ページ（/users/:username）
+  resources :users, only: [ :show ], param: :username
 
   get "static_pages/index"
 
