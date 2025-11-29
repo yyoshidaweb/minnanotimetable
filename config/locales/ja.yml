@@ -6,5 +6,5 @@ ja:
       user:
         name: "名前"
         email: "メールアドレス"
-        user_id: "ユーザーID"
+        username: "ユーザー名"
         description: "自己紹介"

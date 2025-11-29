@@ -1,6 +1,6 @@
 class User < ApplicationRecord
-  # 予約語として使用禁止の user_id リスト
-  MANUAL_RESERVED_USER_IDS = %w[
+  # 予約語として使用禁止の username リスト
+  MANUAL_RESERVED_USERNAMES = %w[
     sign_in
     sign_out
     sign_up
@@ -15,8 +15,8 @@ class User < ApplicationRecord
     settings
   ].freeze
 
-  # ユーザーIDを生成するメソッドを呼び出す
-  before_validation :generate_user_id, on: :create
+  # ユーザー名を生成するメソッドを呼び出す
+  before_validation :generate_username, on: :create
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -28,10 +28,10 @@ class User < ApplicationRecord
   # バリデーション設定
   validates :name, presence: true, length: { maximum: 50 }
   validates :email, presence: true, uniqueness: true, length: { maximum: 255 }
-  validates :user_id, presence: true, uniqueness: true, length: { maximum: 20 }
+  validates :username, presence: true, uniqueness: true, length: { maximum: 20 }
   validates :description, length: { maximum: 500 }
-  # user_id が予約語でないことを確認するカスタムバリデーション
-  validate :user_id_must_not_be_reserved
+  # username が予約語でないことを確認するカスタムバリデーション
+  validate :username_must_not_be_reserved
 
   # Googleログイン時に呼ばれるユーザー検索 or 生成メソッド
   def self.from_omniauth(auth)
@@ -49,21 +49,21 @@ class User < ApplicationRecord
 
   private
 
-  # ユーザーIDを生成するメソッド
-  def generate_user_id
-    return if user_id.present? # 既に設定されていれば生成しない
+  # ユーザー名を生成するメソッド
+  def generate_username
+    return if username.present? # 既に設定されていれば生成しない
     loop do
       # 8バイト（11文字程度）のランダムなURLセーフ文字列を生成
       random_id = SecureRandom.urlsafe_base64(8)
       # 作成したIDが既に存在しないか場合は保存
-      break self.user_id = random_id unless User.exists?(user_id: random_id)
+      break self.username = random_id unless User.exists?(username: random_id)
     end
   end
 
-  # user_id が予約語でないことを確認するカスタムバリデーション
-  def user_id_must_not_be_reserved
-    if MANUAL_RESERVED_USER_IDS.include?(user_id)
-      errors.add(:user_id, "は使用できません。別のIDを登録してください。")
+  # username が予約語でないことを確認するカスタムバリデーション
+  def username_must_not_be_reserved
+    if MANUAL_RESERVED_USERNAMES.include?(username)
+      errors.add(:username, "は使用できません。別のIDを登録してください。")
     end
   end
 end

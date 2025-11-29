@@ -35,6 +35,6 @@ class ProfilesController < ApplicationController
 
   def user_params
     # 許可されたパラメータのみを受け取る
-    params.require(:user).permit(:name, :user_id, :description)
+    params.require(:user).permit(:name, :username, :description)
   end
 end
