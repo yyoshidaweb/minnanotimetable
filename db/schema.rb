@@ -10,7 +10,105 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_29_004846) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_30_175200) do
+  create_table "days", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "date", null: false
+    t.integer "event_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_days_on_event_id"
+  end
+
+  create_table "event_favorites", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "event_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["event_id"], name: "index_event_favorites_on_event_id"
+    t.index ["user_id", "event_id"], name: "index_event_favorites_on_user_id_and_event_id", unique: true
+    t.index ["user_id"], name: "index_event_favorites_on_user_id"
+  end
+
+  create_table "event_name_tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", limit: 50, null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_event_name_tags_on_name", unique: true
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "event_key", limit: 50, null: false
+    t.integer "event_name_tag_id", null: false
+    t.boolean "is_published", default: false, null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["event_key"], name: "index_events_on_event_key", unique: true
+    t.index ["event_name_tag_id"], name: "index_events_on_event_name_tag_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
+  end
+
+  create_table "performances", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "day_id", null: false
+    t.integer "duration", null: false
+    t.time "end_time", null: false
+    t.integer "performer_id", null: false
+    t.integer "stage_id", null: false
+    t.time "start_time", null: false
+    t.datetime "updated_at", null: false
+    t.index ["day_id"], name: "index_performances_on_day_id"
+    t.index ["performer_id"], name: "index_performances_on_performer_id"
+    t.index ["stage_id"], name: "index_performances_on_stage_id"
+  end
+
+  create_table "performer_favorites", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "performer_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["performer_id"], name: "index_performer_favorites_on_performer_id"
+    t.index ["user_id", "performer_id"], name: "index_performer_favorites_on_user_id_and_performer_id", unique: true
+    t.index ["user_id"], name: "index_performer_favorites_on_user_id"
+  end
+
+  create_table "performer_name_tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", limit: 50, null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_performer_name_tags_on_name", unique: true
+  end
+
+  create_table "performers", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.integer "event_id", null: false
+    t.integer "performer_name_tag_id", null: false
+    t.datetime "updated_at", null: false
+    t.string "website_url", limit: 50
+    t.index ["event_id"], name: "index_performers_on_event_id"
+    t.index ["performer_name_tag_id"], name: "index_performers_on_performer_name_tag_id"
+  end
+
+  create_table "stage_name_tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", limit: 50, null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_stage_name_tags_on_name", unique: true
+  end
+
+  create_table "stages", force: :cascade do |t|
+    t.string "address", limit: 50
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.integer "event_id", null: false
+    t.integer "stage_name_tag_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_stages_on_event_id"
+    t.index ["stage_name_tag_id"], name: "index_stages_on_stage_name_tag_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -29,4 +127,19 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_29_004846) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
+
+  add_foreign_key "days", "events"
+  add_foreign_key "event_favorites", "events"
+  add_foreign_key "event_favorites", "users"
+  add_foreign_key "events", "event_name_tags"
+  add_foreign_key "events", "users"
+  add_foreign_key "performances", "days"
+  add_foreign_key "performances", "performers"
+  add_foreign_key "performances", "stages"
+  add_foreign_key "performer_favorites", "performers"
+  add_foreign_key "performer_favorites", "users"
+  add_foreign_key "performers", "events"
+  add_foreign_key "performers", "performer_name_tags"
+  add_foreign_key "stages", "events"
+  add_foreign_key "stages", "stage_name_tags"
 end
