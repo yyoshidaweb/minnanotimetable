@@ -1,15 +1,6 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  description: MyText
-  event_key: MyString
-  event_name_tag: one
-  is_published: false
+test_event:
   user: one
-
-two:
-  description: MyText
-  event_key: MyString
-  event_name_tag: two
-  is_published: false
-  user: two
+  event_name_tag: rock_fest
+  event_key: "test-event-123"
+  description: "テスト用フェスイベント"
+  is_published: true

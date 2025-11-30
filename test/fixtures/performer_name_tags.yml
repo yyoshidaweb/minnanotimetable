@@ -1,7 +1,5 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+dj_yoshi:
+  name: "DJ Yoshi"
 
-one:
-  name: MyString
-
-two:
-  name: MyString
+band_alpha:
+  name: "Band Alpha"

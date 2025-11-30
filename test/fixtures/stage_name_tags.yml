@@ -1,7 +1,5 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+main_stage:
+  name: "Main Stage"
 
-one:
-  name: MyString
-
-two:
-  name: MyString
+second_stage:
+  name: "Second Stage"

@@ -1,13 +1,11 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+main_stage_instance:
+  event: test_event
+  stage_name_tag: main_stage
+  address: "Tokyo, Japan"
+  description: "メインステージ"
 
-one:
-  address: MyString
-  description: MyText
-  event: one
-  stage_name_tag: one
-
-two:
-  address: MyString
-  description: MyText
-  event: two
-  stage_name_tag: two
+second_stage_instance:
+  event: test_event
+  stage_name_tag: second_stage
+  address: "Tokyo, Japan"
+  description: "サブステージ"

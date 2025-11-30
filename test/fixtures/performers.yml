@@ -1,13 +1,9 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+yoshi_performance:
+  event: test_event
+  performer_name_tag: dj_yoshi
+  description: "メインDJ"
 
-one:
-  description: MyText
-  event: one
-  performer_name_tag: one
-  website_url: MyString
-
-two:
-  description: MyText
-  event: two
-  performer_name_tag: two
-  website_url: MyString
+alpha_band:
+  event: test_event
+  performer_name_tag: band_alpha
+  description: "サブステージバンド"
