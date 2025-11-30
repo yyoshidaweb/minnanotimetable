@@ -11,6 +11,14 @@
 # Seedファイルを上から順番に読み込む
 seed_files = %w[
   users.rb
+  event_name_tags.rb
+  events.rb
+  performer_name_tags.rb
+  performers.rb
+  stage_name_tags.rb
+  stages.rb
+  days.rb
+  performances.rb
 ]
 
 # 各seedファイルを実行
