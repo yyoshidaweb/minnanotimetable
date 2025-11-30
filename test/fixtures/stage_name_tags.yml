@@ -1,0 +1,5 @@
+main_stage:
+  name: "Main Stage"
+
+second_stage:
+  name: "Second Stage"

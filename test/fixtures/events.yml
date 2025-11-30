@@ -1,0 +1,6 @@
+test_event:
+  user: one
+  event_name_tag: rock_fest
+  event_key: "test-event-123"
+  description: "テスト用フェスイベント"
+  is_published: true

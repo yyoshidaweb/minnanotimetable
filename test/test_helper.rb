@@ -7,8 +7,18 @@ module ActiveSupport
     # Run tests in parallel with specified workers
     parallelize(workers: :number_of_processors)
 
-    # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-    fixtures :all
+    # fixturesファイルを上から順番に読み込む
+    fixtures :users
+    fixtures :event_name_tags
+    fixtures :performer_name_tags
+    fixtures :stage_name_tags
+    fixtures :events
+    fixtures :performers
+    fixtures :stages
+    fixtures :days
+    fixtures :performances
+    fixtures :event_favorites
+    fixtures :performer_favorites
 
     # Add more helper methods to be used by all tests here...
   end

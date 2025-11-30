@@ -1,0 +1,7 @@
+user_one_favorite_test_event:
+  user: one
+  event: test_event
+
+user_two_favorite_test_event:
+  user: two
+  event: test_event

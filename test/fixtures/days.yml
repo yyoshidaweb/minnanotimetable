@@ -1,0 +1,7 @@
+day_1:
+  event: test_event
+  date: <%= Date.current %>
+
+day_2:
+  event: test_event
+  date: <%= Date.current + 1.day %>

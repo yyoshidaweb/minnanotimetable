@@ -1,0 +1,11 @@
+main_stage_instance:
+  event: test_event
+  stage_name_tag: main_stage
+  address: "Tokyo, Japan"
+  description: "メインステージ"
+
+second_stage_instance:
+  event: test_event
+  stage_name_tag: second_stage
+  address: "Tokyo, Japan"
+  description: "サブステージ"
