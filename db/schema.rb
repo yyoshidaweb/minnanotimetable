@@ -10,7 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_29_004846) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_30_165928) do
+  create_table "event_name_tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", limit: 50, null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_event_name_tags_on_name", unique: true
+  end
+
+  create_table "performer_name_tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", limit: 50, null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_performer_name_tags_on_name", unique: true
+  end
+
+  create_table "stage_name_tags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", limit: 50, null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_stage_name_tags_on_name", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
