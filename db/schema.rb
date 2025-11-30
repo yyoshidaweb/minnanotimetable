@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_30_171534) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_30_172513) do
   create_table "event_name_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", limit: 50, null: false
@@ -45,6 +45,17 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_171534) do
     t.index ["name"], name: "index_stage_name_tags_on_name", unique: true
   end
 
+  create_table "stages", force: :cascade do |t|
+    t.string "address", limit: 50
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.integer "event_id", null: false
+    t.integer "stage_name_tag_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_stages_on_event_id"
+    t.index ["stage_name_tag_id"], name: "index_stages_on_stage_name_tag_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -66,4 +77,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_171534) do
 
   add_foreign_key "events", "event_name_tags"
   add_foreign_key "events", "users"
+  add_foreign_key "stages", "events"
+  add_foreign_key "stages", "stage_name_tags"
 end
