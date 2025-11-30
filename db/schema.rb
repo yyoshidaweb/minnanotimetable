@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_30_172513) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_30_172940) do
+  create_table "days", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "date", null: false
+    t.integer "event_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_days_on_event_id"
+  end
+
   create_table "event_name_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", limit: 50, null: false
@@ -75,6 +83,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_172513) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "days", "events"
   add_foreign_key "events", "event_name_tags"
   add_foreign_key "events", "users"
   add_foreign_key "stages", "events"
