@@ -10,12 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_30_165928) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_30_171534) do
   create_table "event_name_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", limit: 50, null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_event_name_tags_on_name", unique: true
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "event_key", limit: 50, null: false
+    t.integer "event_name_tag_id", null: false
+    t.boolean "is_published", default: false, null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["event_key"], name: "index_events_on_event_key", unique: true
+    t.index ["event_name_tag_id"], name: "index_events_on_event_name_tag_id"
+    t.index ["user_id"], name: "index_events_on_user_id"
   end
 
   create_table "performer_name_tags", force: :cascade do |t|
@@ -50,4 +63,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_165928) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
+
+  add_foreign_key "events", "event_name_tags"
+  add_foreign_key "events", "users"
 end
