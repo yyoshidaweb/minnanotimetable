@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_30_172940) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_30_173143) do
   create_table "days", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "date", null: false
@@ -44,6 +44,17 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_172940) do
     t.string "name", limit: 50, null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_performer_name_tags_on_name", unique: true
+  end
+
+  create_table "performers", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.integer "event_id", null: false
+    t.integer "performer_name_tag_id", null: false
+    t.datetime "updated_at", null: false
+    t.string "website_url", limit: 50
+    t.index ["event_id"], name: "index_performers_on_event_id"
+    t.index ["performer_name_tag_id"], name: "index_performers_on_performer_name_tag_id"
   end
 
   create_table "stage_name_tags", force: :cascade do |t|
@@ -86,6 +97,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_172940) do
   add_foreign_key "days", "events"
   add_foreign_key "events", "event_name_tags"
   add_foreign_key "events", "users"
+  add_foreign_key "performers", "events"
+  add_foreign_key "performers", "performer_name_tags"
   add_foreign_key "stages", "events"
   add_foreign_key "stages", "stage_name_tags"
 end
