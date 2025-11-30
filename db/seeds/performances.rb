@@ -19,7 +19,8 @@ days.each_with_index do |day, i|
       start_time: start,
       end_time: end_t
     ) do |p|
-      p.duration = (end_t - start).to_i
+      # 公演時間を分単位で保存
+      p.duration = ((end_t - start) / 60).to_i
     end
   end
 end
