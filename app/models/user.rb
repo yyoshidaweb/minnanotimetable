@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  # ユーザーが作成したイベント
+  has_many :events, dependent: :destroy
+
   # お気に入りのイベント
   has_many :event_favorites, dependent: :destroy
   has_many :favorite_events, through: :event_favorites, source: :event
