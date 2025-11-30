@@ -1,4 +1,11 @@
 class User < ApplicationRecord
+  # お気に入りのイベント
+  has_many :event_favorites, dependent: :destroy
+  has_many :favorite_events, through: :event_favorites, source: :event
+  # お気に入りの出演者
+  has_many :performer_favorites, dependent: :destroy
+  has_many :favorite_performers, through: :performer_favorites, source: :performer
+
   # 予約語として使用禁止の username リスト
   MANUAL_RESERVED_USERNAMES = %w[
     sign_in

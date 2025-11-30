@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  description: MyText
+  event: one
+  performer_name_tag: one
+  website_url: MyString
+
+two:
+  description: MyText
+  event: two
+  performer_name_tag: two
+  website_url: MyString
