@@ -1,12 +1,22 @@
-<!-- app/views/events/show.html.erb -->
-<h1><%= @event.event_name_tag.name %> のタイムテーブル</h1>
-<% @days.each do |day| %>
-  <h2><%= day.date %></h2>
-  <% day.performances.each do |performance| %>
-    <p>
-      <%= performance.start_time.strftime("%H:%M") %> -
-      <%= performance.end_time.strftime("%H:%M") %> :
-      <%= performance.performer.performer_name_tag.name %> @ <%= performance.stage.stage_name_tag.name %>
-    </p>
+<nav class="mb-4">
+  <% @days.each do |day| %>
+    <% is_selected = (day.date == @selected_date) %>
+    <%= link_to day.date.to_s,
+                event_path(@event.event_key, d: day.date),
+                class: "mr-2 #{'font-bold' if is_selected}" %>
   <% end %>
-<% end %>
+</nav>
+<h2 class="mb-2"><%= @selected_date %> の出演</h2>
+<div class="flex gap-4 overflow-x-auto">
+  <% @performances.group_by(&:stage).each do |stage, stage_performances| %>
+    <div class="flex flex-col border p-2 min-w-[200px]">
+      <h3 class="font-semibold mb-2 text-center"><%= stage.stage_name_tag.name %></h3>
+      <% stage_performances.sort_by(&:start_time).each do |performance| %>
+        <div class="border-b py-1">
+          <p class="text-sm"><%= performance.start_time.strftime("%H:%M") %> - <%= performance.end_time.strftime("%H:%M") %></p>
+          <p class="text-sm font-medium"><%= performance.performer.performer_name_tag.name %></p>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>
