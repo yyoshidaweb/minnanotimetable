@@ -1,0 +1,12 @@
+<!-- app/views/events/show.html.erb -->
+<h1><%= @event.event_name_tag.name %> のタイムテーブル</h1>
+<% @days.each do |day| %>
+  <h2><%= day.date %></h2>
+  <% day.performances.each do |performance| %>
+    <p>
+      <%= performance.start_time.strftime("%H:%M") %> -
+      <%= performance.end_time.strftime("%H:%M") %> :
+      <%= performance.performer.performer_name_tag.name %> @ <%= performance.stage.stage_name_tag.name %>
+    </p>
+  <% end %>
+<% end %>
