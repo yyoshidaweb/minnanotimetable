@@ -16,26 +16,27 @@
   </nav>
   <%# タイムテーブル表示エリア - スクロール可能 %>
   <div class="flex-1 min-h-0 bg-white overflow-auto w-full">
-    <table class="lg:table-fixed w-full relative bg-white rounded-lg shadow-sm">
+    <table class="w-full relative bg-white rounded-lg shadow-sm">
       <%# テーブルヘッダー - ステージ名 %>
-      <thead class="bg-white">
+      <thead class="h-8 bg-white">
         <tr>
-          <%# ステージデータ作成（23ステージ） %>
-          <% stages = (1..23).map{|i| "ステージ  #{i}"} %>
+          <%# 左端の時刻列用の空セル %>
           <th class="w-[1.5rem] pl-1.5 pr-1 py-1 text-left text-xs font-medium text-gray-500 tracking-wider sticky left-0 top-0 z-[110] bg-gray-50">
             <div class="absolute inset-0 bg-white z-[110]"></div>
             <div class="absolute right-0 bottom-[-1px] h-[1px] w-full bg-white z-[110]"></div>
             <span class="relative z-[110]"></span>
           </th>
+          <%# Event に紐づくステージを StageNameTag.name で取得してアルファベット順にソート %>
+          <% stages = @event.stages.includes(:stage_name_tag).sort_by { |s| s.stage_name_tag.name } %>
           <% stages.each_with_index do |stage, stage_index| %>
-            <%# ステージ名 %>
-            <th class="w-[calc((100%-2rem)/<%= stages.length %>)] py-2 text-center text-xs font-bold text-gray-800 tracking-wider sticky top-0 z-[100] relative <%= stage_index != stages.length-1 ? 'border-r border-white' : '' %>">
-              <div class=" absolute inset-0 <%= stage_index.odd? ? 'bg-gray-200' : 'bg-gray-300' %> z-[95]">
+            <%# ステージ名列 %>
+            <th class="w-[calc((100%-2rem)/<%= stages.length %>)] p-1 h-8 text-center text-xs font-bold text-gray-800 tracking-wider sticky top-0 z-[100] relative <%= stage_index != stages.length-1 ? 'border-r border-white' : '' %>">
+              <div class="absolute inset-0 <%= stage_index.odd? ? 'bg-gray-200' : 'bg-gray-300' %> z-[95]">
               </div>
               <%# ステージ名 %>
               <div class="relative z-[100] flex items-center justify-center">
-                <p class=" leading-tight text-center break-words line-clamp-5">
-                  <%= stage %>
+                <p class="leading-tight text-center wrap-break-word line-clamp-2">
+                  <%= stage.stage_name_tag.name %>
                 </p>
               </div>
             </th>
