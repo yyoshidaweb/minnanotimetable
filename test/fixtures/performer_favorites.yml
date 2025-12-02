@@ -1,7 +1,7 @@
-user_one_favorite_yoshi:
+one:
   user: one
-  performer: yoshi_performance
+  performer: one
 
-user_two_favorite_alpha:
-  user: two
-  performer: alpha_band
+two:
+  user: one
+  performer: three

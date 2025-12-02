@@ -3,11 +3,13 @@ require "test_helper"
 class EventsControllerTest < ActionDispatch::IntegrationTest
   # fixtures に登録済みの event ラベルを利用
   setup do
-    @event = events(:test_event)
-    @day1 = days(:day_1)
-    @day2 = days(:day_2)
-    @perf1 = performances(:one_day_one_performance)
-    @perf2 = performances(:two_day_two_performance)
+    @event = events(:one)
+    @day1 = days(:one)
+    @day2 = days(:two)
+    @performance1 = performances(:one)
+    @performance2 = performances(:two)
+    @performance3 = performances(:three)
+    @performance4 = performances(:four)
   end
 
   # デフォルト（最古日付）での表示テスト

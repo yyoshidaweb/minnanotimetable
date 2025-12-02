@@ -1,5 +1,5 @@
-main_stage:
-  name: "Main Stage"
+one:
+  name: "Stage1"
 
-second_stage:
-  name: "Second Stage"
+two:
+  name: "Stage2"

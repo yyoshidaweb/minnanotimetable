@@ -1,31 +1,35 @@
-one_day_one_performance:
-  day: day_1
-  performer: yoshi_performance
-  stage: main_stage_instance
+# 1日目ステージ1出演者1（60分）
+one:
+  day: one
+  performer: one
+  stage: one
   start_time: "12:00:00"
   end_time: "13:00:00"
   duration: 60
 
-one_day_two_performance:
-  day: day_1
-  performer: alpha_band
-  stage: second_stage_instance
+# 1日目ステージ2出演者2（30分）
+two:
+  day: one
+  performer: two
+  stage: two
   start_time: "13:30:00"
   end_time: "14:30:00"
-  duration: 60
+  duration: 30
 
-two_day_one_performance:
-  day: day_2
-  performer: yoshi_performance
-  stage: main_stage_instance
+# 2日目ステージ1出演者3（60分）
+three:
+  day: two
+  performer: three
+  stage: one
   start_time: "12:00:00"
   end_time: "13:00:00"
   duration: 60
 
-two_day_two_performance:
-  day: day_2
-  performer: alpha_band
-  stage: second_stage_instance
+# 2日目ステージ2出演者4（30分）
+four:
+  day: two
+  performer: four
+  stage: two
   start_time: "13:30:00"
   end_time: "14:30:00"
-  duration: 60
+  duration: 30

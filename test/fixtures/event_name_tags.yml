@@ -1,5 +1,5 @@
-rock_fest:
-  name: "Rock Festival"
+one:
+  name: "Event1"
 
-jazz_night:
-  name: "Jazz Night"
+two:
+  name: "Event2"
