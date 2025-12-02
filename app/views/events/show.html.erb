@@ -2,7 +2,7 @@
 <div class="h-[calc(100vh-3rem)] flex flex-col overflow-hidden">
   <%# 日付選択タブ %>
   <nav class="flex justify-around overflow-x-auto bg-white border-t border-gray-200">
-    <% @days.each do |day| %>
+    <% @event.days.each do |day| %>
       <%# 日付を MM/DD 形式でラベルに整形 %>
       <% label = day.date.strftime("%-m/%-d") %>
       <%# 現在選択中の日付かどうか判定 %>
@@ -15,7 +15,7 @@
     <% end %>
   </nav>
   <%# タイムテーブル表示エリア - スクロール可能 %>
-  <div class="flex-1 pb-8 min-h-0 bg-white overflow-auto pr-2 lg:px-2 w-full">
+  <div class="flex-1 min-h-0 bg-white overflow-auto w-full">
     <table class="lg:table-fixed w-full relative bg-white rounded-lg shadow-sm">
       <%# テーブルヘッダー - ステージ名 %>
       <thead class="bg-white">
