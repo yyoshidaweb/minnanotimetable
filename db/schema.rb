@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_30_175200) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_02_084144) do
   create_table "days", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "date", null: false
@@ -103,6 +103,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_30_175200) do
     t.datetime "created_at", null: false
     t.text "description"
     t.integer "event_id", null: false
+    t.integer "position", default: 0, null: false
     t.integer "stage_name_tag_id", null: false
     t.datetime "updated_at", null: false
     t.index ["event_id"], name: "index_stages_on_event_id"
