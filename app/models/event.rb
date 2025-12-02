@@ -6,7 +6,7 @@ class Event < ApplicationRecord
 
   # 関連
   has_many :days, dependent: :destroy
-  has_many :stages, dependent: :destroy
+  has_many :stages, -> { order(:position) }, dependent: :destroy
   has_many :performers, dependent: :destroy
   # 多対多
   has_many :performances, through: :days
