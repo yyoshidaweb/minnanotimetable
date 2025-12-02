@@ -1,22 +1,137 @@
-<nav class="mb-4">
-  <% @days.each do |day| %>
-    <% is_selected = (day.date == @selected_date) %>
-    <%= link_to day.date.to_s,
-                event_path(@event.event_key, d: day.date),
-                class: "mr-2 #{'font-bold' if is_selected}" %>
-  <% end %>
-</nav>
-<h2 class="mb-2"><%= @selected_date %> の出演</h2>
-<div class="flex gap-4 overflow-x-auto">
-  <% @performances.group_by(&:stage).each do |stage, stage_performances| %>
-    <div class="flex flex-col border p-2 min-w-[200px]">
-      <h3 class="font-semibold mb-2 text-center"><%= stage.stage_name_tag.name %></h3>
-      <% stage_performances.sort_by(&:start_time).each do |performance| %>
-        <div class="border-b py-1">
-          <p class="text-sm"><%= performance.start_time.strftime("%H:%M") %> - <%= performance.end_time.strftime("%H:%M") %></p>
-          <p class="text-sm font-medium"><%= performance.performer.performer_name_tag.name %></p>
-        </div>
+<%# タイムテーブル表示画面のメインコンテナ %>
+<div class="h-[calc(100vh-3rem)] flex flex-col overflow-hidden">
+  <%# 日付選択タブ %>
+  <nav class="flex justify-around overflow-x-auto bg-white border-t border-gray-200">
+    <% @days.each do |day| %>
+      <%# 日付を MM/DD 形式でラベルに整形 %>
+      <% label = day.date.strftime("%-m/%-d") %>
+      <%# 現在選択中の日付かどうか判定 %>
+      <% selected = (day.date == @selected_date) %>
+      <%# 日付タブリンク。選択中の場合は下線を表示し、横幅は均等に伸ばす %>
+      <%= link_to event_path(@event.event_key, d: day.date),
+                  class: "flex-1 px-2 py-2 text-xs text-gray-800 font-bold border-b-4 #{selected ? 'border-gray-800' : 'border-transparent'} hover:border-gray-300 transition-colors duration-150 text-center whitespace-nowrap" do %>
+        <%= label %>
       <% end %>
-    </div>
-  <% end %>
+    <% end %>
+  </nav>
+  <%# タイムテーブル表示エリア - スクロール可能 %>
+  <div class="flex-1 pb-8 min-h-0 bg-white overflow-auto pr-2 lg:px-2 w-full">
+    <table class="lg:table-fixed w-full relative bg-white rounded-lg shadow-sm">
+      <%# テーブルヘッダー - ステージ名 %>
+      <thead class="bg-white">
+        <tr>
+          <%# ステージデータ作成（23ステージ） %>
+          <% stages = (1..23).map{|i| "ステージ  #{i}"} %>
+          <th class="w-[1.5rem] pl-1.5 pr-1 py-1 text-left text-xs font-medium text-gray-500 tracking-wider sticky left-0 top-0 z-[110] bg-gray-50">
+            <div class="absolute inset-0 bg-white z-[110]"></div>
+            <div class="absolute right-0 bottom-[-1px] h-[1px] w-full bg-white z-[110]"></div>
+            <span class="relative z-[110]"></span>
+          </th>
+          <% stages.each_with_index do |stage, stage_index| %>
+            <%# ステージ名 %>
+            <th class="w-[calc((100%-2rem)/<%= stages.length %>)] py-2 text-center text-xs font-bold text-gray-800 tracking-wider sticky top-0 z-[100] relative <%= stage_index != stages.length-1 ? 'border-r border-white' : '' %>">
+              <div class=" absolute inset-0 <%= stage_index.odd? ? 'bg-gray-200' : 'bg-gray-300' %> z-[95]">
+              </div>
+              <%# ステージ名 %>
+              <div class="relative z-[100] flex items-center justify-center">
+                <p class=" leading-tight text-center break-words line-clamp-5">
+                  <%= stage %>
+                </p>
+              </div>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+      <%# タイムテーブル本体 %>
+      <tbody>
+        <%# 仮データの生成（本番では削除） %>
+        <% mock_artists = {} %>
+        <% performance_times = [15, 30, 45, 60] %>
+        <% stages.length.times do |i| %>
+          <% 
+                            # 各ステージのタイムスロットを作成
+                            schedule = []
+                            current_hour = 10
+                            current_min = (i * 5) % 30  # ステージごとの初期オフセット
+
+                            # 1日のスケジュールを組む
+                            while current_hour < 21
+                                # ランダムな公演時間を選択
+                                duration = performance_times.sample
+                                
+                                # 現在の時刻と公演時間を記録
+                                schedule << [current_hour, current_min, duration]
+                                
+                                # 次の開始時刻を計算（公演時間 + 30分休憩）
+                                next_minutes = current_min + duration + 30  # 30分の休憩時間を追加
+                                current_hour += next_minutes / 60
+                                current_min = next_minutes % 60
+                            end
+                            
+                            mock_artists[i] = schedule
+                        %>
+        <% end %>
+        <% start_hour = 10 %>
+        <% end_hour = 21 %>
+        <% (start_hour..end_hour).each do |hour| %>
+          <% (0..55).step(5) do |minute| %>
+            <tr class="h-4 relative"> <%# h-3からh-4に変更 %>
+              <%# 時刻列 - 左側に固定表示 %>
+              <td class="min-w-[1.25rem] px-0 h-4 bg-white sticky left-0 z-[150]">
+                <div class="absolute inset-0 bg-white z-[145]"></div>
+                <div class="absolute inset-0 flex items-center justify-center z-[150]">
+                  <div class="w-full h-full flex items-center justify-center -translate-y-[6px]">
+                    <%# 正時のみ時刻を表示 %>
+                    <% if minute == 0 %>
+                      <span class="text-xs font-medium text-gray-900 tabular-nums">
+                        <%= format("%02d", hour) %>
+                      </span>
+                    <% end %>
+                  </div>
+                </div>
+              </td>
+              <%# 各ステージの時間枠 %>
+              <% stages.each_with_index do |stage, stage_index| %>
+                <%# ステージの時間枠と、縦の区切り線の表示 %>
+                <td class="w-[calc((100%-2rem)/<%= stages.length %>)] min-w-[80px] max-w-[120px] relative <%= stage_index.odd? ? 'bg-gray-100' : 'bg-gray-200' %> <%= stage_index != stages.length-1 ? 'border-r border-white' : '' %>">
+                  <%# 横の区切り線の表示 %>
+                  <% if minute == 0 || minute == 30 %>
+                    <div class=" absolute inset-x-0 top-0 border-t border-white z-[5]">
+                    </div>
+                  <% end %>
+                  <%# アーティストカードの表示 %>
+                  <% mock_artists[stage_index]&.each do |artist_time| %>
+                    <% if artist_time[0] == hour && artist_time[1] == minute %>
+                      <%# アーティストカードのリンク（リンク先は仮の値） %>
+                      <%= link_to "/artists/1", class: "block absolute inset-x-[1px] top-0 z-[10] hover:scale-[1.02] transition-transform duration-150", style: "height: #{duration_to_rows(artist_time[2])}rem" do %>
+                        <%# アーティストカードの内容 %>
+                        <div class="bg-white rounded-lg p-1 w-full h-full shadow-sm hover:shadow transition-shadow duration-150">
+                          <%# 時間表示 %>
+                          <div class="text-xs font-light leading-xs line-clamp-1 text-gray-800">
+                            <%= format("%02d:%02d", hour, minute) %>
+                          </div>
+                          <%# アーティスト名 - 公演時間に応じて行数制限 %>
+                          <% line_clamp = if artist_time[2] <= 15
+                                        'line-clamp-1'
+                                    elsif artist_time[2] <= 30
+                                        'line-clamp-4'
+                                    else
+                                        'line-clamp-6'
+                                    end
+                                %>
+                          <div class="font-semibold text-xs leading-xs text-gray-800 <%= line_clamp %>">
+                            <%= "#{artist_time[2]}分枠のアーティスト" %>
+                          </div>
+                        </div>
+                      <% end %>
+                    <% end %>
+                  <% end %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>

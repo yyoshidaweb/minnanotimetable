@@ -16,5 +16,12 @@ class EventsController < ApplicationController
                           .where(days: { date: @selected_date })
                           .includes(:performer, :stage)
                           .order(:start_time)
+
+    # ヘッダー非表示フラグ
+    @hidden_header = true
+    # マージン不要フラグ
+    @no_margin = true
+    # イベント用ヘッダー表示フラグ
+    @show_event_header = true
   end
 end
