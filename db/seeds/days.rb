@@ -1,4 +1,4 @@
-event = Event.find_by!(event_key: "test-event-123")
+event = Event.find_by!(event_key: "one")
 
 dates = [
   Date.today,

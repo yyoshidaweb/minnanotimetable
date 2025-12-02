@@ -1,5 +1,11 @@
-dj_yoshi:
-  name: "DJ Yoshi"
+one:
+  name: "Performer1"
 
-band_alpha:
-  name: "Band Alpha"
+two:
+  name: "Performer2"
+
+three:
+  name: "Performer3"
+
+four:
+  name: "Performer4"

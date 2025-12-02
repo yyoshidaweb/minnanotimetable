@@ -1,6 +1,7 @@
-test_event:
+one:
   user: one
-  event_name_tag: rock_fest
-  event_key: "test-event-123"
+  event_name_tag: one
+  event_key: "one"
   description: "テスト用フェスイベント"
   is_published: true
+  

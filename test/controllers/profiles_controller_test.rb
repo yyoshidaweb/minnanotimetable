@@ -37,9 +37,9 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
   # プロフィール更新アクションのusernameが重複した場合のテスト
   test "should not update username when duplicated" do
     # PATCHリクエスト（プロフィール更新処理）
-    patch profile_url, params: { user: { username: "efgh5678" } }
+    patch profile_url, params: { user: { username: "two" } }
     @user.reload
-    assert_not_equal "efgh5678", @user.username
+    assert_not_equal "two", @user.username
     # HTTPステータスが422（バリデーションエラー）であることを確認
     assert_response :unprocessable_entity
   end

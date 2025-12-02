@@ -76,8 +76,8 @@
                     <div class=" absolute inset-x-0 top-0 border-t border-white z-5">
                     </div>
                   <% end %>
-                  <%# ステージごとの出演者を取得 %>
-                  <% stage_performances = @event.performances.where(stage: stage) %>
+                  <%# ステージごとの出演者を取得（選択日付で絞り込み） %>
+                  <% stage_performances = @performances.where(stage: stage) %>
                   <%# 出演情報カードの表示 %>
                   <% stage_performances.each do |performance| %>
                     <%# 出演開始時刻%>
@@ -102,9 +102,9 @@
                                         'line-clamp-6'
                                     end
                                 %>
-                          <div class="font-semibold text-xs leading-xs text-gray-800 <%= line_clamp %>">
+                          <p class="font-semibold text-xs leading-xs text-gray-800 <%= line_clamp %>">
                             <%= performance.performer.performer_name_tag.name %>
-                          </div>
+                          </p>
                         </div>
                       <% end %>
                     <% end %>

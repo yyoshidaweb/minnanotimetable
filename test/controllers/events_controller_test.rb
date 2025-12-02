@@ -3,11 +3,13 @@ require "test_helper"
 class EventsControllerTest < ActionDispatch::IntegrationTest
   # fixtures に登録済みの event ラベルを利用
   setup do
-    @event = events(:test_event)
-    @day1 = days(:day_1)
-    @day2 = days(:day_2)
-    @perf1 = performances(:one_day_one_performance)
-    @perf2 = performances(:two_day_two_performance)
+    @event = events(:one)
+    @day1 = days(:one)
+    @day2 = days(:two)
+    @performance1 = performances(:one)
+    @performance2 = performances(:two)
+    @performance3 = performances(:three)
+    @performance4 = performances(:four)
   end
 
   # デフォルト（最古日付）での表示テスト
@@ -29,5 +31,11 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   test "should show event with specified date" do
     get event_path(@event.event_key, d: @day2.date)
     assert_response :success
+    # 指定日付の全てのパフォーマンスが含まれている
+    assert_select "p", text: @performance3.performer.performer_name_tag.name
+    assert_select "p", text: @performance4.performer.performer_name_tag.name
+    # 他の日付のパフォーマンスが含まれていなければ成功
+    assert_select "p", text: @performance1.performer.performer_name_tag.name, count: 0
+    assert_select "p", text: @performance2.performer.performer_name_tag.name, count: 0
   end
 end

@@ -1,9 +1,19 @@
-yoshi_performance:
-  event: test_event
-  performer_name_tag: dj_yoshi
-  description: "メインDJ"
+one:
+  event: one
+  performer_name_tag: one
+  description: "出演者1の説明"
 
-alpha_band:
-  event: test_event
-  performer_name_tag: band_alpha
-  description: "サブステージバンド"
+two:
+  event: one
+  performer_name_tag: two
+  description: "出演者2の説明"
+
+three:
+  event: one
+  performer_name_tag: three
+  description: "出演者3の説明"
+
+four:
+  event: one
+  performer_name_tag: four
+  description: "出演者4の説明"

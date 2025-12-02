@@ -1,17 +1,14 @@
-event = Event.find_by!(event_key: "test-event-123")
+event = Event.find_by!(event_key: "one")
 
-[
-  { name: "DJ Yoshi", desc: "ハウス系 DJ", url: "https://example.com/yoshi" },
-  { name: "The Rails Band", desc: "Rubyist ロックバンド", url: "https://example.com/railsband" },
-  { name: "Frontend Girls", desc: "UI/UX 系ガールズユニット", url: "https://example.com/fegirls" }
-].each do |data|
-  tag = PerformerNameTag.find_by!(name: data[:name])
+# PerformerNameTag を 1〜100 取得して配列化
+tags = (1..100).map { |i| PerformerNameTag.find_by!(name: "Performer#{i}") }
 
+tags.each_with_index do |tag, i|
   Performer.find_or_create_by!(
     performer_name_tag_id: tag.id,
     event_id: event.id
   ) do |p|
-    p.description = data[:desc]
-    p.website_url = data[:url]
+    p.description = "出演者#{i + 1}の説明"
+    p.website_url = "https://test.example.com"
   end
 end
