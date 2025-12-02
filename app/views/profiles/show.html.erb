@@ -1,31 +1,31 @@
 <div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-  <!-- 名前 -->
+  <%# 名前 %>
   <div class="mb-4">
     <label class="block text-sm font-semibold text-gray-800 mb-1">名前</label>
-    <!-- ラベルの下に内容を表示 -->
+    <%# ラベルの下に内容を表示 %>
     <p class="text-gray-800"><%= current_user.name %></p>
   </div>
-  <!-- 説明欄 -->
+  <%# 説明欄 %>
   <div class="mb-6">
     <p class="text-gray-800 whitespace-pre-wrap"><%= current_user.description %></p>
   </div>
-  <!-- ユーザー名 -->
+  <%# ユーザー名 %>
   <div class="mb-6">
     <label class="block text-sm font-semibold text-gray-800 mb-1">ユーザー名</label>
     <p class="text-gray-800"><%= current_user.username %></p>
   </div>
-  <!-- メールアドレス -->
+  <%# メールアドレス %>
   <div class="mb-6">
     <label class="block text-sm font-semibold text-gray-800 mb-1">メールアドレス</label>
     <p class="text-gray-800"><%= current_user.email %></p>
   </div>
-  <!-- 編集ボタン -->
+  <%# 編集ボタン %>
   <div class="mb-4">
     <%= link_to "編集",
       edit_profile_path,
       class: "w-full block text-center py-2 rounded-md border border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white transition" %>
   </div>
-  <!-- ログアウト -->
+  <%# ログアウト %>
   <div class="mt-12 mb-4">
     <%= button_to "ログアウト",
       destroy_user_session_path,
@@ -33,7 +33,7 @@
       data: { turbo_confirm: "⚠️ ログアウトしますか？" },
       class: "w-full py-2 rounded-md border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition" %>
   </div>
-  <!-- アカウント削除 -->
+  <%# アカウント削除 %>
   <div>
     <%= button_to "アカウント削除",
       profile_path,
