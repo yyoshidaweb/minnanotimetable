@@ -21,20 +21,20 @@
       <thead class="h-8 bg-white">
         <tr>
           <%# 左端の時刻列用の空セル %>
-          <th class="w-[1.5rem] pl-1.5 pr-1 py-1 text-left text-xs font-medium text-gray-500 tracking-wider sticky left-0 top-0 z-[110] bg-gray-50">
-            <div class="absolute inset-0 bg-white z-[110]"></div>
-            <div class="absolute right-0 bottom-[-1px] h-[1px] w-full bg-white z-[110]"></div>
-            <span class="relative z-[110]"></span>
+          <th class="w-6 pl-1.5 pr-1 py-1 text-left text-xs font-medium text-gray-500 tracking-wider sticky left-0 top-0 z-110 bg-gray-50">
+            <div class="absolute inset-0 bg-white z-110"></div>
+            <div class="absolute right-0 -bottom-px h-px w-full bg-white z-110"></div>
+            <span class="relative z-110"></span>
           </th>
           <%# Event に紐づくステージを StageNameTag.name で取得してアルファベット順にソート %>
           <% stages = @event.stages.includes(:stage_name_tag).sort_by { |s| s.stage_name_tag.name } %>
           <% stages.each_with_index do |stage, stage_index| %>
             <%# ステージ名列 %>
-            <th class="w-[calc((100%-2rem)/<%= stages.length %>)] p-1 h-8 text-center text-xs font-bold text-gray-800 tracking-wider sticky top-0 z-[100] relative <%= stage_index != stages.length-1 ? 'border-r border-white' : '' %>">
-              <div class="absolute inset-0 <%= stage_index.odd? ? 'bg-gray-200' : 'bg-gray-300' %> z-[95]">
+            <th class="w-[calc((100%-2rem)/<%= stages.length %>)] p-1 h-8 text-center text-xs font-bold text-gray-800 tracking-wider sticky top-0 z-100 relative <%= stage_index != stages.length-1 ? 'border-r border-white' : '' %>">
+              <div class="absolute inset-0 <%= stage_index.odd? ? 'bg-gray-200' : 'bg-gray-300' %> z-95">
               </div>
               <%# ステージ名 %>
-              <div class="relative z-[100] flex items-center justify-center">
+              <div class="relative z-100 flex items-center justify-center">
                 <p class="leading-tight text-center wrap-break-word line-clamp-2">
                   <%= stage.stage_name_tag.name %>
                 </p>
@@ -54,10 +54,10 @@
           <% (0..55).step(5) do |minute| %>
             <tr class="h-4 relative">
               <%# 時刻列 - 左側に固定表示 %>
-              <td class="min-w-[1.25rem] px-0 h-4 bg-white sticky left-0 z-[150]">
-                <div class="absolute inset-0 bg-white z-[145]"></div>
-                <div class="absolute inset-0 flex items-center justify-center z-[150]">
-                  <div class="w-full h-full flex items-center justify-center -translate-y-[6px]">
+              <td class="min-w-5 px-0 h-4 bg-white sticky left-0 z-150">
+                <div class="absolute inset-0 bg-white z-145"></div>
+                <div class="absolute inset-0 flex items-center justify-center z-150">
+                  <div class="w-full h-full flex items-center justify-center -translate-y-1.5">
                     <%# 正時のみ時刻を表示 %>
                     <% if minute == 0 %>
                       <span class="text-xs font-medium text-gray-900 tabular-nums">
@@ -70,10 +70,10 @@
               <%# 各ステージの時間枠 %>
               <% stages.each_with_index do |stage, stage_index| %>
                 <%# ステージの時間枠と、縦の区切り線の表示 %>
-                <td class="w-[calc((100%-2rem)/<%= stages.length %>)] min-w-[80px] max-w-[120px] relative <%= stage_index.odd? ? 'bg-gray-100' : 'bg-gray-200' %> <%= stage_index != stages.length-1 ? 'border-r border-white' : '' %>">
+                <td class="w-[calc((100%-2rem)/<%= stages.length %>)] min-w-20 max-w-[120px] relative <%= stage_index.odd? ? 'bg-gray-100' : 'bg-gray-200' %> <%= stage_index != stages.length-1 ? 'border-r border-white' : '' %>">
                   <%# 横の区切り線の表示 %>
                   <% if minute == 0 || minute == 30 %>
-                    <div class=" absolute inset-x-0 top-0 border-t border-white z-[5]">
+                    <div class=" absolute inset-x-0 top-0 border-t border-white z-5">
                     </div>
                   <% end %>
                   <%# ステージごとの出演者を取得 %>
