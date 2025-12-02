@@ -26,8 +26,8 @@
             <div class="absolute right-0 -bottom-px h-px w-full bg-white z-110"></div>
             <span class="relative z-110"></span>
           </th>
-          <%# Event に紐づくステージを StageNameTag.name で取得してアルファベット順にソート %>
-          <% stages = @event.stages.includes(:stage_name_tag).sort_by { |s| s.stage_name_tag.name } %>
+          <%# Event に紐づくステージを StageNameTag.name を取得 %>
+          <% stages = @event.stages.includes(:stage_name_tag) %>
           <% stages.each_with_index do |stage, stage_index| %>
             <%# ステージ名列 %>
             <th class="w-[calc((100%-2rem)/<%= stages.length %>)] p-1 h-8 text-center text-xs font-bold text-gray-800 tracking-wider sticky top-0 z-100 relative <%= stage_index != stages.length-1 ? 'border-r border-white' : '' %>">
