@@ -72,11 +72,14 @@
                             mock_artists[i] = schedule
                         %>
         <% end %>
-        <% start_hour = 10 %>
-        <% end_hour = 21 %>
-        <% (start_hour..end_hour).each do |hour| %>
+        <%# 開始時刻が最も早い出演者の出演時刻を取得 %>
+        <% earliest_time = @event.performances.minimum(:start_time)&.hour %>
+        <%# 終了時刻が最も遅い出演者の出演時刻を取得 %>
+        <% latest_end_time = @event.performances.maximum(:end_time)&.hour %>
+        <%# 最も早い開始時刻から最も遅い終了時間までのタイムテーブルを描画する %>
+        <% (earliest_time..latest_end_time).each do |hour| %>
           <% (0..55).step(5) do |minute| %>
-            <tr class="h-4 relative"> <%# h-3からh-4に変更 %>
+            <tr class="h-4 relative">
               <%# 時刻列 - 左側に固定表示 %>
               <td class="min-w-[1.25rem] px-0 h-4 bg-white sticky left-0 z-[150]">
                 <div class="absolute inset-0 bg-white z-[145]"></div>
