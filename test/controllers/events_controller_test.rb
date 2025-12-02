@@ -34,8 +34,8 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     # 指定日付の全てのパフォーマンスが含まれている
     assert_select "p", text: @performance3.performer.performer_name_tag.name
     assert_select "p", text: @performance4.performer.performer_name_tag.name
-    # 他の日付のパフォーマンスが含まれていない
-    assert_select "p", { text: @performance1.performer.performer_name_tag.name }, 0
-    assert_select "p", { text: @performance2.performer.performer_name_tag.name }, 0
+    # 他の日付のパフォーマンスが含まれていなければ成功
+    assert_select "p", text: @performance1.performer.performer_name_tag.name, count: 0
+    assert_select "p", text: @performance2.performer.performer_name_tag.name, count: 0
   end
 end
