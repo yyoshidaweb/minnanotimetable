@@ -1,19 +1,19 @@
 one:
   event: one
   performer_name_tag: one
-  description: "出演者1"
+  description: "出演者1の説明"
 
 two:
   event: one
   performer_name_tag: two
-  description: "出演者2"
+  description: "出演者2の説明"
 
 three:
   event: one
   performer_name_tag: three
-  description: "出演者3"
+  description: "出演者3の説明"
 
 four:
   event: one
   performer_name_tag: four
-  description: "出演者4"
+  description: "出演者4の説明"
