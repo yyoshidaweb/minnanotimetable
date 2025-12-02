@@ -45,33 +45,6 @@
       </thead>
       <%# タイムテーブル本体 %>
       <tbody>
-        <%# 仮データの生成（本番では削除） %>
-        <% mock_artists = {} %>
-        <% performance_times = [15, 30, 45, 60] %>
-        <% stages.length.times do |i| %>
-          <% 
-                            # 各ステージのタイムスロットを作成
-                            schedule = []
-                            current_hour = 10
-                            current_min = (i * 5) % 30  # ステージごとの初期オフセット
-
-                            # 1日のスケジュールを組む
-                            while current_hour < 21
-                                # ランダムな公演時間を選択
-                                duration = performance_times.sample
-                                
-                                # 現在の時刻と公演時間を記録
-                                schedule << [current_hour, current_min, duration]
-                                
-                                # 次の開始時刻を計算（公演時間 + 30分休憩）
-                                next_minutes = current_min + duration + 30  # 30分の休憩時間を追加
-                                current_hour += next_minutes / 60
-                                current_min = next_minutes % 60
-                            end
-                            
-                            mock_artists[i] = schedule
-                        %>
-        <% end %>
         <%# 開始時刻が最も早い出演者の出演時刻を取得 %>
         <% earliest_time = @event.performances.minimum(:start_time)&.hour %>
         <%# 終了時刻が最も遅い出演者の出演時刻を取得 %>
@@ -103,28 +76,34 @@
                     <div class=" absolute inset-x-0 top-0 border-t border-white z-[5]">
                     </div>
                   <% end %>
-                  <%# アーティストカードの表示 %>
-                  <% mock_artists[stage_index]&.each do |artist_time| %>
-                    <% if artist_time[0] == hour && artist_time[1] == minute %>
-                      <%# アーティストカードのリンク（リンク先は仮の値） %>
-                      <%= link_to "/artists/1", class: "block absolute inset-x-[1px] top-0 z-[10] hover:scale-[1.02] transition-transform duration-150", style: "height: #{duration_to_rows(artist_time[2])}rem" do %>
-                        <%# アーティストカードの内容 %>
+                  <%# ステージごとの出演者を取得 %>
+                  <% stage_performances = @event.performances.where(stage: stage) %>
+                  <%# 出演情報カードの表示 %>
+                  <% stage_performances.each do |performance| %>
+                    <%# 出演開始時刻%>
+                    <% start_h = performance.start_time.hour %>
+                    <%# 出演終了時刻 %>
+                    <% start_m = performance.start_time.min %>
+                    <% if start_h == hour && start_m == minute %>
+                      <%# 出演情報カードのリンク（リンク先は仮の値） %>
+                      <%= link_to "#", class: "block absolute inset-x-[1px] top-0 z-[10] hover:scale-[1.02] transition-transform duration-150", style: "height: #{duration_to_rows(performance.duration)}rem" do %>
+                        <%# 出演情報カードの内容 %>
                         <div class="bg-white rounded-lg p-1 w-full h-full shadow-sm hover:shadow transition-shadow duration-150">
                           <%# 時間表示 %>
                           <div class="text-xs font-light leading-xs line-clamp-1 text-gray-800">
                             <%= format("%02d:%02d", hour, minute) %>
                           </div>
-                          <%# アーティスト名 - 公演時間に応じて行数制限 %>
-                          <% line_clamp = if artist_time[2] <= 15
+                          <%# 出演者名 - 公演時間に応じて行数制限 %>
+                          <% line_clamp = if performance.duration <= 15
                                         'line-clamp-1'
-                                    elsif artist_time[2] <= 30
+                                    elsif performance.duration <= 30
                                         'line-clamp-4'
                                     else
                                         'line-clamp-6'
                                     end
                                 %>
                           <div class="font-semibold text-xs leading-xs text-gray-800 <%= line_clamp %>">
-                            <%= "#{artist_time[2]}分枠のアーティスト" %>
+                            <%= performance.performer.performer_name_tag.name %>
                           </div>
                         </div>
                       <% end %>
