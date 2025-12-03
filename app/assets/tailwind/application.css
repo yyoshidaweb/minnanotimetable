@@ -3,6 +3,9 @@
 /* GoogleログインボタンのCSSを読み込む */
 @import "../stylesheets/google-sign-in-btn.css";
 
+/* ステージ用CSSを読み込む */
+@import "../stylesheets/event.css";
+
 @config '../../../config/tailwind.config.js';
 
 /*
