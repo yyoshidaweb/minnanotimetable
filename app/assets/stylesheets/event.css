@@ -1,0 +1,129 @@
+/* ===== ステージヘッダー ===== */
+/* ステージヘッダーの背景（奇数） */
+th.stage-col:nth-child(odd) .bg-stage {
+    /* gray-200 */
+    background-color: #e5e7eb;
+}
+
+/* ステージヘッダーの背景（偶数） */
+th.stage-col:nth-child(even) .bg-stage {
+    /* gray-300 */
+    background-color: #d1d5db;
+}
+
+/* 最後のステージ以外の右端にボーダーをつける */
+th.stage-col:not(:last-child) {
+    border-right: 1px solid white;
+}
+
+
+/* ===== 時刻列（左端） ===== */
+/* 時刻列の正時以外を非表示にする */
+.time-cell[data-minute]:not([data-minute="0"]) span {
+    display: none;
+}
+
+
+/* ===== テーブルボディ部分の背景 ===== */
+/* テーブルボディ部分の背景色（偶数） */
+td.stage-col:nth-child(odd) {
+    /* gray-100 */
+    background-color: #f3f4f6;
+}
+
+/* テーブルボディ部分の背景色（奇数） */
+td.stage-col:nth-child(even) {
+    /* gray-200 */
+    background-color: #e5e7eb;
+}
+
+/* テーブルボディに表示する区切り線（正時） */
+.time-border[data-minute="0"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* gray-300 */
+    border-top: 2px solid #d1d5db;
+    z-index: 5;
+}
+
+/* テーブルボディに表示する区切り線（正時以外の10分ごと） */
+.time-border[data-minute="10"]::before,
+.time-border[data-minute="20"]::before,
+.time-border[data-minute="30"]::before,
+.time-border[data-minute="40"]::before,
+.time-border[data-minute="50"]::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* gray-300 */
+    border-top: 1px solid #d1d5db;
+    z-index: 5;
+}
+
+
+/* ===== 出演情報 ===== */
+/* 5分刻みの高さを rem で指定 */
+.performance-duration-1 {
+    height: 1rem;
+}
+
+/* 5分 */
+.performance-duration-2 {
+    height: 2rem;
+}
+
+/* 10分 */
+.performance-duration-3 {
+    height: 3rem;
+}
+
+/* 15分 */
+.performance-duration-4 {
+    height: 4rem;
+}
+
+/* 20分 */
+.performance-duration-5 {
+    height: 5rem;
+}
+
+/* 25分 */
+.performance-duration-6 {
+    height: 6rem;
+}
+
+/* 30分 */
+.performance-duration-7 {
+    height: 7rem;
+}
+
+/* 35分 */
+.performance-duration-8 {
+    height: 8rem;
+}
+
+/* 40分 */
+.performance-duration-9 {
+    height: 9rem;
+}
+
+/* 45分 */
+.performance-duration-10 {
+    height: 10rem;
+}
+
+/* 50分 */
+.performance-duration-11 {
+    height: 11rem;
+}
+
+/* 55分 */
+.performance-duration-12 {
+    height: 12rem;
+}
+
+/* 60分 */
+.performance-duration-13 {
+    height: 13rem;
+}
