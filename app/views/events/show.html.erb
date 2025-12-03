@@ -88,7 +88,7 @@
                         </div>
                         <%# 出演情報の出演時間に応じて行数制限の行数を変更する %>
                         <% line_clamp_class = performance.line_clamp_class %>
-                        <p class="font-semibold text-xs leading-3 text-gray-800 <%= line_clamp_class %>">
+                        <p class="font-semibold wrap-break-word text-xs leading-3 text-gray-800 <%= line_clamp_class %>">
                           <%# 出演者名 %>
                           <%= performance.performer.performer_name_tag.name %>
                         </p>
