@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get "events/show"
   # ユーザープロフィール用のルーティング
   resource :profile, only: [ :show, :edit, :update, :destroy ]
 
@@ -10,8 +9,6 @@ Rails.application.routes.draw do
 
   # ユーザー詳細ページ（/users/:username）
   resources :users, only: [ :show ], param: :username
-
-  get "static_pages/index"
 
   # トップページ
   root to: "static_pages#index"
