@@ -17,6 +17,9 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # イベント作成
+  resources :events, only: [ :new, :create ]
+
   # イベント詳細ページ（/:event_key）
   get "/:event_key", to: "events#show", as: :event
 end

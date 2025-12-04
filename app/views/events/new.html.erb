@@ -1,0 +1,27 @@
+<div class="p-4">
+  <h2 class="text-lg font-bold">イベント作成</h2>
+  <%= form_with model: @event, url: events_path do |f| %>
+    <%# Event 本体のエラーメッセージ（description 等） %>
+    <%= render "devise/shared/error_messages", resource: @event %>
+    <div>
+      <%= f.label :event_name_tag, "イベント名" %>
+      <%# fields_for を使って nested attributes の形で name を送る (event[event_name_tag_attributes][name]) %>
+      <%= f.fields_for :event_name_tag do |ff| %>
+        <%= ff.text_field :name, value: @event.event_name_tag&.name, class: "border p-1 w-full", placeholder: "例: みんなのフェス" %>
+      <% end %>
+    </div>
+    <%# EventNameTag のエラーメッセージ %>
+    <% if defined?(@event.event_name_tag) && @event.event_name_tag&.errors&.any? %>
+      <p class="text-red-600 text-sm mt-1">
+        <%= @event.event_name_tag.errors.full_messages.first %>
+      </p>
+    <% end %>
+    <div class="mt-2">
+      <%= f.label :description, "説明" %>
+      <%= f.text_area :description, class: "border p-1 w-full" %>
+    </div>
+    <div class="mt-4">
+      <%= f.submit "作成", class: "px-3 py-1 bg-blue-500 text-white rounded cursor-pointer" %>
+    </div>
+  <% end %>
+</div>

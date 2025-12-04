@@ -1,8 +1,16 @@
 require "test_helper"
 
 class EventsControllerTest < ActionDispatch::IntegrationTest
+  # Devise のテストヘルパーをインクルード
+  include Devise::Test::IntegrationHelpers
+
+  # 各テストの前に実行されるセットアップメソッド
   # fixtures に登録済みの event ラベルを利用
   setup do
+    # Google 認証のテスト用ユーザーを作成
+    @user = users(:one) # fixtures の user を利用
+    # テスト用のログイン状態を再現
+    sign_in @user
     @event = events(:one)
     @day1 = days(:one)
     @day2 = days(:two)
@@ -37,5 +45,37 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     # 他の日付のパフォーマンスが含まれていなければ成功
     assert_select "p", text: @performance1.performer.performer_name_tag.name, count: 0
     assert_select "p", text: @performance2.performer.performer_name_tag.name, count: 0
+  end
+
+  # イベント作成ページを表示
+  test "should new event" do
+    get new_event_url
+    assert_response :success
+  end
+
+  # イベント作成処理（タグ未存在の場合にイベント作成と同時にタグも作成されることを確認）
+  test "should create event and create tag when tag not exists" do
+    event_name = "タグ未存在の名前"
+    # Event と EventNameTag がそれぞれ1件増えることを確認
+    assert_difference([ "Event.count", "EventNameTag.count" ], 1) do
+      post events_url, params: {
+        event: {
+          # ネスト属性でタグ名を送信
+          event_name_tag_attributes: { name: event_name },
+          description: "説明"
+        }
+      }
+    end
+    # 作成されたイベント
+    created_event = Event.last
+    # 作成されたタグ
+    tag = EventNameTag.find_by(name: event_name)
+
+    # タグが作成されていること
+    assert_not_nil tag
+    # イベントに紐付いていること
+    assert_equal tag.id, created_event.event_name_tag_id
+    # 正しいリダイレクト先
+    assert_redirected_to event_path(created_event.event_key)
   end
 end
