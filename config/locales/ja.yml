@@ -2,9 +2,69 @@ ja:
   activerecord:
     models:
       user: "ユーザー"
+      event: "イベント"
+      event_name_tag: "イベント名タグ"
+      event_favorite: "お気に入りイベント"
+      day: "開催日"
+      stage: "ステージ"
+      stage_name_tag: "ステージ名タグ"
+      performer: "出演者"
+      performer_name_tag: "出演者名タグ"
+      performance: "出演情報"
+      performer_favorite: "お気に入り出演者"
+
     attributes:
       user:
         name: "名前"
         email: "メールアドレス"
         username: "ユーザー名"
         description: "自己紹介"
+
+      event:
+        description: "説明"
+        event_key: "イベントキー"
+        event_name_tag_id: "イベント名タグ"
+        is_published: "公開設定"
+        user_id: "作成者"
+
+      event_name_tag:
+        name: "イベント名"
+
+      event_favorite:
+        user_id: "ユーザー"
+        event_id: "イベント"
+
+      day:
+        date: "日付"
+        event_id: "イベント"
+
+      stage:
+        address: "住所"
+        description: "説明"
+        event_id: "イベント"
+        position: "表示順"
+        stage_name_tag_id: "ステージ名タグ"
+
+      stage_name_tag:
+        name: "ステージ名"
+
+      performer:
+        description: "説明"
+        event_id: "イベント"
+        performer_name_tag_id: "出演者名タグ"
+        website_url: "公式サイトURL"
+
+      performer_name_tag:
+        name: "出演者名"
+
+      performance:
+        day_id: "開催日"
+        duration: "出演時間"
+        end_time: "終了時間"
+        performer_id: "出演者"
+        stage_id: "ステージ"
+        start_time: "開始時間"
+
+      performer_favorite:
+        user_id: "ユーザー"
+        performer_id: "出演者"
