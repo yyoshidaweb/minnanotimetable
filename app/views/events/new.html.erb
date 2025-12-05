@@ -1,5 +1,6 @@
-<div class="p-4">
-  <h2 class="text-lg font-bold">イベント作成</h2>
+<div class="p-4" 
+     data-controller="tag-suggestion"
+     data-tag-suggestion-url-value="<%= search_event_name_tags_path %>">
   <%= form_with model: @event, url: events_path do |f| %>
     <%# Event 本体のエラーメッセージ（description 等） %>
     <%= render "devise/shared/error_messages", resource: @event %>
@@ -7,11 +8,21 @@
       <%= f.label :event_name_tag, "イベント名" %>
       <%# fields_for を使って nested attributes の形で name を送る (event[event_name_tag_attributes][name]) %>
       <%= f.fields_for :event_name_tag do |ff| %>
-        <%= ff.text_field :name, value: @event.event_name_tag&.name, class: "border p-1 w-full", placeholder: "例: みんなのフェス" %>
+        <%= ff.text_field :name,
+              value: @event.event_name_tag&.name,
+              class: "border p-1 w-full",
+              data: { 
+                tag_suggestion_target: "input",
+                action: "input->tag-suggestion#search"
+              }
+        %>
+        <%# イベント名タグ候補表示 %>
+        <div data-tag-suggestion-target="results">
+        </div>
       <% end %>
     </div>
     <%# EventNameTag のエラーメッセージ %>
-    <% if defined?(@event.event_name_tag) && @event.event_name_tag&.errors&.any? %>
+    <% if @event.event_name_tag&.errors&.any? %>
       <p class="text-red-600 text-sm mt-1">
         <%= @event.event_name_tag.errors.full_messages.first %>
       </p>

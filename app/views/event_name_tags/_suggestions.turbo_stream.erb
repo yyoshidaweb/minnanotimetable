@@ -1,0 +1,11 @@
+<div id="tag-suggestions" class="border border-gray-200 bg-white mt-1 rounded">
+  <% tags.each do |tag| %>
+    <button 
+      class="block w-full text-left p-1 border-b border-gray-100 hover:bg-gray-100 cursor-pointer"
+      data-action="click->tag-suggestion#choose"
+      data-tag-suggestion-name-value="<%= tag.name %>"
+      >
+      <%= tag.name %>
+    </button>
+  <% end %>
+</div>
