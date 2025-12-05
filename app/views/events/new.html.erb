@@ -1,32 +1,43 @@
-<div class="p-4" 
+<div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg"
      data-controller="tag-suggestion"
      data-tag-suggestion-url-value="<%= search_event_name_tags_path %>">
-  <%= form_with model: @event, url: events_path do |f| %>
-    <%# Event 本体のエラーメッセージ（description 等） %>
+  <%= form_with model: @event, url: events_path, class: "space-y-6" do |f| %>
+    <%# エラーメッセージ %>
     <%= render "devise/shared/error_messages", resource: @event %>
+    <%# ─ イベント名（タグ入力＋候補表示） ─ %>
     <div>
-      <%= f.label :event_name_tag, "イベント名" %>
+      <%= f.label :event_name_tag, "イベント名", class: "block text-sm font-semibold text-gray-800 mb-1" %>
       <%# fields_for を使って nested attributes の形で name を送る (event[event_name_tag_attributes][name]) %>
       <%= f.fields_for :event_name_tag do |ff| %>
         <%= ff.text_field :name,
-              value: @event.event_name_tag&.name,
-              class: "border p-1 w-full",
-              data: { 
-                tag_suggestion_target: "input",
-                action: "input->tag-suggestion#search"
-              }
-        %>
-        <%# イベント名タグ候補表示 %>
-        <div data-tag-suggestion-target="results">
-        </div>
+          value: @event.event_name_tag&.name,
+          class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800 
+                  focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800",
+          data: {
+            tag_suggestion_target: "input",
+            action: "input->tag-suggestion#search"
+          } %>
+        <%# タグ候補（ポップアップ表示領域） %>
+        <div class="relative" data-tag-suggestion-target="results"></div>
       <% end %>
     </div>
-    <div class="mt-2">
-      <%= f.label :description, "説明" %>
-      <%= f.text_area :description, class: "border p-1 w-full" %>
+    <%# 説明欄 %>
+    <div>
+      <%= f.label :description, "説明", class: "block text-sm font-semibold text-gray-800 mb-1" %>
+      <%= f.text_area :description,
+        class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800
+                focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800 min-h-24 resize-none",
+        rows: 3,
+        data: {
+          controller: "autosize",
+          action: "input->autosize#resize",
+          autosize_target: "textarea"
+        } %>
     </div>
-    <div class="mt-4">
-      <%= f.submit "作成", class: "px-3 py-1 bg-blue-500 text-white rounded cursor-pointer" %>
+    <%# 作成ボタン %>
+    <div>
+      <%= f.submit "作成",
+        class: "w-full py-2 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition cursor-pointer" %>
     </div>
   <% end %>
 </div>
