@@ -26,9 +26,9 @@ export default class extends Controller {
         })
     }
 
-    search(event) {
+    search(tag) {
         // 現在の入力値を取得
-        const query = event.target.value
+        const query = tag.target.value
 
         // 空文字なら候補を消して終了
         if (query.length === 0) {
@@ -47,9 +47,9 @@ export default class extends Controller {
             })
     }
 
-    choose(event) {
+    choose(tag) {
         // data-tag-suggestion-name-value に入っている候補名を取得
-        const name = event.target.dataset.tagSuggestionNameValue
+        const name = tag.target.dataset.tagSuggestionNameValue
 
         // 入力欄へ選択した名称を挿入
         this.inputTarget.value = name
