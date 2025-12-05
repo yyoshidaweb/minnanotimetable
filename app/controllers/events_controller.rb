@@ -22,7 +22,10 @@ class EventsController < ApplicationController
     if tag_name.blank?
       # nested object を用意してエラーメッセージをビューで表示させる
       @event.build_event_name_tag(name: tag_name)
+      # 子モデルにエラーを付ける
       @event.event_name_tag.errors.add(:name, :blank)
+      # 親にエラーを伝える（Deviseエラー表示コンポーネントで表示するため）
+      @event.errors.add(:base, @event.event_name_tag.errors.full_messages.first)
       return render :new, status: :unprocessable_entity
     end
 
@@ -120,6 +123,9 @@ class EventsController < ApplicationController
 
   # 許可するパラメーター
   def event_params
-    params.require(:event).permit(:description)
+    params.require(:event).permit(
+      :description,
+      event_name_tag_attributes: [ :name ] # event_name_tagに対するエラーの伝播を許可
+    )
   end
 end

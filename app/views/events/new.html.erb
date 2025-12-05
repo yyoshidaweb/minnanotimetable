@@ -21,12 +21,6 @@
         </div>
       <% end %>
     </div>
-    <%# EventNameTag のエラーメッセージ %>
-    <% if @event.event_name_tag&.errors&.any? %>
-      <p class="text-red-600 text-sm mt-1">
-        <%= @event.event_name_tag.errors.full_messages.first %>
-      </p>
-    <% end %>
     <div class="mt-2">
       <%= f.label :description, "説明" %>
       <%= f.text_area :description, class: "border p-1 w-full" %>

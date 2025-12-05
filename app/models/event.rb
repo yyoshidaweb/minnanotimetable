@@ -21,4 +21,5 @@ class Event < ApplicationRecord
   # ===== バリデーション =====
   validates :event_key, presence: true, uniqueness: true
   validates :event_name_tag, presence: true
+  validates_associated :event_name_tag # event_name_tag のバリデーションエラーを event.errors に自動で伝播させる
 end
