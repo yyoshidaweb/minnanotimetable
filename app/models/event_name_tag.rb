@@ -4,4 +4,7 @@ class EventNameTag < ApplicationRecord
 
   # バリデーション
   validates :name, presence: true, uniqueness: true
+
+  # 紐づくイベント数が3件以上のタグだけ取得するスコープ
+  scope :popular, -> { joins(:events).group("event_name_tags.id").having("COUNT(events.id) >= 3") }
 end

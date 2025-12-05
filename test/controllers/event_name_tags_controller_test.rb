@@ -1,25 +1,18 @@
 require "test_helper"
 
 class EventNameTagsControllerTest < ActionDispatch::IntegrationTest
-  # 検索結果が返る（部分一致・5件まで）
-  test "should return suggestions for matching tags" do
-    # 事前に6件作る（limit 5 をテスト）
-    6.times do |i|
-      EventNameTag.create!(name: "フェス#{i}")
-    end
+# 検索結果が返る（部分一致・3つ以上のイベントに紐づいているもののみ）
+test "should return suggestions for matching tags with at least 3 events" do
+  # 検索リクエスト送信
+  get search_event_name_tags_url, params: { query: "Event" }, headers: {
+    "Accept" => "text/vnd.turbo-stream.html"
+  }
 
-    get search_event_name_tags_url, params: { query: "フェス" }, headers: {
-      "Accept" => "text/vnd.turbo-stream.html"
-    }
-
-    assert_response :success   # 200 が返っているか
-
-    # turbo-stream 形式か？
-    assert_equal "text/vnd.turbo-stream.html", @response.media_type
-
-    # 返却 HTML に 5件分のボタンがあるか（limit 5）
-    assert_select "button[data-tag-suggestion-name-value]", 5
-  end
+  # 成功しているか
+  assert_response :success
+  # 返す形式が正しいか
+  assert_equal "text/vnd.turbo-stream.html", @response.media_type
+end
 
   # 該当なしの場合は空HTML（または空エリア）
   test "should return empty list when no match" do

@@ -3,6 +3,7 @@ class EventNameTagsController < ApplicationController
   def search
     query = params[:query].to_s
     @tags = EventNameTag
+              .popular
               .where("LOWER(name) LIKE ?", "%#{query.downcase}%")
               .limit(5)
 
