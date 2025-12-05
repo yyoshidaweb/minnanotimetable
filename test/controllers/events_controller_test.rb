@@ -76,6 +76,6 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     # イベントに紐付いていること
     assert_equal tag.id, created_event.event_name_tag_id
     # 正しいリダイレクト先
-    assert_redirected_to event_path(created_event.event_key)
+    assert_redirected_to edit_timetable_url(created_event.event_key)
   end
 end
