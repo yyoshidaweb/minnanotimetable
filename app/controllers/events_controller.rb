@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   # ログイン必須（show以外）
-  before_action :authenticate_user!, only: [ :new, :create ]
+  before_action :authenticate_user!, only: [ :new, :create, :update ]
 
   # イベント作成ページ表示
   def new
@@ -43,6 +43,38 @@ class EventsController < ApplicationController
     else
       # 保存に失敗したら new を再表示（validation メッセージを @event に持たせる）
       render :new, status: :unprocessable_entity
+    end
+  end
+
+  def edit
+    # 編集対象のイベントを取得
+    @event = current_user.events.find_by!(event_key: params[:event_key])
+    @page_title = "イベント情報編集"
+  end
+
+  def update
+    # 編集対象の Event を取得（作成者が現在のユーザーであることを確認）
+    @event = current_user.events.find_by!(event_key: params[:event_key])
+
+    # フォームで受け取るタグ名（nested attributes の id は無視）
+    tag_name = params.dig(:event, :event_name_tag_attributes, :name)&.strip
+
+    # タグ名が空ならエラーにする
+    if tag_name.blank?
+      @event.build_event_name_tag(name: tag_name) unless @event.event_name_tag
+      @event.event_name_tag.errors.add(:name, :blank)
+      @event.errors.add(:base, @event.event_name_tag.errors.full_messages.first)
+      return render :edit, status: :unprocessable_entity
+    end
+
+    # 既存のタグは更新せず、新しいタグに置き換える
+    @event.event_name_tag = EventNameTag.find_or_create_by!(name: tag_name)
+
+    # Event 本体を更新（description など）
+    if @event.update(event_params.except(:event_name_tag_attributes))
+      redirect_to edit_timetable_url(@event.event_key), notice: "イベントを更新しました"
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 

@@ -25,8 +25,8 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     get "/#{@event.event_key}"
     assert_response :success
     # 全日付へのリンクが含まれている
-    assert_select "a[href=?]", event_path(@event.event_key, d: @day1.date)
-    assert_select "a[href=?]", event_path(@event.event_key, d: @day2.date)
+    assert_select "a[href=?]", show_timetable_path(@event.event_key, d: @day1.date)
+    assert_select "a[href=?]", show_timetable_path(@event.event_key, d: @day2.date)
   end
 
   # 存在しないイベントキーによるタイムテーブル表示失敗のテスト
@@ -37,7 +37,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
 
   # 特定日付指定での表示テスト
   test "should show event with specified date" do
-    get event_path(@event.event_key, d: @day2.date)
+    get show_timetable_path(@event.event_key, d: @day2.date)
     assert_response :success
     # 指定日付の全てのパフォーマンスが含まれている
     assert_select "p", text: @performance3.performer.performer_name_tag.name
@@ -77,5 +77,43 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_equal tag.id, created_event.event_name_tag_id
     # 正しいリダイレクト先
     assert_redirected_to edit_timetable_url(created_event.event_key)
+  end
+
+  # 編集フォームを表示
+  test "should get edit" do
+    get edit_event_url(@event.event_key)
+    assert_response :success
+  end
+
+  test "should not update when tag name is blank" do
+    patch event_url(@event.event_key), params: {
+      event: {
+        description: "説明変更",
+        event_name_tag_attributes: { name: "" }       # 空なので 422
+      }
+    }
+
+    assert_response :unprocessable_entity
+  end
+
+  test "should update event and replace tag" do
+    new_tag_name = "新しいタグ"
+
+    patch event_url(@event.event_key), params: {
+      event: {
+        description: "説明更新",
+        event_name_tag_attributes: { name: new_tag_name }
+      }
+    }
+
+    assert_redirected_to edit_timetable_url(@event.event_key)
+
+    @event.reload
+
+    # イベントのタグが新しいものに置き換わっていること
+    assert_equal new_tag_name, @event.event_name_tag.name
+
+    # Event 本体の値も更新されていること
+    assert_equal "説明更新", @event.description
   end
 end
