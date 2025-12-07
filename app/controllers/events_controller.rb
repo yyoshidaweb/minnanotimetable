@@ -9,6 +9,11 @@ class EventsController < ApplicationController
     @page_title = "作成したイベント一覧"
   end
 
+  def show
+    @event = Event.find_by!(event_key: params[:event_key])
+    @page_title = "#{@event.event_name_tag.name} 概要"
+  end
+
   # イベント作成ページ表示
   def new
     @event = Event.new
@@ -83,9 +88,6 @@ class EventsController < ApplicationController
     else
       render :edit, status: :unprocessable_entity
     end
-  end
-
-  def show
   end
 
   # 削除処理

@@ -15,6 +15,12 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     @other_event = events(:four)
   end
 
+  # イベント詳細表示
+  test "should show event" do
+    get event_url(@event.event_key)
+    assert_response :success
+  end
+
   # 自分が作成したイベント一覧
   test "should index" do
     get events_path

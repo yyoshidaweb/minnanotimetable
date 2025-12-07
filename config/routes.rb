@@ -28,7 +28,7 @@ Rails.application.routes.draw do
   resources :events, only: [ :index, :new, :create ]
 
   # イベント情報編集ページ（/events/:event_key/edit）
-  resources :events, param: :event_key, only: [ :edit, :update, :destroy ]
+  resources :events, param: :event_key, only: [ :edit, :show, :update, :destroy ]
 
   # タイムテーブル編集ページ（/:event_key/edit）
   get "/:event_key/edit", to: "timetables#edit", as: :edit_timetable
