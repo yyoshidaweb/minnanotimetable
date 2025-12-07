@@ -21,6 +21,12 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     @performance4 = performances(:four)
   end
 
+  # 自分が作成したイベント一覧
+  test "should index" do
+    get events_path
+    assert_response :success
+  end
+
   # デフォルト（最古日付）での表示テスト
   test "should show event timetable by event_key" do
     get "/#{@event.event_key}"
@@ -124,7 +130,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
       delete event_url(@event.event_key)
     end
 
-    assert_redirected_to root_path
+    assert_redirected_to events_path
   end
 
   test "should not delete event of another user" do

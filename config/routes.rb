@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   end
 
   # イベント作成
-  resources :events, only: [ :new, :create ]
+  resources :events, only: [ :index, :new, :create ]
 
   # イベント情報編集ページ（/events/:event_key/edit）
   resources :events, param: :event_key, only: [ :edit, :update, :destroy ]

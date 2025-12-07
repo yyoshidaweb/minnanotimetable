@@ -1,6 +1,13 @@
 class EventsController < ApplicationController
   # ログイン必須（show以外）
-  before_action :authenticate_user!, only: [ :new, :create, :update ]
+  before_action :authenticate_user!, only: [ :index, :new, :create, :update ]
+
+  # 作成したイベント一覧
+  def index
+    # 自分が作成したイベントのみ取得（最新順）
+    @events = current_user.events.order(created_at: :desc)
+    @page_title = "作成したイベント一覧"
+  end
 
   # イベント作成ページ表示
   def new
@@ -156,7 +163,7 @@ class EventsController < ApplicationController
     # 削除対象の Event を取得（作成者が現在のユーザーであることを確認）
     @event = current_user.events.find_by!(event_key: params[:event_key])
     @event.destroy!
-    redirect_to root_path, notice: "イベントを削除しました"
+    redirect_to events_path, notice: "イベントを削除しました"
   end
 
   private
