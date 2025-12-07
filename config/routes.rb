@@ -34,5 +34,5 @@ Rails.application.routes.draw do
   get "/:event_key/edit", to: "timetables#edit", as: :edit_timetable
 
   # イベント詳細ページ（/:event_key）
-  get "/:event_key", to: "events#show", as: :show_timetable
+  get "/:event_key", to: "timetables#show", as: :show_timetable
 end
