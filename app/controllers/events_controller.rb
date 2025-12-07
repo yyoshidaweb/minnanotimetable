@@ -151,6 +151,14 @@ class EventsController < ApplicationController
     @show_event_header = true
   end
 
+  # 削除処理
+  def destroy
+    # 削除対象の Event を取得（作成者が現在のユーザーであることを確認）
+    @event = current_user.events.find_by!(event_key: params[:event_key])
+    @event.destroy!
+    redirect_to root_path, notice: "イベントを削除しました"
+  end
+
   private
 
   # 許可するパラメーター

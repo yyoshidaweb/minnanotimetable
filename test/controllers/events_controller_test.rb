@@ -12,6 +12,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     # テスト用のログイン状態を再現
     sign_in @user
     @event = events(:one)
+    @other_event = events(:four)
     @day1 = days(:one)
     @day2 = days(:two)
     @performance1 = performances(:one)
@@ -89,7 +90,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     patch event_url(@event.event_key), params: {
       event: {
         description: "説明変更",
-        event_name_tag_attributes: { name: "" }       # 空なので 422
+        event_name_tag_attributes: { name: "" }
       }
     }
 
@@ -115,5 +116,21 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
 
     # Event 本体の値も更新されていること
     assert_equal "説明更新", @event.description
+  end
+
+  # イベント削除処理
+  test "should delete event" do
+    assert_difference("Event.count", -1) do
+      delete event_url(@event.event_key)
+    end
+
+    assert_redirected_to root_path
+  end
+
+  test "should not delete event of another user" do
+    # 他人のイベント削除は失敗し、Event.count は変化しない
+    assert_no_difference "Event.count" do
+      delete event_url(@other_event.event_key)
+    end
   end
 end
