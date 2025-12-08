@@ -15,9 +15,9 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     @other_event = events(:four)
   end
 
-  # イベント詳細表示
-  test "should show event" do
-    get event_url(@event.event_key)
+  # 他者が作成したイベント詳細も表示できる
+  test "should show event by other user" do
+    get event_url(@other_event.event_key)
     assert_response :success
   end
 
@@ -65,17 +65,13 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should not update when tag name is blank" do
-    patch event_url(@event.event_key), params: {
-      event: {
-        description: "説明変更",
-        event_name_tag_attributes: { name: "" }
-      }
-    }
-
-    assert_response :unprocessable_entity
+  # 他者が作成した編集フォームは表示できない
+  test "should not get edit form of other user's event" do
+    get edit_event_url(@other_event.event_key)
+    assert_response :not_found
   end
 
+  # イベント編集処理
   test "should update event and replace tag" do
     new_tag_name = "新しいタグ"
 
@@ -97,19 +93,42 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "説明更新", @event.description
   end
 
+  # イベント名が空文字の場合は編集できない
+  test "should not update when tag name is blank" do
+    patch event_url(@event.event_key), params: {
+      event: {
+        description: "説明変更",
+        event_name_tag_attributes: { name: "" }
+      }
+    }
+
+    assert_response :unprocessable_entity
+  end
+
+  # 他者が作成したイベントは編集できない
+  test "should not update other user's event" do
+    patch event_url(@other_event.event_key), params: {
+      event: {
+        description: "説明変更",
+        event_name_tag_attributes: { name: "" }
+      }
+    }
+    assert_response :not_found
+  end
+
   # イベント削除処理
   test "should delete event" do
     assert_difference("Event.count", -1) do
       delete event_url(@event.event_key)
     end
-
     assert_redirected_to events_path
   end
 
+  # 他人のイベント削除は失敗し、Event.count は変化しない
   test "should not delete event of another user" do
-    # 他人のイベント削除は失敗し、Event.count は変化しない
     assert_no_difference "Event.count" do
       delete event_url(@other_event.event_key)
     end
+    assert_response :not_found
   end
 end
