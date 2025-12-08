@@ -2,6 +2,9 @@ class EventsController < ApplicationController
   # ログイン必須（show以外）
   before_action :authenticate_user!, only: [ :index, :new, :create, :update ]
 
+  # ログインユーザーが持つイベントのみ取得するフィルタ（見つからない場合は404エラー）
+  before_action :set_event, only: [ :edit, :update, :destroy ]
+
   # 作成したイベント一覧
   def index
     # 自分が作成したイベントのみ取得（最新順）
@@ -9,6 +12,7 @@ class EventsController < ApplicationController
     @page_title = "作成したイベント一覧"
   end
 
+  # 未ログインでも閲覧可能
   def show
     @event = Event.find_by!(event_key: params[:event_key])
     @page_title = "#{@event.event_name_tag.name} 概要"
@@ -59,15 +63,10 @@ class EventsController < ApplicationController
   end
 
   def edit
-    # 編集対象のイベントを取得
-    @event = current_user.events.find_by!(event_key: params[:event_key])
     @page_title = "イベント情報編集"
   end
 
   def update
-    # 編集対象の Event を取得（作成者が現在のユーザーであることを確認）
-    @event = current_user.events.find_by!(event_key: params[:event_key])
-
     # フォームで受け取るタグ名（nested attributes の id は無視）
     tag_name = params.dig(:event, :event_name_tag_attributes, :name)&.strip
 
@@ -92,13 +91,16 @@ class EventsController < ApplicationController
 
   # 削除処理
   def destroy
-    # 削除対象の Event を取得（作成者が現在のユーザーであることを確認）
-    @event = current_user.events.find_by!(event_key: params[:event_key])
     @event.destroy!
     redirect_to events_path, notice: "イベントを削除しました"
   end
 
   private
+
+  # ログインユーザーが持つイベントのみ取得するフィルタ（見つからない場合は404エラー）
+  def set_event
+    @event = current_user.events.find_by!(event_key: params[:event_key])
+  end
 
   # 許可するパラメーター
   def event_params
