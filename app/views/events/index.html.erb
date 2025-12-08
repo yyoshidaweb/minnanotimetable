@@ -1,0 +1,26 @@
+<%= link_to "タイムテーブル作成",
+            new_event_path,
+            class: "inline-block mb-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+<% if @events.any? %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @events.each do |event| %>
+      <%= link_to edit_timetable_path(event.event_key),
+                  class: "block bg-white shadow-md rounded-lg p-4 border hover:shadow-xl hover:bg-gray-50 transition" do %>
+        <!-- タイトル -->
+        <p class="text-lg font-semibold text-blue-600">
+          <%= event.event_name_tag.name %>
+        </p>
+        <!-- 説明文 -->
+        <p class="text-gray-700 mt-2 line-clamp-2">
+          <%= event.description %>
+        </p>
+        <!-- 作成日 -->
+        <p class="text-xs text-gray-500 mt-3">
+          作成日: <%= l(event.created_at.to_date, format: :default) %>
+        </p>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <p class="text-gray-600">作成したイベントはありません。</p>
+<% end %>

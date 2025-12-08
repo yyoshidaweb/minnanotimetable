@@ -4,4 +4,24 @@ one:
   event_key: "one"
   description: "テスト用フェスイベント"
   is_published: true
-  
+
+two:
+  user: one
+  event_name_tag: one
+  event_key: "two"
+  description: "テスト用フェスイベント"
+  is_published: true
+
+three:
+  user: one
+  event_name_tag: one
+  event_key: "three"
+  description: "テスト用フェスイベント"
+  is_published: true
+
+four:
+  user: two
+  event_name_tag: one
+  event_key: "four"
+  description: "テスト用フェスイベント"
+  is_published: true

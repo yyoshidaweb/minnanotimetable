@@ -14,4 +14,12 @@ class Event < ApplicationRecord
 
   # イベントをお気に入り登録しているユーザーの一覧を取得したいときに使うエイリアス
   has_many :favorited_users, through: :event_favorites, source: :user
+
+  # nested attributes を許可（フォームで fields_for を使うため）
+  accepts_nested_attributes_for :event_name_tag, update_only: false
+
+  # ===== バリデーション =====
+  validates :event_key, presence: true, uniqueness: true
+  validates :event_name_tag, presence: true
+  validates_associated :event_name_tag # event_name_tag のバリデーションエラーを event.errors に自動で伝播させる
 end

@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get "events/show"
   # ユーザープロフィール用のルーティング
   resource :profile, only: [ :show, :edit, :update, :destroy ]
 
@@ -11,8 +10,6 @@ Rails.application.routes.draw do
   # ユーザー詳細ページ（/users/:username）
   resources :users, only: [ :show ], param: :username
 
-  get "static_pages/index"
-
   # トップページ
   root to: "static_pages#index"
 
@@ -20,6 +17,22 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # イベントタグ名候補表示のための検索機能
+  resources :event_name_tags, only: [] do
+    collection do
+      get :search   # /event_name_tags/search
+    end
+  end
+
+  # イベント作成
+  resources :events, only: [ :index, :new, :create ]
+
+  # イベント情報編集ページ（/events/:event_key/edit）
+  resources :events, param: :event_key, only: [ :edit, :show, :update, :destroy ]
+
+  # タイムテーブル編集ページ（/:event_key/edit）
+  get "/:event_key/edit", to: "timetables#edit", as: :edit_timetable
+
   # イベント詳細ページ（/:event_key）
-  get "/:event_key", to: "events#show", as: :event
+  get "/:event_key", to: "timetables#show", as: :show_timetable
 end
