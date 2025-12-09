@@ -5,3 +5,7 @@ one:
 two:
   event: one
   date: <%= Date.current + 1.day %>
+
+three:
+  event: four
+  date: <%= Date.current + 2.day %>
