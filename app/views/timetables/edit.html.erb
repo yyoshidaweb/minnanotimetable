@@ -1,3 +1,16 @@
 <div>
-  <%= link_to "イベント情報編集", edit_event_path %>
+  <%= link_to "イベント情報編集", edit_event_path %><br>
+  <h2>開催日</h2>
+  <ul>
+    <% @event.days.each do |day| %>
+      <li class="flex mt-2"><%= day.date.strftime("%-m/%-d") %>：
+        <%= button_to "開催日（#{day.date.strftime("%-m/%-d")}）を削除する",
+              event_day_path(@event.event_key, day),
+              method: :delete,
+              data: { turbo_confirm: "⚠️ 削除しますか？ 一度削除すると元に戻せません" },
+              class: "py-2 rounded-md bg-red-500 text-white hover:bg-red-600 hover:text-white transition cursor-pointer" %>
+      </li>
+    <% end %>
+  </ul>
+  <%= link_to "開催日を追加", new_event_day_url(@event.event_key) %>
 </div>
