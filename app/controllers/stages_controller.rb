@@ -57,6 +57,29 @@ class StagesController < ApplicationController
 
   # ステージ編集処理
   def update
+    # フォームのタグ名を取得
+    tag_name = params.dig(:stage, :stage_name_tag_attributes, :name)&.strip
+
+    # タグ名が空欄ならエラー
+    if tag_name.blank?
+      # 既存の nested attributes 用オブジェクトを差し込む
+      @stage.build_stage_name_tag(name: tag_name) unless @stage.stage_name_tag
+      # 子モデルにエラーを付ける
+      @stage.stage_name_tag.errors.add(:name, :blank)
+      # 親にエラーを伝える
+      @stage.errors.add(:base, @stage.stage_name_tag.errors.full_messages.first)
+      return render :edit, status: :unprocessable_entity
+    end
+
+    # 既存のタグは更新せず、新しいタグに置き換える
+    @stage.stage_name_tag = StageNameTag.find_or_create_by!(name: tag_name)
+
+    # Stage本体を更新（ネストされたフィールドを除く）
+    if @stage.update(stage_params.except(:stage_name_tag_attributes))
+      redirect_to edit_timetable_path(@event.event_key), notice: "ステージを更新しました。"
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   # ステージ削除処理

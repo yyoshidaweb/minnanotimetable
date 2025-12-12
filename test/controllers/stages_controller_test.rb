@@ -130,6 +130,69 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to edit_timetable_path(@event_two.event_key)
   end
 
+  # ステージ編集ページ
+  test "should get edit stage" do
+    stage = @event.stages.first
+    get edit_event_stage_url(@event.event_key, stage)
+    assert_response :success
+  end
+
+  # 他者のステージ編集ページはアクセスできない
+  test "should not get edit of other user's event" do
+    stage = @event.stages.first
+    get edit_event_stage_url(@other_event.event_key, stage)
+    assert_response :not_found
+  end
+
+# ステージ編集処理
+test "should update stage and replace tag" do
+  stage = @event.stages.first
+  new_tag_name = "新しいタグ"
+
+  patch event_stage_url(@event.event_key, stage), params: {
+    stage: {
+      description: "説明更新",
+      address: "住所更新",
+      stage_name_tag_attributes: { name: new_tag_name }
+    }
+  }
+  assert_redirected_to edit_timetable_url(@event.event_key)
+  stage.reload
+  # ステージのタグが新しいものに置き換わっていること
+  assert_equal new_tag_name, stage.stage_name_tag.name
+  # Stage 本体の値も更新されていること
+  assert_equal "説明更新", stage.description
+  assert_equal "住所更新", stage.address
+end
+
+  # ステージ名が空文字の場合は編集できない
+  test "should not update stage when tag name is blank" do
+    stage = @event.stages.first
+    patch event_stage_url(@event.event_key, stage), params: {
+      stage: {
+        description: "説明変更",
+        address: "住所変更",
+        stage_name_tag_attributes: { name: "" }
+      }
+    }
+
+    assert_response :unprocessable_entity
+  end
+
+  # 他者が作成したステージは編集できない
+  test "should not update other user's stage" do
+    stage = @other_event.stages.first
+    patch event_stage_url(@other_event.event_key, stage), params: {
+      stage: {
+        description: "説明変更",
+        address: "住所変更",
+        stage_name_tag_attributes: { name: "" }
+      }
+    }
+
+    assert_response :not_found
+  end
+
   # ステージ削除
   test "should destroy stage" do
     assert_difference("@event.stages.count", -1) do
