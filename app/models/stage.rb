@@ -16,4 +16,6 @@ class Stage < ApplicationRecord
 
   # イベント内のステージはユニーク
   validates :stage_name_tag, presence: true, uniqueness: { scope: :event_id }
+
+  validates :address, length: { maximum: 50 }
 end

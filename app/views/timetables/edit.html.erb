@@ -22,5 +22,6 @@
     <% end %>
   </ul>
   <%= link_to "開催日を追加", new_event_day_url(@event.event_key) %><br>
-  <%= link_to "ステージを追加", new_event_stage_url(@event.event_key) %>
+  <%= link_to "ステージを追加", new_event_stage_url(@event.event_key) %><br>
+  <%= link_to "ステージ一覧", event_stages_url(@event.event_key) %>
 </div>

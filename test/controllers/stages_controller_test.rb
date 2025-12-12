@@ -30,6 +30,21 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # ステージ詳細
+  test "should get show stage" do
+    stage = @event.stages.first
+    get event_stage_url(@event.event_key, stage)
+    assert_response :success
+  end
+
+  # 未ログインでもステージ詳細にアクセス可能
+  test "should get show stage with logout" do
+    sign_out @user
+    stage = @event.stages.first
+    get event_stage_url(@event.event_key, stage)
+    assert_response :success
+  end
+
   # ステージ追加ページ
   test "should get new" do
     get new_event_stage_url(@event.event_key)
