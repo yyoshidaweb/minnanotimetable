@@ -17,16 +17,31 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     @current_day = Date.current
   end
 
-  # ステージ一覧ページ
+  # 出演者一覧ページ
   test "should get index" do
     get event_performers_url(@event.event_key)
     assert_response :success
   end
 
-  # 未ログインでもステージ一覧ページにアクセス可能
+  # 未ログインでも出演者一覧ページにアクセス可能
   test "should get index with logout" do
     sign_out @user
     get event_performers_url(@event.event_key)
+    assert_response :success
+  end
+
+  # 出演者詳細
+  test "should get show" do
+    performer = @event.performers.first
+    get event_performer_url(@event.event_key, performer)
+    assert_response :success
+  end
+
+  # 未ログインでも出演者詳細にアクセス可能
+  test "should get show with logout" do
+    sign_out @user
+    performer = @event.performers.first
+    get event_performer_url(@event.event_key, performer)
     assert_response :success
   end
 end
