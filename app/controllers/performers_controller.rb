@@ -14,7 +14,8 @@ class PerformersController < ApplicationController
   end
 
   def new
-    @performer = Performer.new
+    @performer = @event.performers.build
+    @performer.build_performer_name_tag
   end
 
   def edit

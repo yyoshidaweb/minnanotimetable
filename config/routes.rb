@@ -31,6 +31,13 @@ Rails.application.routes.draw do
     end
   end
 
+  # 出演者タグ名候補表示のための検索機能
+  resources :performer_name_tags, only: [] do
+    collection do
+      get :search
+    end
+  end
+
   # イベント関連
   resources :events, param: :event_key, only: [ :index, :new, :create, :show, :edit, :update, :destroy ] do
     resources :days, only: [ :new, :create, :destroy ]

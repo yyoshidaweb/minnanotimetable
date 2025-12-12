@@ -44,4 +44,16 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     get event_performer_url(@event.event_key, performer)
     assert_response :success
   end
+
+  # 出演者追加ページ
+  test "should get new" do
+    get new_event_performer_url(@event.event_key)
+    assert_response :success
+  end
+
+  # 他者の出演者追加ページはアクセスできない
+  test "should not get new of other user's event" do
+    get new_event_performer_url(@other_event.event_key)
+    assert_response :not_found
+  end
 end
