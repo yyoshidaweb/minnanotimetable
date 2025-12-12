@@ -24,6 +24,7 @@ ja:
         description: "説明"
         event_key: "イベントキー"
         event_name_tag_id: "イベント名タグ"
+        event_name_tag: "イベント名"
         is_published: "公開設定"
         user_id: "作成者"
 
@@ -44,6 +45,7 @@ ja:
         event_id: "イベント"
         position: "表示順"
         stage_name_tag_id: "ステージ名タグ"
+        stage_name_tag: "ステージ名"
 
       stage_name_tag:
         name: "ステージ名"
@@ -52,6 +54,7 @@ ja:
         description: "説明"
         event_id: "イベント"
         performer_name_tag_id: "出演者名タグ"
+        performer_name_tag: "出演者名"
         website_url: "公式サイトURL"
 
       performer_name_tag:
