@@ -35,6 +35,7 @@ Rails.application.routes.draw do
   resources :events, param: :event_key, only: [ :index, :new, :create, :show, :edit, :update, :destroy ] do
     resources :days, only: [ :new, :create, :destroy ]
     resources :stages, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
+    resources :performers, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
   end
 
 
