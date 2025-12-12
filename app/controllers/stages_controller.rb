@@ -13,7 +13,6 @@ class StagesController < ApplicationController
 
   # ステージ
   def show
-    @stage
   end
 
   # ステージ追加ページ
