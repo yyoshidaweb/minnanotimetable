@@ -1,0 +1,12 @@
+<%# タグ候補表示(data-tag-suggestion-url-valueの指定先を変更することで汎用的に使用可能) %>
+<div id="tag-suggestions" class="absolute w-full border border-gray-200 rounded">
+  <% tags.each do |tag| %>
+    <button 
+      class="block w-full text-left p-1 border-b border-gray-100 bg-white hover:bg-gray-100 cursor-pointer"
+      data-action="click->tag-suggestion#choose"
+      data-tag-suggestion-name-value="<%= tag.name %>"
+      >
+      <%= tag.name %>
+    </button>
+  <% end %>
+</div>
