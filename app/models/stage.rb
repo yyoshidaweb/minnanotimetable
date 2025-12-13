@@ -5,7 +5,8 @@ class Stage < ApplicationRecord
   # ステージをpositionの昇順で取得するためのデフォルトスコープ
   default_scope { order(:position) }
 
-  has_many :performances, dependent: :destroy
+  # 出演情報がある場合も削除可能
+  has_many :performances, dependent: :nullify
 
   # nested attributes を許可（フォームで fields_for を使うため）
   accepts_nested_attributes_for :stage_name_tag, update_only: false
