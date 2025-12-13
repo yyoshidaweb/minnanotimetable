@@ -13,9 +13,11 @@
   <% if @performer.website_url.present? %>
     <div class="mb-6">
       <h2 class="text-md font-bold text-gray-900">Official website</h2>
-      <%= link_to @performer.website_url,
-          @performer.website_url,
-          class: "text-blue-600 hover:border-b border-blue-600 transition cursor-pointer" %>
+      <%# ヘルパーを使用し、URLを検証・整形して表示する %>
+      <%= safe_website_link(@performer,
+          class: "text-blue-600 hover:border-b border-blue-600 transition cursor-pointer",
+          target: "_blank",
+          rel: "noopener noreferrer") %>
     </div>
   <% end %>
   <%# 編集ボタン（作成者のみ） %>
