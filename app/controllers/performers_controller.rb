@@ -18,21 +18,36 @@ class PerformersController < ApplicationController
     @performer.build_performer_name_tag
   end
 
-  def edit
+  def create
+    @performer = @event.performers.build(performer_params)
+
+    # フォームで受け取るタグ名（fields_for で post される形）
+    tag_name = params.dig(:performer, :performer_name_tag_attributes, :name)&.strip
+
+    # タグ名が空ならエラーにする
+    if tag_name.blank?
+      # nested object を用意してエラーメッセージをビューで表示させる
+      @performer.build_performer_name_tag(name: tag_name)
+      # 子モデルにエラーを付ける
+      @performer.performer_name_tag.errors.add(:name, :blank)
+      # 親にエラーを伝える（Deviseエラー表示コンポーネントで表示するため）
+      @performer.errors.add(:base, @performer.performer_name_tag.errors.full_messages.first)
+      return render :new, status: :unprocessable_entity
+    end
+    # 既存のタグがあれば使い、なければ作成（ユニーク制約はunique index により DB レベルで防ぐ）
+    performer_name_tag = PerformerNameTag.find_or_create_by!(name: tag_name)
+
+    # Performer に紐付け
+    @performer.performer_name_tag = performer_name_tag
+
+    if @performer.save
+      redirect_to edit_timetable_path(@event.event_key), notice: "出演者を追加しました。"
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
-  def create
-    @performer = Performer.new(performer_params)
-
-    respond_to do |format|
-      if @performer.save
-        format.html { redirect_to @performer, notice: "Performer was successfully created." }
-        format.json { render :show, status: :created, location: @performer }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @performer.errors, status: :unprocessable_entity }
-      end
-    end
+  def edit
   end
 
   def update

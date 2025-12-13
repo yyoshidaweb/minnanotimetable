@@ -55,7 +55,7 @@ ja:
         event_id: "イベント"
         performer_name_tag_id: "出演者名タグ"
         performer_name_tag: "出演者名"
-        website_url: "公式サイトURL"
+        website_url: "Official website"
 
       performer_name_tag:
         name: "出演者名"
