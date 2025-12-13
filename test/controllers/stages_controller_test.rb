@@ -144,26 +144,26 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-# ステージ編集処理
-test "should update stage and replace tag" do
-  stage = @event.stages.first
-  new_tag_name = "新しいタグ"
+  # ステージ編集処理
+  test "should update stage and replace tag" do
+    stage = @event.stages.first
+    new_tag_name = "新しいタグ"
 
-  patch event_stage_url(@event.event_key, stage), params: {
-    stage: {
-      description: "説明更新",
-      address: "住所更新",
-      stage_name_tag_attributes: { name: new_tag_name }
+    patch event_stage_url(@event.event_key, stage), params: {
+      stage: {
+        description: "説明更新",
+        address: "住所更新",
+        stage_name_tag_attributes: { name: new_tag_name }
+      }
     }
-  }
-  assert_redirected_to edit_timetable_url(@event.event_key)
-  stage.reload
-  # ステージのタグが新しいものに置き換わっていること
-  assert_equal new_tag_name, stage.stage_name_tag.name
-  # Stage 本体の値も更新されていること
-  assert_equal "説明更新", stage.description
-  assert_equal "住所更新", stage.address
-end
+    assert_redirected_to edit_timetable_url(@event.event_key)
+    stage.reload
+    # ステージのタグが新しいものに置き換わっていること
+    assert_equal new_tag_name, stage.stage_name_tag.name
+    # Stage 本体の値も更新されていること
+    assert_equal "説明更新", stage.description
+    assert_equal "住所更新", stage.address
+  end
 
   # ステージ名が空文字の場合は編集できない
   test "should not update stage when tag name is blank" do

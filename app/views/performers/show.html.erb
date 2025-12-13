@@ -1,0 +1,31 @@
+<div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+  <%# 出演者名 %>
+  <h1 class="text-xl font-bold text-gray-900">
+    <%= @performer.performer_name_tag.name %>
+  </h1>
+  <%# 説明 %>
+  <% if @performer.description.present? %>
+    <div class="mb-6">
+      <p class="text-gray-800 whitespace-pre-line"><%= @performer.description %></p>
+    </div>
+  <% end %>
+  <%# Official website %>
+  <% if @performer.website_url.present? %>
+    <div class="mb-6">
+      <h2 class="text-md font-bold text-gray-900">Official website</h2>
+      <%# ヘルパーを使用し、URLを検証・整形して表示する %>
+      <%= safe_website_link(@performer,
+          class: "text-blue-600 hover:border-b border-blue-600 transition cursor-pointer",
+          target: "_blank",
+          rel: "noopener noreferrer") %>
+    </div>
+  <% end %>
+  <%# 編集ボタン（作成者のみ） %>
+  <div>
+    <% if @event.user == current_user %>
+      <%= link_to "編集",
+          edit_event_performer_path(@event.event_key, @performer),
+          class: "flex justify-center w-full py-2 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition cursor-pointer" %>
+    <% end %>
+  </div>
+</div>

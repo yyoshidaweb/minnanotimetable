@@ -1,0 +1,22 @@
+<%= link_to "出演者作成",
+            new_event_performer_path(@event.event_key),
+            class: "inline-block mb-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+<% if @performers.any? %>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @performers.each do |performer| %>
+      <%= link_to event_performer_path(@event.event_key, performer),
+                  class: "block bg-white shadow-md rounded-lg p-4 border hover:shadow-xl hover:bg-gray-50 transition" do %>
+        <%# 名前 %>
+        <p class="text-lg font-semibold text-blue-600">
+          <%= performer.performer_name_tag.name %>
+        </p>
+        <%# 説明文 %>
+        <p class="text-gray-700 mt-2 line-clamp-2">
+          <%= performer.description %>
+        </p>
+      <% end %>
+    <% end %>
+  </div>
+<% else %>
+  <p class="text-gray-600">出演者はいません。</p>
+<% end %>
