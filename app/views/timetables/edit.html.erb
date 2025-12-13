@@ -11,18 +11,8 @@
               class: "py-2 rounded-md bg-red-500 text-white hover:bg-red-600 hover:text-white transition cursor-pointer" %>
       </li>
     <% end %>
-    <% @event.stages.each do |stage| %>
-      <li class="flex mt-2"><%= stage.stage_name_tag.name %>：
-        <%= button_to "ステージ（#{stage.stage_name_tag.name}）を削除する",
-              event_stage_path(@event.event_key, stage),
-              method: :delete,
-              data: { turbo_confirm: "⚠️ 削除しますか？ 一度削除すると元に戻せません" },
-              class: "py-2 rounded-md bg-red-500 text-white hover:bg-red-600 hover:text-white transition cursor-pointer" %>
-      </li>
-    <% end %>
   </ul>
   <%= link_to "開催日を追加", new_event_day_url(@event.event_key) %><br>
-  <%= link_to "ステージを追加", new_event_stage_url(@event.event_key) %><br>
   <%= link_to "ステージ一覧", event_stages_url(@event.event_key) %><br>
   <%= link_to "出演者一覧", event_performers_url(@event.event_key) %>
 </div>
