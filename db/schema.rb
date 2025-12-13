@@ -51,12 +51,12 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_084144) do
 
   create_table "performances", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.integer "day_id", null: false
-    t.integer "duration", null: false
-    t.time "end_time", null: false
+    t.integer "day_id"
+    t.integer "duration"
+    t.time "end_time"
     t.integer "performer_id", null: false
-    t.integer "stage_id", null: false
-    t.time "start_time", null: false
+    t.integer "stage_id"
+    t.time "start_time"
     t.datetime "updated_at", null: false
     t.index ["day_id"], name: "index_performances_on_day_id"
     t.index ["performer_id"], name: "index_performances_on_performer_id"
