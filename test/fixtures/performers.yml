@@ -17,3 +17,8 @@ four:
   event: one
   performer_name_tag: four
   description: "出演者4の説明"
+
+five:
+  event: four
+  performer_name_tag: one
+  description: "出演者1の説明"

@@ -51,14 +51,28 @@ class PerformersController < ApplicationController
   end
 
   def update
-    respond_to do |format|
-      if @performer.update(performer_params)
-        format.html { redirect_to @performer, notice: "Performer was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @performer }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @performer.errors, status: :unprocessable_entity }
-      end
+    # フォームのタグ名を取得
+    tag_name = params.dig(:performer, :performer_name_tag_attributes, :name)&.strip
+
+    # タグ名が空欄ならエラー
+    if tag_name.blank?
+      # 既存の nested attributes 用オブジェクトを差し込む
+      @performer.build_performer_name_tag(name: tag_name) unless @performer.performer_name_tag
+      # 子モデルにエラーを付ける
+      @performer.performer_name_tag.errors.add(:name, :blank)
+      # 親にエラーを伝える
+      @performer.errors.add(:base, @performer.performer_name_tag.errors.full_messages.first)
+      return render :edit, status: :unprocessable_entity
+    end
+
+    # 既存のタグは更新せず、新しいタグに置き換える
+    @performer.performer_name_tag = PerformerNameTag.find_or_create_by!(name: tag_name)
+
+    # Performer本体を更新（ネストされたフィールドを除く）
+    if @performer.update(performer_params.except(:performer_name_tag_attributes))
+      redirect_to edit_timetable_path(@event.event_key), notice: "出演者を更新しました。"
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 

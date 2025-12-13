@@ -159,4 +159,53 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     get edit_event_performer_url(@other_event.event_key, performer)
     assert_response :not_found
   end
+
+  # 出演者編集処理
+  test "should update performer and replace tag" do
+    performer = @event.performers.first
+    new_tag_name = "新しいタグ"
+
+    patch event_performer_url(@event.event_key, performer), params: {
+      performer: {
+        description: "説明更新",
+        website_url: "https://example.com",
+        performer_name_tag_attributes: { name: new_tag_name }
+      }
+    }
+    assert_redirected_to edit_timetable_url(@event.event_key)
+    performer.reload
+    # 出演者のタグが新しいものに置き換わっていること
+    assert_equal new_tag_name, performer.performer_name_tag.name
+    # Performer 本体の値も更新されていること
+    assert_equal "説明更新", performer.description
+    assert_equal "https://example.com", performer.website_url
+  end
+
+  # 出演者名が空文字の場合は編集できない
+  test "should not update performer when tag name is blank" do
+    performer = @event.performers.first
+    patch event_performer_url(@event.event_key, performer), params: {
+      performer: {
+        description: "説明変更",
+        website_url: "https://example.com",
+        performer_name_tag_attributes: { name: "" }
+      }
+    }
+
+    assert_response :unprocessable_entity
+  end
+
+  # 他者が作成した出演者は編集できない
+  test "should not update other user's performer" do
+    performer = @other_event.performers.first
+    patch event_performer_url(@other_event.event_key, performer), params: {
+      performer: {
+        description: "説明変更",
+        website_url: "https://example.com",
+        performer_name_tag_attributes: { name: "新しい名前" }
+      }
+    }
+
+    assert_response :not_found
+  end
 end
