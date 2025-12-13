@@ -208,4 +208,20 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :not_found
   end
+
+  # 出演者削除
+  test "should destroy performer" do
+    assert_difference("@event.performers.count", -1) do
+      delete event_performer_path(@event.event_key, @event.performers.first)
+    end
+    assert_redirected_to edit_timetable_path(@event.event_key)
+  end
+
+  # 他者の出演者は削除できない
+  test "should not destroy other user's performer" do
+    assert_no_difference("@other_event.performers.count", -1) do
+      delete event_performer_path(@other_event.event_key, @other_event.performers.first)
+    end
+    assert_response :not_found
+  end
 end
