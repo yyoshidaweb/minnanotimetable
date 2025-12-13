@@ -145,4 +145,18 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to edit_timetable_path(@event_two.event_key)
   end
+
+  # 出演者編集ページ
+  test "should get edit performer" do
+    performer = @event.performers.first
+    get edit_event_performer_url(@event.event_key, performer)
+    assert_response :success
+  end
+
+  # 他者の出演者編集ページはアクセスできない
+  test "should not get edit of other user's event" do
+    performer = @event.performers.first
+    get edit_event_performer_url(@other_event.event_key, performer)
+    assert_response :not_found
+  end
 end
