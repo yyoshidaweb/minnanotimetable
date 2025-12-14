@@ -2,8 +2,8 @@ class Performer < ApplicationRecord
   belongs_to :event
   belongs_to :performer_name_tag
 
-  # 出演情報と紐づいている出演者は削除できない
-  has_many :performances, dependent: :restrict_with_exception
+  # 出演者を削除すると、紐づいている出演情報も全て削除される
+  has_many :performances, dependent: :destroy
   has_many :performer_favorites, dependent: :destroy
 
   # 出演者をお気に入り登録しているユーザーの一覧を取得したいときに使うエイリアス

@@ -7,19 +7,21 @@ class PerformerTest < ActiveSupport::TestCase
     @day = days(:one)
   end
 
-  # 出演情報と紐づいている出演者は削除できない
-  test "should not destroy performer when performances exist" do
+  # 出演者を削除すると紐づいている出演情報も削除される
+  test "should destroy performer" do
     performer = @performer
     performance = performances(:one)
 
     assert_equal performer.id, performance.performer_id
 
-    assert_raises(ActiveRecord::DeleteRestrictionError) do
-      performer.destroy
+    assert_difference("Performer.count", -1) do
+      assert_difference("Performance.count", -1) do
+        performer.destroy
+      end
     end
-    performance.reload
-
-    # Performer が削除されていないこと
-    assert Performer.exists?(performer.id)
+    # 削除されたことを確認
+    assert_raises(ActiveRecord::RecordNotFound) do
+      performance.reload
+    end
   end
 end

@@ -51,6 +51,6 @@
   <%= button_to "削除",
               event_performer_path(@event.event_key, @performer),
               method: :delete,
-              data: { turbo_confirm: "⚠️ 削除しますか？ 一度削除すると元に戻せません" },
+              data: { turbo_confirm: "⚠️ この出演者に紐づく出演情報もすべて削除されます。 本当に削除しますか？" },
               class: "flex justify-center w-full mt-24 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 hover:text-white transition cursor-pointer" %>
 </div>
