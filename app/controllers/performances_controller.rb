@@ -3,14 +3,17 @@ class PerformancesController < ApplicationController
   before_action :set_event
   # 所有者本人のみアクセス可能
   before_action :authorize_event!
+  # === 出演者、開催日、ステージをセット ===
+  before_action :set_performers, only: %i[ new create edit update ]
+  before_action :set_days, only: %i[ new create edit update ]
+  before_action :set_stages, only: %i[ new create edit update ]
+  # 出演情報をセット
   before_action :set_performance, only: %i[ edit update destroy ]
+  # ページタイトル設定
   before_action :set_page_title, except: %i[ destroy ]
 
   def new
     @performance = Performance.for_event(@event).build
-    @performers = @event.performers.order_by_name
-    @days = @event.days.order(:date)
-    @stages = @event.stages
   end
 
   # GET /performances/1/edit
@@ -69,6 +72,21 @@ class PerformancesController < ApplicationController
     # 出演情報を取得
     def set_performance
       Performance.for_event(@event).find(params[:id])
+    end
+
+    # 出演者を取得
+    def set_performers
+      @performers = @event.performers.order_by_name
+    end
+
+    # 開催日を取得
+    def set_days
+      @days = @event.days.order(:date)
+    end
+
+    # ステージを取得
+    def set_stages
+      @stages = @event.stages
     end
 
     # ページタイトルを設定
