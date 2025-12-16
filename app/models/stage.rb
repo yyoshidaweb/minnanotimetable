@@ -19,4 +19,9 @@ class Stage < ApplicationRecord
   validates :stage_name_tag, presence: true, uniqueness: { scope: :event_id }
 
   validates :address, length: { maximum: 50 }
+
+  # フォームや一覧表示用の名前
+  def display_name
+    stage_name_tag.name
+  end
 end
