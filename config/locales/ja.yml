@@ -61,11 +61,11 @@ ja:
         name: "出演者名"
 
       performance:
-        day_id: "開催日"
+        day: "開催日"
         duration: "出演時間"
         end_time: "終了時間"
-        performer_id: "出演者"
-        stage_id: "ステージ"
+        performer: "出演者"
+        stage: "ステージ"
         start_time: "開始時間"
 
       performer_favorite:

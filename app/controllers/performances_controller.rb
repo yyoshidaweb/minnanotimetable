@@ -13,26 +13,20 @@ class PerformancesController < ApplicationController
   before_action :set_page_title, except: %i[ destroy ]
 
   def new
-    @performance = Performance.for_event(@event).build
+    @performance = Performance.new
+  end
+
+  def create
+    @performance = Performance.new(performance_params)
+    if @performance.save
+      redirect_to edit_timetable_path(@event.event_key), notice: "出演情報を作成しました。"
+    else
+      render :new, status: :unprocessable_entity
+    end
   end
 
   # GET /performances/1/edit
   def edit
-  end
-
-  # POST /performances or /performances.json
-  def create
-    @performance = Performance.new(performance_params)
-
-    respond_to do |format|
-      if @performance.save
-        format.html { redirect_to @performance, notice: "Performance was successfully created." }
-        format.json { render :show, status: :created, location: @performance }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @performance.errors, status: :unprocessable_entity }
-      end
-    end
   end
 
   # PATCH/PUT /performances/1 or /performances/1.json
@@ -71,7 +65,7 @@ class PerformancesController < ApplicationController
 
     # 出演情報を取得
     def set_performance
-      Performance.for_event(@event).find(params[:id])
+      @performance = Performance.for_event(@event).find(params[:id])
     end
 
     # 出演者を取得
@@ -105,6 +99,11 @@ class PerformancesController < ApplicationController
     # 許可するパラメーター
     def performance_params
       params.require(:performance).permit(
+        :performer_id,
+        :day_id,
+        :stage_id,
+        :start_time,
+        :end_time
       )
     end
 end
