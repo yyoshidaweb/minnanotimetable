@@ -37,10 +37,10 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
           performer_id: @event.performers.first.id,
           day_id: @event.days.first.id,
           stage_id: @event.stages.first.id,
-          start_hour: "10",
-          start_minute: "00",
-          end_hour: "10",
-          end_minute: "30"
+          start_time_hour: "10",
+          start_time_minute: "00",
+          end_time_hour: "10",
+          end_time_minute: "30"
         }
       }
     end
@@ -65,6 +65,24 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
       post event_performances_path(@event.event_key), params: {
         performance: {
           performer_id: ""
+        }
+      }
+    end
+    assert_response :unprocessable_entity
+  end
+
+  # 時刻が正しくないと出演情報を作成できない
+  test "should not create performance with invalid time" do
+    assert_no_difference("Performance.for_event(@event).count") do
+      post event_performances_path(@event.event_key), params: {
+        performance: {
+          performer_id: @event.performers.first.id,
+          day_id: @event.days.first.id,
+          stage_id: @event.stages.first.id,
+          start_time_hour: "10",
+          start_time_minute: "",
+          end_time_hour: "10",
+          end_time_minute: "30"
         }
       }
     end

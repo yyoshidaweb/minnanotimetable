@@ -21,6 +21,8 @@ class PerformancesController < ApplicationController
     if @performance.save
       redirect_to edit_timetable_path(@event.event_key), notice: "出演情報を作成しました。"
     else
+      # エラー時に select の選択値を保持する
+      restore_time_virtual_attributes
       render :new, status: :unprocessable_entity
     end
   end
@@ -102,12 +104,20 @@ class PerformancesController < ApplicationController
         :performer_id,
         :day_id,
         :stage_id,
-        :start_hour, :start_minute,
-        :end_hour, :end_minute
+        :start_time_hour,
+        :start_time_minute,
+        :end_time_hour,
+        :end_time_minute
       ).tap do |p|
-        # start_time と end_time に変換
-        p[:start_time] = parse_time_from_hour_minute(p.delete(:start_hour), p.delete(:start_minute))
-        p[:end_time]   = parse_time_from_hour_minute(p.delete(:end_hour), p.delete(:end_minute))
+        # hour / minute から Time を組み立てる
+        p[:start_time] = parse_time_from_hour_minute(
+          p[:start_time_hour],
+          p[:start_time_minute]
+        )
+        p[:end_time] = parse_time_from_hour_minute(
+          p[:end_time_hour],
+          p[:end_time_minute]
+        )
       end
     end
 
@@ -115,5 +125,13 @@ class PerformancesController < ApplicationController
     def parse_time_from_hour_minute(hour, minute)
       return nil if hour.blank? || minute.blank?
       Time.zone.local(2000, 1, 1, hour.to_i, minute.to_i)
+    end
+
+    def restore_time_virtual_attributes
+      return unless params[:performance]
+      @performance.start_time_hour   = params[:performance][:start_time_hour]
+      @performance.start_time_minute = params[:performance][:start_time_minute]
+      @performance.end_time_hour     = params[:performance][:end_time_hour]
+      @performance.end_time_minute   = params[:performance][:end_time_minute]
     end
 end

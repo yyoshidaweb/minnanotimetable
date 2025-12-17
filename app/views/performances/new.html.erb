@@ -46,12 +46,12 @@
       <%= f.label :start_time, "開始時刻",
                     class: "block text-sm font-semibold text-gray-800 mb-1" %>
       <div class="flex items-center space-x-2 text-gray-800">
-        <%= f.select :start_hour,
+        <%= f.select :start_time_hour,
               time_select_options[:hours],
               { include_blank: "未定" },
               class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
         <span>:</span>
-        <%= f.select :start_minute,
+        <%= f.select :start_time_minute,
               time_select_options[:minutes],
               { include_blank: "未定" },
               class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
@@ -62,12 +62,12 @@
       <%= f.label :end_time, "終了時刻",
                     class: "block text-sm font-semibold text-gray-800 mb-1" %>
       <div class="flex items-center space-x-2 text-gray-800">
-        <%= f.select :end_hour,
+        <%= f.select :end_time_hour,
               time_select_options[:hours],
               { include_blank: "未定" },
               class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
         <span>:</span>
-        <%= f.select :end_minute,
+        <%= f.select :end_time_minute,
               time_select_options[:minutes],
               { include_blank: "未定" },
               class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
