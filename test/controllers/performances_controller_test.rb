@@ -37,8 +37,10 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
           performer_id: @event.performers.first.id,
           day_id: @event.days.first.id,
           stage_id: @event.stages.first.id,
-          start_time: "12:00",
-          end_time: "12:30"
+          start_hour: "10",
+          start_minute: "00",
+          end_hour: "10",
+          end_minute: "30"
         }
       }
     end

@@ -102,8 +102,18 @@ class PerformancesController < ApplicationController
         :performer_id,
         :day_id,
         :stage_id,
-        :start_time,
-        :end_time
-      )
+        :start_hour, :start_minute,
+        :end_hour, :end_minute
+      ).tap do |p|
+        # start_time と end_time に変換
+        p[:start_time] = parse_time_from_hour_minute(p.delete(:start_hour), p.delete(:start_minute))
+        p[:end_time]   = parse_time_from_hour_minute(p.delete(:end_hour), p.delete(:end_minute))
+      end
+    end
+
+    # 時刻をhourとminuteから作成
+    def parse_time_from_hour_minute(hour, minute)
+      return nil if hour.blank? || minute.blank?
+      Time.zone.local(2000, 1, 1, hour.to_i, minute.to_i)
     end
 end

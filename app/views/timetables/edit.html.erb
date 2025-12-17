@@ -20,6 +20,7 @@
         <li class="flex mt-2"><%= performance.day.date.strftime("%-m/%-d") %></li>
         <li class="flex mt-2"><%= performance.stage.display_name %></li>
         <li class="flex mt-2"><%= performance.start_time.strftime("%H:%M") %>~<%= performance.end_time.strftime("%H:%M") %></li>
+        <li class="flex mt-2"><%= "出演時間#{performance.duration}分" %></li>
       <% end %>
     <% end %>
   </ul>
