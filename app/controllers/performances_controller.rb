@@ -35,16 +35,12 @@ class PerformancesController < ApplicationController
     @performance.end_time_minute   = @performance.end_time&.min
   end
 
-  # PATCH/PUT /performances/1 or /performances/1.json
   def update
-    respond_to do |format|
-      if @performance.update(performance_params)
-        format.html { redirect_to @performance, notice: "Performance was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @performance }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @performance.errors, status: :unprocessable_entity }
-      end
+    if @performance.update(performance_params)
+      redirect_to edit_timetable_path(@event.event_key), notice: "出演情報を更新しました。"
+    else
+      restore_time_virtual_attributes
+      render :edit, status: :unprocessable_entity
     end
   end
 

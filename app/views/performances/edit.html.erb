@@ -1,6 +1,6 @@
 <div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
   <%= form_with model: @performance,
-                url: event_performances_path(@event.event_key, @performance),
+                url: event_performance_path(@event.event_key, @performance),
                 method: :patch,
                 class: "space-y-6" do |f| %>
     <%# エラーメッセージ %>
