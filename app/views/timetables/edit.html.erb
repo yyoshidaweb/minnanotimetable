@@ -1,6 +1,6 @@
 <div>
   <%= link_to "イベント情報編集", edit_event_path %><br>
-  <h2>開催日</h2>
+  <h2>開催日↓</h2>
   <ul>
     <% @event.days.each do |day| %>
       <li class="flex mt-2"><%= day.date.strftime("%-m/%-d") %>：
@@ -12,7 +12,25 @@
       </li>
     <% end %>
   </ul>
+  <h2>出演情報↓</h2>
+  <ul>
+    <% Performance.for_event(@event).each do |performance| %>
+      <li class="flex mt-2"><%= performance.performer.display_name %></li>
+      <div>
+        <div>
+          <% if performance.day && performance.stage && performance.start_time && performance.end_time %>
+            <li class="flex mt-2"><%= performance.day.date.strftime("%-m/%-d") %></li>
+            <li class="flex mt-2"><%= performance.stage.display_name %></li>
+            <li class="flex mt-2"><%= performance.start_time.strftime("%H:%M") %>~<%= performance.end_time.strftime("%H:%M") %></li>
+            <li class="flex mt-2"><%= "出演時間#{performance.duration}分" %></li>
+          <% end %>
+        </div>
+        <%= link_to "#{performance.performer.display_name}を編集", edit_event_performance_url(@event.event_key, performance) %><br>
+      </div>
+    <% end %>
+  </ul>
   <%= link_to "開催日を追加", new_event_day_url(@event.event_key) %><br>
   <%= link_to "ステージ一覧", event_stages_url(@event.event_key) %><br>
-  <%= link_to "出演者一覧", event_performers_url(@event.event_key) %>
+  <%= link_to "出演者一覧", event_performers_url(@event.event_key) %><br>
+  <%= link_to "出演情報を作成", new_event_performance_url(@event.event_key) %>
 </div>

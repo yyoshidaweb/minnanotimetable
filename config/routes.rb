@@ -43,6 +43,7 @@ Rails.application.routes.draw do
     resources :days, only: [ :new, :create, :destroy ]
     resources :stages, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
     resources :performers, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
+    resources :performances, only: [ :new, :create, :edit, :update, :destroy ]
   end
 
 

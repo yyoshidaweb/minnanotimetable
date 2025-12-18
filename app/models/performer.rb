@@ -2,6 +2,7 @@ class Performer < ApplicationRecord
   belongs_to :event
   belongs_to :performer_name_tag
 
+  # 出演者を削除すると、紐づいている出演情報も全て削除される
   has_many :performances, dependent: :destroy
   has_many :performer_favorites, dependent: :destroy
 
@@ -23,4 +24,15 @@ class Performer < ApplicationRecord
             format: { with: URI::DEFAULT_PARSER.make_regexp(%w[http https]),
                       message: "は有効なURL形式で入力してください" },
             allow_blank: true
+
+  # 出演者名の昇順で取得するスコープ
+  scope :order_by_name, -> {
+    joins(:performer_name_tag)
+      .order("performer_name_tags.name ASC")
+  }
+
+  # フォームや一覧表示用の名前
+  def display_name
+    performer_name_tag.name
+  end
 end

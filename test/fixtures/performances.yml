@@ -33,3 +33,12 @@ four:
   start_time: "13:30:00"
   end_time: "14:30:00"
   duration: 30
+
+# ユーザー2の出演情報
+five:
+  day: three
+  performer: five
+  stage: three
+  start_time: "15:00:00"
+  end_time: "15:45:00"
+  duration: 45

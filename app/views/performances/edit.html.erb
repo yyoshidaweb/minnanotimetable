@@ -1,0 +1,88 @@
+<div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+  <%= form_with model: @performance,
+                url: event_performance_path(@event.event_key, @performance),
+                method: :patch,
+                class: "space-y-6" do |f| %>
+    <%# エラーメッセージ %>
+    <%= render "devise/shared/error_messages", resource: @performance %>
+    <%# 出演者（必須） %>
+    <div class="flex items-end mb-1">
+      <%= f.label :performer_id, "出演者",
+                  class: "block text-sm font-semibold text-gray-800" %>
+      <span class="ml-1 text-xs text-red-600">※必須</span>
+    </div>
+    <div>
+      <%= f.collection_select :performer_id,
+                              @performers,
+                              :id,
+                              :display_name,
+                              { prompt: "選択してください" },
+                              { class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800
+                                        focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800" } %>
+    </div>
+    <%# 開催日（任意） %>
+    <div>
+      <%= f.label :day_id, "開催日",
+                  class: "block text-sm font-semibold text-gray-800 mb-1" %>
+      <%= f.collection_select :day_id,
+                              @days,
+                              :id,
+                              :date,
+                              { include_blank: "未定" },
+                              { class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800" } %>
+    </div>
+    <%# ステージ（任意） %>
+    <div>
+      <%= f.label :stage_id, "ステージ",
+                  class: "block text-sm font-semibold text-gray-800 mb-1" %>
+      <%= f.collection_select :stage_id,
+                              @stages,
+                              :id,
+                              :display_name,
+                              { include_blank: "未定" },
+                              { class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800" } %>
+    </div>
+    <%# 開始時刻（任意） %>
+    <div>
+      <%= f.label :start_time, "開始時刻",
+                    class: "block text-sm font-semibold text-gray-800 mb-1" %>
+      <div class="flex items-center space-x-2 text-gray-800">
+        <%= f.select :start_time_hour,
+              time_select_options[:hours],
+              { include_blank: "未定" },
+              class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
+        <span>:</span>
+        <%= f.select :start_time_minute,
+              time_select_options[:minutes],
+              { include_blank: "未定" },
+              class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
+      </div>
+    </div>
+    <%# 終了時刻（任意） %>
+    <div>
+      <%= f.label :end_time, "終了時刻",
+                    class: "block text-sm font-semibold text-gray-800 mb-1" %>
+      <div class="flex items-center space-x-2 text-gray-800">
+        <%= f.select :end_time_hour,
+              time_select_options[:hours],
+              { include_blank: "未定" },
+              class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
+        <span>:</span>
+        <%= f.select :end_time_minute,
+              time_select_options[:minutes],
+              { include_blank: "未定" },
+              class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
+      </div>
+    </div>
+    <%# 更新ボタン %>
+    <div>
+      <%= f.submit "更新",
+        class: "w-full py-2 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition cursor-pointer" %>
+    </div>
+  <% end %>
+  <%= button_to "出演情報を削除する",
+              event_performance_path(@event.event_key, @performance),
+              method: :delete,
+              data: { turbo_confirm: "⚠️ 削除しますか？ 一度削除すると元に戻せません" },
+              class: "w-full mt-24 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 hover:text-white transition cursor-pointer" %>
+</div>
