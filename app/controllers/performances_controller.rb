@@ -44,14 +44,9 @@ class PerformancesController < ApplicationController
     end
   end
 
-  # DELETE /performances/1 or /performances/1.json
   def destroy
     @performance.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to performances_path, notice: "Performance was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    redirect_to edit_timetable_path(@event.event_key), notice: "出演情報を削除しました。", status: :see_other
   end
 
   private
