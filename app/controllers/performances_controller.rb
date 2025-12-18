@@ -27,8 +27,12 @@ class PerformancesController < ApplicationController
     end
   end
 
-  # GET /performances/1/edit
+
   def edit
+    @performance.start_time_hour   = @performance.start_time&.hour
+    @performance.start_time_minute = @performance.start_time&.min
+    @performance.end_time_hour     = @performance.end_time&.hour
+    @performance.end_time_minute   = @performance.end_time&.min
   end
 
   # PATCH/PUT /performances/1 or /performances/1.json

@@ -88,4 +88,16 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     end
     assert_response :unprocessable_entity
   end
+
+  # 出演情報編集ページ
+  test "should get edit" do
+    get edit_event_performance_url(@event.event_key, Performance.for_event(@event).first)
+    assert_response :success
+  end
+
+  # 他者の出演情報編集ページはアクセスできない
+  test "should not get edit of other user's event" do
+    get edit_event_performance_url(@other_event.event_key, Performance.for_event(@other_event).first)
+    assert_response :not_found
+  end
 end
