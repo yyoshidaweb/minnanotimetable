@@ -83,12 +83,17 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Run tests
+      - name: Run tests (fail if 0 runs)
         env:
           RAILS_ENV: test
-          # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:schema:load test
+        run: |
+          set -euo pipefail
+
+          # テストを実行しつつ、0 runs を検知したら失敗
+          if bin/rails db:schema:load test | tee /dev/stderr | grep -q '^0 runs,'; then
+            echo "::error::Minitest executed 0 tests"
+            exit 1
+          fi
 
   system-test:
     runs-on: ubuntu-latest
