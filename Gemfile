@@ -73,9 +73,6 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
-
-  # minitest5.2系を使用
-  gem "minitest", "~> 5.2"
 end
 
 group :development do
