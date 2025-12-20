@@ -1,0 +1,43 @@
+<% if @performances.present? %>
+  <div class="overflow-x-auto">
+    <table class="min-w-full border-collapse">
+      <%# ===== ステージヘッダー ===== %>
+      <thead class="sticky top-0 z-20">
+        <tr>
+          <th class="w-14 bg-white"></th>
+          <% @stages.each do |stage| %>
+            <th class="stage-col text-xs font-bold text-center">
+              <div class="bg-stage py-2">
+                <%= stage.display_name %>
+              </div>
+            </th>
+          <% end %>
+        </tr>
+      </thead>
+      <%# ===== テーブル本体 ===== %>
+      <tbody>
+        <% timetable_hours(@performances).each do |hour| %>
+          <tr class="relative">
+            <%# 時刻列（正時のみ表示） %>
+            <td class="time-cell text-xs text-gray-600 text-center align-top">
+              <span><%= format("%02d:00", hour) %></span>
+            </td>
+            <% @stages.each do |stage| %>
+              <td class="stage-col align-top p-1">
+                <% if perf = performance_at(@performances_by_stage, stage.id, hour) %>
+                  <div class="bg-white rounded shadow text-xs p-1">
+                    <div class="font-semibold leading-tight">
+                      <%= perf.performer.performer_name_tag.name %>
+                    </div>
+                  </div>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-center mt-10">出演情報がありません</p>
+<% end %>
