@@ -1,28 +1,20 @@
 class TimetablesController < ApplicationController
-  # ログイン必須、かつ作成者本人であることをチェック
-  before_action :authorize_event_creator!, only: [ :edit ]
+  # イベントをセット
+  before_action :set_event
+  # 所有者本人のみアクセス可能
+  before_action :authorize_event!, only: %i[ edit ]
+  # === 出演者、開催日、ステージをセット ===
+  before_action :set_performers, only: %i[ show edit ]
+  before_action :set_days, only: %i[ show edit ]
+  before_action :set_stages, only: %i[ show edit ]
+  # 選択された開催日をセット
+  before_action :set_selected_date, only: %i[ show edit ]
+  # タイムテーブル描画に必要な情報がすべて揃った performance を取得
+  before_action :set_timetable_ready_for_event_on_date, only: %i[ show edit ]
+  # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
+  before_action :performances_by_stage, only: %i[ show edit ]
 
   def show
-    # イベント本体と name_tag を同時に取得
-    @event = Event.includes(:event_name_tag)
-                .find_by!(event_key: params[:event_key])
-    # 日付を古い順に取得
-    @days = @event.days.order(:date)
-    # performers に対して name_tag をプリロード
-    @performers = @event.performers.includes(:performer_name_tag)
-    # stages に対して name_tag をプリロード
-    @stages = @event.stages.includes(:stage_name_tag)
-
-    # クエリパラメータから日付を決定
-    @selected_date = params[:d].present? ? Date.parse(params[:d]) : @days.first.date
-
-    # タイムテーブル描画に必要な情報がすべて揃った performance を取得
-    @performances =
-      Performance.timetable_ready_for_event_on_date(@event, @selected_date)
-
-    # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
-    @performances_by_stage = @performances.group_by(&:stage_id)
-
     # ヘッダー非表示フラグ
     @hidden_header = true
     # マージン不要フラグ
@@ -33,21 +25,53 @@ class TimetablesController < ApplicationController
 
   # タイムテーブル編集ページ表示
   def edit
-    # 作成者チェック
-    unless @event.user == current_user
-      redirect_to root_path, alert: "編集権限がありません"
-    end
-    @days = @event.days.includes(:performances)
-    @stages = @event.stages
-    @performers = @event.performers
-    @performances = @event.performances.includes(:day, :stage, :performer)
-    @page_title = "タイムテーブル編集"
+    # ヘッダー非表示フラグ
+    @hidden_header = true
+    # イベント用ヘッダー表示フラグ
+    @show_event_header = true
+    # マージン不要フラグ
+    @no_margin = true
   end
 
   private
+    # イベントを取得
+    def set_event
+      @event = Event.includes(:event_name_tag).find_by!(event_key: params[:event_key])
+    end
 
-  def authorize_event_creator!
-    @event = Event.find_by!(event_key: params[:event_key])
-    redirect_to root_path, alert: "編集権限がありません" unless @event.user == current_user
-  end
+    # イベントの所有者かどうかチェック（異なる場合は404エラーを発生させる）
+    def authorize_event!
+      raise ActiveRecord::RecordNotFound unless @event.user == current_user
+    end
+
+    # 出演者を取得
+    def set_performers
+      @performers = @event.performers.includes(:performer_name_tag).order_by_name
+    end
+
+    # 開催日を取得
+    def set_days
+      @days = @event.days.order(:date)
+    end
+
+    # ステージを取得
+    def set_stages
+      @stages = @event.stages.includes(:stage_name_tag)
+    end
+
+    # 選択された開催日をセット
+    def set_selected_date
+      # クエリパラメータから日付を決定
+      @selected_date = params[:d].present? ? Date.parse(params[:d]) : @days.first.date
+    end
+
+    # タイムテーブル描画に必要な情報がすべて揃った performance を取得
+    def set_timetable_ready_for_event_on_date
+      @performances = Performance.timetable_ready_for_event_on_date(@event, @selected_date)
+    end
+
+    # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
+    def performances_by_stage
+      @performances_by_stage = @performances.group_by(&:stage_id)
+    end
 end
