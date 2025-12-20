@@ -16,17 +16,25 @@
       </thead>
       <%# ===== テーブル本体 ===== %>
       <tbody>
-        <% timetable_hours(@performances).each do |hour| %>
-          <tr class="relative">
-            <%# 時刻列（正時のみ表示） %>
-            <td class="time-cell text-xs text-gray-600 text-center align-top">
-              <span><%= format("%02d:00", hour) %></span>
+        <% time_slots_for_timetable(@performances).each do |hour, minute| %>
+          <tr class="h-16 relative">
+            <%# 時刻列 %>
+            <td class="time-cell sticky left-0 bg-white z-10 px-1">
+              <% if minute == 0 %>
+                <span class="text-xs text-gray-600">
+                  <%= "%02d:00" % hour %>
+                </span>
+              <% end %>
             </td>
             <% @stages.each do |stage| %>
-              <td class="stage-col relative align-top p-1">
-                <% if perf = performance_at(@performances_by_stage, stage.id, hour) %>
-                  <div class="absolute inset-x-1 top-1 bg-white rounded shadow text-xs p-1">
-                    <div class="font-semibold leading-tight">
+              <td class="stage-col relative align-top p-1 h-16">
+                <% if perf = performance_at(@performances_by_stage, stage.id, hour, minute) %>
+                  <% top_class = perf.start_m < 30 ? "top-1" : "top-1/2" %>
+                  <div
+                    class="absolute inset-x-1 <%= top_class %> h-1/2
+                          bg-white rounded shadow text-xs p-1 overflow-hidden"
+                  >
+                    <div class="font-semibold leading-tight truncate">
                       <%= perf.performer.performer_name_tag.name %>
                     </div>
                   </div>
