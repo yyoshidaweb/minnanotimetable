@@ -27,19 +27,26 @@
               <% end %>
             </td>
             <% @stages.each do |stage| %>
-              <td class="stage-col relative align-top p-1 h-16">
-                <% if perf = performance_at(@performances_by_stage, stage.id, hour, minute) %>
-                  <% top_class = perf.start_m < 30 ? "top-1" : "top-1/2" %>
-                  <div
-                    class="absolute inset-x-1 <%= top_class %> h-1/2
-                          bg-white rounded shadow text-xs p-1 overflow-hidden"
-                  >
+              <% perf = performance_at(@performances_by_stage, stage.id, hour, minute) %>
+              <% if perf && performance_starting_at?(perf, hour, minute) %>
+                <td class="stage-col p-1 align-top"
+                    rowspan="<%= perf.slot_span %>">
+                  <div class="bg-white rounded shadow text-xs p-1 h-full overflow-hidden">
+                    <% if perf.duration >= 30 %>
+                      <div class="text-[10px] text-gray-500">
+                        <%= formatted_time(perf.start_time) %>
+                      </div>
+                    <% end %>
                     <div class="font-semibold leading-tight truncate">
                       <%= perf.performer.performer_name_tag.name %>
                     </div>
                   </div>
-                <% end %>
-              </td>
+                </td>
+              <% elsif perf %>
+                <%# rowspan によってすでに使われているセルなので何も描画しない %>
+              <% else %>
+                <td class="stage-col h-16"></td>
+              <% end %>
             <% end %>
           </tr>
         <% end %>

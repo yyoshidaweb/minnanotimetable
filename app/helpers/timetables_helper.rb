@@ -29,4 +29,9 @@ module TimetablesHelper
       [ minute / 60, minute % 60 ]
     end
   end
+
+  # この時間に出演情報カードを描画するか判定する
+  def performance_starting_at?(perf, hour, minute)
+    perf.start_h == hour && perf.start_m == minute
+  end
 end
