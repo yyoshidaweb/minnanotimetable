@@ -57,7 +57,6 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     sign_out @user
     sign_in @user_two
     get edit_timetable_url(@event.event_key)
-    # トップページにリダイレクトされる
-    assert_redirected_to root_url
+    assert_response :not_found
   end
 end
