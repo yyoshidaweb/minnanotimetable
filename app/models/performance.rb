@@ -20,6 +20,57 @@ class Performance < ApplicationRecord
       .where(performers: { event_id: event.id })
   }
 
+  # タイムテーブル描画に必要な情報がすべて揃った performance を取得するスコープ
+  scope :timetable_ready_for_event_on_date, ->(event, date) {
+    joins(:performer, :day, :stage)
+    .where.not(
+      start_time: nil,
+      end_time: nil,
+      duration: nil
+    )
+    .where(performers: { event_id: event.id })
+    .where(days: { date: date })
+    .includes(
+      performer: :performer_name_tag,
+      stage: :stage_name_tag
+    )
+    .order(:start_time)
+  }
+
+  # ==== タイムテーブル表示用メソッド ====
+
+  # 開始時（hour）
+  def start_h
+    start_time.hour
+  end
+
+  # 開始分（minute）
+  def start_m
+    start_time.min
+  end
+
+  # 開始時刻を分単位のキーに変換（並び・位置計算用）
+  def start_key
+    start_time.hour * 60 + start_time.min
+  end
+
+  # hh:mm 形式の開始時刻
+  def formatted_start_time
+    format("%02d:%02d", start_time.hour, start_time.min)
+  end
+
+  # 5分単位に変換した出演時間
+  def duration_in_5_min_units
+    duration / 5
+  end
+
+  # 30分未満は開始時刻を表示しない
+  def show_start_time?
+    duration >= 30
+  end
+
+  # ==== フォーム入力用補助属性 ====
+
   attr_accessor :start_time_hour, :start_time_minute, :end_time_hour, :end_time_minute
 
   private
