@@ -23,9 +23,9 @@
               <span><%= format("%02d:00", hour) %></span>
             </td>
             <% @stages.each do |stage| %>
-              <td class="stage-col align-top p-1">
+              <td class="stage-col relative align-top p-1">
                 <% if perf = performance_at(@performances_by_stage, stage.id, hour) %>
-                  <div class="bg-white rounded shadow text-xs p-1">
+                  <div class="absolute inset-x-1 top-1 bg-white rounded shadow text-xs p-1">
                     <div class="font-semibold leading-tight">
                       <%= perf.performer.performer_name_tag.name %>
                     </div>
