@@ -23,16 +23,6 @@ class TimetablesController < ApplicationController
     # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
     @performances_by_stage = @performances.group_by(&:stage_id)
 
-
-    # 開始時刻が最も早い出演者の出演時刻を取得
-    earliest_time = @performances.min_by(&:start_time).start_time.hour
-    # 終了時刻が最も遅い出演者の出演時刻を取得
-    latest_end_time = @performances.max_by(&:end_time).end_time.hour
-    # 時刻列用の配列を事前に作成する
-    @time_slots = (earliest_time..latest_end_time).flat_map do |hour|
-      (0..55).step(5).map { |minute| [ hour, minute ] }
-    end
-
     # ヘッダー非表示フラグ
     @hidden_header = true
     # マージン不要フラグ

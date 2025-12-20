@@ -69,16 +69,7 @@ class Performance < ApplicationRecord
     duration >= 30
   end
 
-  def line_clamp_class
-    case duration
-    when ..5  then "line-clamp-1"
-    when ..10 then "line-clamp-2"
-    when ..15 then "line-clamp-3"
-    when ..20 then "line-clamp-4"
-    when ..25 then "line-clamp-5"
-    else           "line-clamp-6"
-    end
-  end
+  # ==== フォーム入力用補助属性 ====
 
   attr_accessor :start_time_hour, :start_time_minute, :end_time_hour, :end_time_minute
 
