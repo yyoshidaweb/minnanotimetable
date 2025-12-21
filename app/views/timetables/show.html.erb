@@ -64,9 +64,11 @@
               <td class="stage-col <%= stage_width_class %> min-w-20 max-w-[120px] relative">
                 <% @performances_by_stage[stage.id].each do |performance| %>
                   <% p_duration = performance.duration_in_5_min_units %>
+                  <%# 出演情報カード %>
                   <%= link_to "#",
                       class: "block absolute inset-x-[1px] top-[1px] z-[10]
-                              performance-duration-#{p_duration}" do %>
+                              performance-duration-#{p_duration}",
+                      style: "top: #{performance_top_rem(performance)}rem;" do %>
                     <div class="bg-white rounded-sm p-1 w-full h-full shadow-sm">
                       <% if performance.show_start_time? %>
                         <div class="text-[10px] text-gray-500">
@@ -74,7 +76,7 @@
                         </div>
                       <% end %>
                       <% line_clamp = line_clamp_class_by_duration(performance.duration) %>
-                      <p class="font-semibold text-xs leading-3 <%= line_clamp %>">
+                      <p class="font-semibold text-xs leading-3 wrap-break-word <%= line_clamp %>">
                         <%= performance.performer.performer_name_tag.name %>
                       </p>
                     </div>

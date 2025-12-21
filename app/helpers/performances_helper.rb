@@ -19,13 +19,23 @@ module PerformancesHelper
     total_minutes * rem_per_min
   end
 
+  # タイムテーブル全体の開始時刻（分）
+  def timetable_start_minute
+    # 最初の1回だけ計算して、1リクエスト中は結果を使い回す
+    @timetable_start_minute ||= begin
+      earliest = @performances.min_by(&:start_time).start_time
+      earliest.hour * 60 + earliest.min
+    end
+  end
+
   # performance の開始位置の top を rem で返す
-  def performance_top_rem(performance, timetable_start_min)
-    start_min = performance.start_time.hour * 60 + performance.start_time.min
-    diff_min  = start_min - timetable_start_min
-    rem_per_hour = 13.0
-    rem_per_min  = rem_per_hour / 60.0
-    diff_min * rem_per_min
+  def performance_top_rem(performance)
+  timetable_start_min = timetable_start_minute
+  start_min = performance.start_time.hour * 60 + performance.start_time.min
+  diff_min  = start_min - timetable_start_min
+  rem_per_hour = 13.0
+  rem_per_min  = rem_per_hour / 60.0
+  diff_min * rem_per_min
   end
 
   # タイムテーブル用の時刻スロット配列を生成
