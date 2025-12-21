@@ -32,7 +32,7 @@
             <%# ステージ幅を事前計算 %>
             <% stage_width_class = "w-[calc((100%-2rem)/#{stage_count})]" %>
             <%# ステージを展開 %>
-            <% @stages.each_with_index do |stage, i| %>
+            <% @stages.each do |stage| %>
               <%# ステージ配色は独自CSS"app/assets/stylesheets/event.css"で指定 %>
               <th class="stage-col <%= stage_width_class %> p-1 h-8 text-center text-xs font-bold text-gray-800 tracking-wider sticky top-0 z-100 relative %>">
                 <div class="absolute inset-0 bg-stage pattern z-95"></div>
@@ -49,7 +49,7 @@
         <% timetable_height_rem = timetable_height_rem(@performances) %>
         <tbody style="height: <%= timetable_height_rem %>rem;">
           <tr class="relative">
-            <%# 最も早い開始時刻から最も遅い終了時間までのタイムテーブルを描画する %>
+            <%# 最も早い開始時刻から最も遅い終了時間までの時刻を描画する %>
             <% time_slots_for_timetable(@performances).each do |hour| %>
               <%# 時刻列 - 左側に固定表示 %>
               <td class="h-52 time-cell min-w-5 px-0 h-4 bg-white sticky left-0 z-150 flex items-start justify-center">
