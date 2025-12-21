@@ -52,7 +52,7 @@
             <%# 最も早い開始時刻から最も遅い終了時間までの時刻を描画する %>
             <% time_slots_for_timetable(@performances).each do |hour| %>
               <%# 時刻列 - 左側に固定表示 %>
-              <td class="h-52 time-cell min-w-5 px-0 h-4 bg-white sticky left-0 z-150 flex items-start justify-center">
+              <td class="h-52 time-cell min-w-5 px-0 bg-white sticky left-0 z-150 flex items-start justify-center">
                 <%# 時刻表示 %>
                 <span class="text-xs font-medium text-gray-900 tabular-nums -translate-y-1.5">
                   <%= hour %>
