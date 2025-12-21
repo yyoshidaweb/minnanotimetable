@@ -69,12 +69,6 @@ class Performance < ApplicationRecord
     duration >= 30
   end
 
-  # タイムテーブル表示時に何スロット分使うかを返す
-  def slot_span
-    (duration / 30.0).ceil
-  end
-
-
   # ==== フォーム入力用補助属性 ====
 
   attr_accessor :start_time_hour, :start_time_minute, :end_time_hour, :end_time_minute
