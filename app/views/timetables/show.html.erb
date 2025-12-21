@@ -30,11 +30,11 @@
             <%# ステージ数を事前取得 %>
             <% stage_count = @stages.size %>
             <%# ステージ幅を事前計算 %>
-            <% width = "w-[calc((100%-2rem)/#{stage_count})]" %>
+            <% stage_width_class = "w-[calc((100%-2rem)/#{stage_count})]" %>
             <%# ステージを展開 %>
             <% @stages.each_with_index do |stage, i| %>
               <%# ステージ配色は独自CSS"app/assets/stylesheets/event.css"で指定 %>
-              <th class="stage-col <%= width %> p-1 h-8 text-center text-xs font-bold text-gray-800 tracking-wider sticky top-0 z-100 relative %>">
+              <th class="stage-col <%= stage_width_class %> p-1 h-8 text-center text-xs font-bold text-gray-800 tracking-wider sticky top-0 z-100 relative %>">
                 <div class="absolute inset-0 bg-stage pattern z-95"></div>
                 <div class="relative z-100 flex items-center justify-center">
                   <p class="leading-tight text-center wrap-break-word line-clamp-2">
@@ -57,44 +57,31 @@
                   <%= hour %>
                 </span>
               </td>
+              <%# 出演情報検索用のstart_keyを作成 %>
+              <% current_start_key = hour * 60 + minute %>
               <%# 各ステージの時間枠 %>
-              <% @stages.each_with_index do |stage, stage_index| %>
-                <%# ステージの時間枠と、縦の区切り線の表示 %>
-                <%# ステージより下の部分の配色は独自CSS"app/assets/stylesheets/event.css"で指定 %>
-                <td class="stage-col <%= width %> min-w-20 max-w-[120px] relative">
-                  <%# 横の区切り線の表示（CSS擬似要素） %>
-                  <div class="time-border" data-minute="<%= minute %>">
-                  </div>
-                  <%# ステージごとの出演者を取得（選択日付で絞り込み済み、かつ開始時間でソート、かつステージとグループ化済み） %>
-                  <% stage_performances = @performances_by_stage[stage.id] || [] %>
-                  <%# 出演情報カードの表示 %>
-                  <% stage_performances.each do |performance| %>
-                    <%# セルの位置の開始時刻を文字列に変換したキーとして取得 %>
-                    <% current_start_key = hour * 60 + minute %>
-                    <%# 出演情報の開始時刻を文字列に変換したキーとして取得 %>
-                    <% performance_start_key = performance.start_key %>
-                    <%# ループ中に出演情報の開始時刻キーとセルの開始時刻キーが一致したら描画する %>
-                    <% if performance_start_key == current_start_key %>
-                      <%# 出演情報の高さ（開始〜終了までの分数）を5分刻みで取得する%>
-                      <% p_duration_in_5_min_units = performance.duration_in_5_min_units %>
-                      <%# 出演情報カードのリンク（リンク先は仮の値） %>
-                      <%= link_to "#", class: "block absolute inset-x-[1px] top-[1px] z-[10] performance-duration-#{p_duration_in_5_min_units}" do %>
-                        <%# 出演情報カードの内容 %>
-                        <div class="bg-white rounded-sm p-1 w-full h-full shadow-sm hover:shadow transition-shadow">
-                          <div class="text-xs font-light leading-xs line-clamp-1 text-gray-800">
-                            <%# 出演情報の開始時間を表示（出演時間が30分未満の場合は非表示） %>
-                            <% if performance.show_start_time? %>
-                              <%= formatted_time(performance.start_time) %>
-                            <% end %>
+              <% @stages.each do |stage| %>
+                <td class="stage-col <%= stage_width_class %> min-w-20 max-w-[120px] relative">
+                  <%# 横の区切り線 %>
+                  <div class="time-border" data-minute="<%= minute %>"></div>
+                  <%# 出演情報検索 %>
+                  <% performance = @performance_map.dig(stage.id, current_start_key) %>
+                  <% if performance %>
+                    <% p_duration = performance.duration_in_5_min_units %>
+                    <%= link_to "#",
+                      class: "block absolute inset-x-[1px] top-[1px] z-[10]
+                              performance-duration-#{p_duration}" do %>
+                      <div class="bg-white rounded-sm p-1 w-full h-full shadow-sm">
+                        <% if performance.show_start_time? %>
+                          <div class="text-[10px] text-gray-500">
+                            <%= formatted_time(performance.start_time) %>
                           </div>
-                          <%# 出演情報の出演時間に応じて行数制限の行数を変更する %>
-                          <% line_clamp_class = line_clamp_class_by_duration(performance.duration) %>
-                          <p class="font-semibold wrap-break-word text-xs leading-3 text-gray-800 <%= line_clamp_class %>">
-                            <%# 出演者名 %>
-                            <%= performance.performer.performer_name_tag.name %>
-                          </p>
-                        </div>
-                      <% end %>
+                        <% end %>
+                        <% line_clamp = line_clamp_class_by_duration(performance.duration) %>
+                        <p class="font-semibold text-xs leading-3 <%= line_clamp %>">
+                          <%= performance.performer.performer_name_tag.name %>
+                        </p>
+                      </div>
                     <% end %>
                   <% end %>
                 </td>

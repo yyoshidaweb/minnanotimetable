@@ -13,6 +13,8 @@ class TimetablesController < ApplicationController
   before_action :set_timetable_ready_for_event_on_date, only: %i[ show edit ]
   # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
   before_action :performances_by_stage, only: %i[ show edit ]
+  # ビュー上でパフォーマンスを素早く検索できるようにHash化しておく
+  before_action :set_performance_map, only: %i[ show edit ]
 
   def show
     # ヘッダー非表示フラグ
@@ -73,5 +75,13 @@ class TimetablesController < ApplicationController
     # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
     def performances_by_stage
       @performances_by_stage = @performances.group_by(&:stage_id)
+    end
+
+    # ビュー上でパフォーマンスを素早く検索できるようにHash化しておく
+    def set_performance_map
+      @performance_map = {}
+      @performances_by_stage.each do |stage_id, performances|
+        @performance_map[stage_id] = performances.index_by(&:start_key)
+      end
     end
 end
