@@ -66,9 +66,10 @@
                   <% p_duration = performance.duration_in_5_min_units %>
                   <%# 出演情報カード %>
                   <%= link_to "#",
-                      class: "block absolute inset-x-[1px] top-[1px] z-[10]
-                              performance-duration-#{p_duration}",
-                      style: "top: #{performance_top_rem(performance)}rem;" do %>
+                      class: "block absolute inset-x-[1px] top-[1px] z-[10]",
+                      style: "
+                        top: #{performance_top_rem(performance)}rem;
+                        height: #{performance_height_rem(performance)}rem;" do %>
                     <div class="bg-white rounded-sm p-1 w-full h-full shadow-sm">
                       <% if performance.show_start_time? %>
                         <div class="text-[10px] text-gray-500">

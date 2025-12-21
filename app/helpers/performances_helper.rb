@@ -50,6 +50,14 @@ module PerformancesHelper
     end
   end
 
+  # performance の高さを rem で返す
+  def performance_height_rem(performance)
+    rem_per_hour = 13.0
+    rem_per_min  = rem_per_hour / 60.0
+    duration_min = performance.duration
+    duration_min * rem_per_min
+  end
+
   # 出演時間に応じた line-clamp クラスを返す
   def line_clamp_class_by_duration(duration)
     case duration
