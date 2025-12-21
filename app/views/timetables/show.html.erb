@@ -46,48 +46,43 @@
           </tr>
         </thead>
         <%# タイムテーブル本体 %>
-        <tbody>
-          <%# 最も早い開始時刻から最も遅い終了時間までのタイムテーブルを描画する %>
-          <% time_slots_for_timetable(@performances).each do |hour, minute| %>
-            <tr class="h-4 relative">
+        <% timetable_height_rem = timetable_height_rem(@performances) %>
+        <tbody style="height: <%= timetable_height_rem %>rem;">
+          <tr class="relative">
+            <%# 最も早い開始時刻から最も遅い終了時間までのタイムテーブルを描画する %>
+            <% time_slots_for_timetable(@performances).each do |hour| %>
               <%# 時刻列 - 左側に固定表示 %>
-              <td class="time-cell min-w-5 px-0 h-4 bg-white sticky left-0 z-150 flex items-center justify-center" data-minute="<%= minute %>">
-                <%# 正時のみ表示する場合は CSS で制御可能 %>
+              <td class="h-52 time-cell min-w-5 px-0 h-4 bg-white sticky left-0 z-150 flex items-start justify-center">
+                <%# 時刻表示 %>
                 <span class="text-xs font-medium text-gray-900 tabular-nums -translate-y-1.5">
                   <%= hour %>
                 </span>
               </td>
-              <%# 出演情報検索用のstart_keyを作成 %>
-              <% current_start_key = hour * 60 + minute %>
-              <%# 各ステージの時間枠 %>
-              <% @stages.each do |stage| %>
-                <td class="stage-col <%= stage_width_class %> min-w-20 max-w-[120px] relative">
-                  <%# 横の区切り線 %>
-                  <div class="time-border" data-minute="<%= minute %>"></div>
-                  <%# 出演情報検索 %>
-                  <% performance = @performance_map.dig(stage.id, current_start_key) %>
-                  <% if performance %>
-                    <% p_duration = performance.duration_in_5_min_units %>
-                    <%= link_to "#",
+            <% end %>
+            <%# 各ステージの出演情報 %>
+            <% @stages.each do |stage| %>
+              <td class="stage-col <%= stage_width_class %> min-w-20 max-w-[120px] relative">
+                <% @performances_by_stage[stage.id].each do |performance| %>
+                  <% p_duration = performance.duration_in_5_min_units %>
+                  <%= link_to "#",
                       class: "block absolute inset-x-[1px] top-[1px] z-[10]
                               performance-duration-#{p_duration}" do %>
-                      <div class="bg-white rounded-sm p-1 w-full h-full shadow-sm">
-                        <% if performance.show_start_time? %>
-                          <div class="text-[10px] text-gray-500">
-                            <%= formatted_time(performance.start_time) %>
-                          </div>
-                        <% end %>
-                        <% line_clamp = line_clamp_class_by_duration(performance.duration) %>
-                        <p class="font-semibold text-xs leading-3 <%= line_clamp %>">
-                          <%= performance.performer.performer_name_tag.name %>
-                        </p>
-                      </div>
-                    <% end %>
+                    <div class="bg-white rounded-sm p-1 w-full h-full shadow-sm">
+                      <% if performance.show_start_time? %>
+                        <div class="text-[10px] text-gray-500">
+                          <%= formatted_time(performance.start_time) %>
+                        </div>
+                      <% end %>
+                      <% line_clamp = line_clamp_class_by_duration(performance.duration) %>
+                      <p class="font-semibold text-xs leading-3 <%= line_clamp %>">
+                        <%= performance.performer.performer_name_tag.name %>
+                      </p>
+                    </div>
                   <% end %>
-                </td>
-              <% end %>
-            </tr>
-          <% end %>
+                <% end %>
+              </td>
+            <% end %>
+          </tr>
         </tbody>
       </table>
     </div>
