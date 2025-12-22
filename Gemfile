@@ -75,7 +75,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   # minitest5.2系を使用
-  gem "minitest", "~> 5.2"
+  gem "minitest", "~> 6.0"
 end
 
 group :development do
