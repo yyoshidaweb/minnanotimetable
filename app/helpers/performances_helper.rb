@@ -7,16 +7,15 @@ module PerformancesHelper
     }
   end
 
-  # タイムテーブル全体の高さを rem で返す
+  # タイムテーブル全体の高さを rem で返す（1時間単位）
   def timetable_height_rem(performances)
-    start_min = performances.min_by(&:start_time).start_time.hour * 60 +
-                performances.min_by(&:start_time).start_time.min
-    end_min   = performances.max_by(&:end_time).end_time.hour * 60 +
-                performances.max_by(&:end_time).end_time.min
-    total_minutes = end_min - start_min
+    start_hour = performances.min_by(&:start_time).start_time.hour
+    end_time   = performances.max_by(&:end_time).end_time
+    # 終了時刻は「次の時間」に切り上げ
+    end_hour = end_time.min.zero? ? end_time.hour : end_time.hour + 1
+    total_hours = end_hour - start_hour
     rem_per_hour = 12.0
-    rem_per_min  = rem_per_hour / 60.0
-    total_minutes * rem_per_min
+    total_hours * rem_per_hour
   end
 
   # タイムテーブル全体の開始時刻（分）
