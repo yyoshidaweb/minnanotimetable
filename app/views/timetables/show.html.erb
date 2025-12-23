@@ -33,9 +33,9 @@
         <%# ボディ %>
         <div class="flex relative">
           <%# 時刻列（sticky left） %>
-          <div class="w-5 sticky left-0 -translate-y-2.75 z-150 bg-white">
+          <div class="w-5 sticky left-0 z-150 bg-white">
             <% time_slots_for_timetable(@performances).each do |hour| %>
-              <p class="h-48 text-xs text-center pt-1 tabular-nums">
+              <p class="h-48 text-xs text-center pt-1 tabular-nums -translate-y-2.75">
                 <%= hour %>
               </p>
             <% end %>
