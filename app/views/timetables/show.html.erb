@@ -14,7 +14,7 @@
     <% end %>
   </nav>
   <%# タイムテーブル表示画面のメインコンテナ（画面全体の高さに設定する） %>
-  <div class="h-svh flex flex-col overflow-hidden">
+  <div class="h-svh flex flex-col overflow-hidden pb-[calc(3.5rem+env(safe-area-inset-bottom))]">
     <%# スクロールコンテナ（ヘッダーと日付選択タブの高さ分下げた位置に配置する） %>
     <div class="flex-1 pt-20 overflow-auto relative">
       <%# 横幅確保 %>
@@ -68,6 +68,27 @@
         </div>
       </div>
     </div>
+    <%# 下部タブメニュー %>
+    <nav
+    class="fixed bottom-0 left-0 w-full h-14
+          bg-white border-t z-200
+          pb-[env(safe-area-inset-bottom)]"
+  >
+      <ul class="flex h-full items-center justify-around text-xs">
+        <li class="flex flex-col items-center">
+          <span class="material-symbols-outlined">home</span>
+          <span>ホーム</span>
+        </li>
+        <li class="flex flex-col items-center">
+          <span class="material-symbols-outlined">event</span>
+          <span>イベント</span>
+        </li>
+        <li class="flex flex-col items-center">
+          <span class="material-symbols-outlined">person</span>
+          <span>マイページ</span>
+        </li>
+      </ul>
+    </nav>
   </div>
 <% else %>
   <%# 情報が揃った出演情報が0件の場合 %>
