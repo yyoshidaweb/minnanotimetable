@@ -22,10 +22,10 @@
         <%# ヘッダー行 %>
         <div class="flex sticky top-0 z-110 bg-white">
           <%# 左上空白 %>
-          <div class="sticky left-0 w-5 shrink-0 bg-white z-100"></div>
+          <div class="sticky left-0 w-5 bg-white z-100"></div>
           <%# ステージヘッダー %>
           <% @stages.each do |stage| %>
-            <div class="stage-header-col w-[120px] z-95 shrink-0 border-b text-xs font-bold text-center p-2">
+            <div class="stage-header-col flex-1 min-w-[120px] z-95 border-b text-xs font-bold text-center p-2">
               <%= stage.stage_name_tag.name %>
             </div>
           <% end %>
@@ -33,7 +33,7 @@
         <%# ボディ %>
         <div class="flex relative">
           <%# 時刻列（sticky left） %>
-          <div class="w-5 shrink-0 sticky left-0 -translate-y-2.75 z-150 bg-white">
+          <div class="w-5 sticky left-0 -translate-y-2.75 z-150 bg-white">
             <% time_slots_for_timetable(@performances).each do |hour| %>
               <p class="h-48 text-xs text-center pt-1 tabular-nums">
                 <%= hour %>
@@ -42,7 +42,7 @@
           </div>
           <%# ステージを展開 %>
           <% @stages.each do |stage| %>
-            <div class="timetable-body-col w-[120px] shrink-0 relative"
+            <div class="timetable-body-col flex-1 min-w-[120px] w-[120px] relative"
                 style="height: <%= timetable_height_rem(@performances) %>rem;">
               <%# 各ステージの出演情報を検索 %>
               <% @performances_by_stage[stage.id].each do |performance| %>
