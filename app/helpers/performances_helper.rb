@@ -7,16 +7,15 @@ module PerformancesHelper
     }
   end
 
-  # タイムテーブル全体の高さを rem で返す
+  # タイムテーブル全体の高さを rem で返す（1時間単位）
   def timetable_height_rem(performances)
-    start_min = performances.min_by(&:start_time).start_time.hour * 60 +
-                performances.min_by(&:start_time).start_time.min
-    end_min   = performances.max_by(&:end_time).end_time.hour * 60 +
-                performances.max_by(&:end_time).end_time.min
-    total_minutes = end_min - start_min
+    start_hour = performances.min_by(&:start_time).start_time.hour
+    end_time   = performances.max_by(&:end_time).end_time
+    # 終了時刻は「次の時間」に切り上げ
+    end_hour = end_time.min.zero? ? end_time.hour : end_time.hour + 1
+    total_hours = end_hour - start_hour
     rem_per_hour = 12.0
-    rem_per_min  = rem_per_hour / 60.0
-    total_minutes * rem_per_min
+    total_hours * rem_per_hour
   end
 
   # タイムテーブル全体の開始時刻（分）
@@ -40,14 +39,17 @@ module PerformancesHelper
 
   # タイムテーブル用の時刻スロット配列を生成
   def time_slots_for_timetable(performances)
-    # 開始時刻が最も早い出演者の出演時刻を取得
-    earliest_time = performances.min_by(&:start_time).start_time.hour
-    # 終了時刻が最も遅い出演者の出演時刻を取得
-    latest_end_time = performances.max_by(&:end_time).end_time.hour
-    # 時刻列用の配列を事前に作成する
-    (earliest_time..latest_end_time).map do |hour|
-      hour
-    end
+    start_time = performances.min_by(&:start_time).start_time
+    end_time   = performances.max_by(&:end_time).end_time
+    start_hour = start_time.hour
+    # 終了時刻が00分なら、その時間は表示しない
+    last_hour =
+      if end_time.min.zero?
+        end_time.hour - 1
+      else
+        end_time.hour
+      end
+    (start_hour..last_hour).to_a
   end
 
   # performance の高さを rem で返す

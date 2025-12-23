@@ -15,79 +15,58 @@
         <% end %>
       <% end %>
     </nav>
-    <%# タイムテーブル表示エリア - スクロール可能 %>
-    <div class="flex-1 min-h-0 bg-white overflow-auto w-full">
-      <table class="w-full relative bg-white rounded-lg shadow-sm">
-        <%# テーブルヘッダー - ステージ名 %>
-        <thead class="h-8 bg-white">
-          <tr>
-            <%# 左端の時刻列用の空セル %>
-            <th class="w-6 pl-1.5 pr-1 py-1 text-left text-xs font-medium text-gray-500 tracking-wider sticky left-0 top-0 z-110 bg-gray-50">
-              <div class="absolute inset-0 bg-white z-110"></div>
-              <div class="absolute right-0 -bottom-px h-px w-full bg-white z-110"></div>
-              <span class="relative z-110"></span>
-            </th>
-            <%# ステージ数を事前取得 %>
-            <% stage_count = @stages.size %>
-            <%# ステージ幅を事前計算 %>
-            <% stage_width_class = "w-[calc((100%-2rem)/#{stage_count})]" %>
-            <%# ステージを展開 %>
-            <% @stages.each do |stage| %>
-              <%# ステージ配色は独自CSS"app/assets/stylesheets/event.css"で指定 %>
-              <th class="stage-col <%= stage_width_class %> p-1 h-8 text-center text-xs font-bold text-gray-800 tracking-wider sticky top-0 z-100 relative %>">
-                <div class="absolute inset-0 bg-stage pattern z-95"></div>
-                <div class="relative z-100 flex items-center justify-center">
-                  <p class="leading-tight text-center wrap-break-word line-clamp-2">
-                    <%= stage.stage_name_tag.name %>
-                  </p>
-                </div>
-              </th>
-            <% end %>
-          </tr>
-        </thead>
-        <%# タイムテーブル本体 %>
-        <% timetable_height_rem = timetable_height_rem(@performances) %>
-        <tbody style="height: <%= timetable_height_rem %>rem;">
-          <tr class="relative">
-            <%# 最も早い開始時刻から最も遅い終了時間までの時刻を描画する %>
+    <%# スクロールコンテナ（ここだけ overflow） %>
+    <div class="flex-1 overflow-auto relative">
+      <%# 横幅確保 %>
+      <div class="min-w-max">
+        <%# ヘッダー行 %>
+        <div class="flex sticky top-0 z-110 bg-white">
+          <%# 左上空白 %>
+          <div class="sticky left-0 w-5 bg-white z-100"></div>
+          <%# ステージヘッダー %>
+          <% @stages.each do |stage| %>
+            <div class="stage-header-col flex-1 min-w-30 z-95 border-b text-xs font-bold text-center p-2">
+              <%= stage.stage_name_tag.name %>
+            </div>
+          <% end %>
+        </div>
+        <%# ボディ %>
+        <div class="flex relative">
+          <%# 時刻列（sticky left） %>
+          <div class="w-5 sticky left-0 -translate-y-2.75 z-150 bg-white">
             <% time_slots_for_timetable(@performances).each do |hour| %>
-              <%# 時刻列 - 左側に固定表示 %>
-              <td class="h-48 time-cell min-w-5 px-0 bg-white sticky left-0 z-150 flex items-start justify-center">
-                <%# 時刻表示 %>
-                <span class="text-xs font-medium text-gray-900 tabular-nums -translate-y-1.5">
-                  <%= hour %>
-                </span>
-              </td>
+              <p class="h-48 text-xs text-center pt-1 tabular-nums">
+                <%= hour %>
+              </p>
             <% end %>
-            <%# 各ステージの出演情報 %>
-            <% @stages.each do |stage| %>
-              <td class="stage-col <%= stage_width_class %> min-w-20 max-w-[120px] relative">
-                <% @performances_by_stage[stage.id].each do |performance| %>
-                  <% p_duration = performance.duration_in_5_min_units %>
-                  <%# 出演情報カード %>
-                  <%= link_to "#",
-                      class: "block absolute inset-x-[1px] top-[1px] z-[10]",
-                      style: "
-                        top: #{performance_top_rem(performance)}rem;
-                        height: #{performance_height_rem(performance)}rem;" do %>
-                    <div class="bg-white rounded-sm p-1 w-full h-full shadow-sm">
-                      <% if performance.show_start_time? %>
-                        <div class="text-[10px] text-gray-500">
-                          <%= formatted_time(performance.start_time) %>
-                        </div>
-                      <% end %>
-                      <% line_clamp = line_clamp_class_by_duration(performance.duration) %>
-                      <p class="font-semibold text-xs leading-3 wrap-break-word <%= line_clamp %>">
-                        <%= performance.performer.performer_name_tag.name %>
-                      </p>
+          </div>
+          <%# ステージを展開 %>
+          <% @stages.each do |stage| %>
+            <div class="timetable-body-col flex-1 min-w-30 relative"
+                style="height: <%= timetable_height_rem(@performances) %>rem;">
+              <%# 各ステージの出演情報を検索 %>
+              <% @performances_by_stage[stage.id].each do |performance| %>
+                <%# 出演情報カード %>
+                <%= link_to "#",
+                class: "absolute left-1 right-1 bg-white rounded shadow p-1 text-xs",
+                style: "
+                  top: #{performance_top_rem(performance)}rem;
+                  height: #{performance_height_rem(performance)}rem;" do %>
+                  <% if performance.show_start_time? %>
+                    <div class="text-[10px] text-gray-500">
+                      <%= formatted_time(performance.start_time) %>
                     </div>
                   <% end %>
+                  <% line_clamp = line_clamp_class_by_duration(performance.duration) %>
+                  <p class="font-semibold text-xs leading-3 wrap-break-word <%= line_clamp %>">
+                    <%= performance.performer.performer_name_tag.name %>
+                  </p>
                 <% end %>
-              </td>
-            <% end %>
-          </tr>
-        </tbody>
-      </table>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 <% else %>
