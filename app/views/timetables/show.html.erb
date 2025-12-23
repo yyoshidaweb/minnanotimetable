@@ -1,24 +1,22 @@
 <% if @performances.present? %>
-  <%# タイムテーブル表示画面のメインコンテナ（画面全体の高さに設定する） %>
-  <div class="h-screen flex flex-col overflow-hidden">
-    <%# イベント用ヘッダー(@show_event_headerがtrueの場合のみ表示) %>
-    <%= render "layouts/event-header" %>
-    <%# 日付選択タブ %>
-    <nav class="flex h-8 sticky top-0 w-full justify-around overflow-x-auto bg-white border-t border-gray-200">
-      <% @days.each do |day| %>
-        <%# 日付を MM/DD 形式でラベルに整形 %>
-        <% label = day.date.strftime("%-m/%-d") %>
-        <%# 現在選択中の日付かどうか判定 %>
-        <% selected = (day.date == @selected_date) %>
-        <%# 日付タブリンク。選択中の場合は下線を表示し、横幅は均等に伸ばす %>
-        <%= link_to url_for(d: day.date),
+  <%# 日付選択タブ（イベントヘッダーの高さ分下げて配置する） %>
+  <nav class="flex h-8 fixed top-12 z-160 w-full justify-around overflow-x-auto bg-white border-t border-gray-200">
+    <% @days.each do |day| %>
+      <%# 日付を MM/DD 形式でラベルに整形 %>
+      <% label = day.date.strftime("%-m/%-d") %>
+      <%# 現在選択中の日付かどうか判定 %>
+      <% selected = (day.date == @selected_date) %>
+      <%# 日付タブリンク。選択中の場合は下線を表示し、横幅は均等に伸ばす %>
+      <%= link_to url_for(d: day.date),
             class: "flex-1 px-2 py-2 text-xs text-gray-800 font-bold border-b-4 #{selected ? 'border-gray-800' : 'border-transparent'} hover:border-gray-300 transition-colors duration-150 text-center whitespace-nowrap" do %>
-          <%= label %>
-        <% end %>
+        <%= label %>
       <% end %>
-    </nav>
-    <%# スクロールコンテナ（ここだけ overflow） %>
-    <div class="flex-1 overflow-auto relative">
+    <% end %>
+  </nav>
+  <%# タイムテーブル表示画面のメインコンテナ（画面全体の高さに設定する） %>
+  <div class="h-svh flex flex-col overflow-hidden">
+    <%# スクロールコンテナ（ヘッダーと日付選択タブの高さ分下げた位置に配置する） %>
+    <div class="flex-1 pt-20 overflow-auto relative">
       <%# 横幅確保 %>
       <div class="min-w-max">
         <%# ヘッダー行 %>
