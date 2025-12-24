@@ -85,7 +85,7 @@
             <%= link_to show_timetable_path(@event.event_key),
                 class: "flex flex-col items-center gap-0.5" do %>
               <span class="material-symbols-outlined
-                    <%= 'material-symbols-filled' if current_page?(show_timetable_path(@event.event_key)) %>">
+                    <%= bottom_tab_filled_class(show_timetable_path(@event.event_key)) %>">
                 table
               </span>
               <span class="text-gray-500">タイムテーブル</span>
@@ -95,7 +95,7 @@
             <%= link_to event_performers_path(@event.event_key),
                           class: "flex flex-col items-center gap-0.5" do %>
               <span class="material-symbols-outlined
-                    <%= 'material-symbols-filled' if current_page?(event_performers_path(@event.event_key)) %>">
+                    <%= bottom_tab_filled_class(event_performers_path(@event.event_key)) %>">
                 artist
               </span>
               <span class="text-gray-500">出演者</span>
@@ -105,7 +105,7 @@
             <%= link_to event_stages_path(@event.event_key),
                                     class: "flex flex-col items-center gap-0.5" do %>
               <span class="material-symbols-outlined
-                    <%= 'material-symbols-filled' if current_page?(event_stages_path(@event.event_key)) %>">
+                    <%= bottom_tab_filled_class(event_stages_path(@event.event_key)) %>">
                 map
               </span>
               <span class="text-gray-500">ステージ</span>
@@ -115,7 +115,7 @@
             <%= link_to event_path(@event.event_key),
                                               class: "flex flex-col items-center gap-0.5" do %>
               <span class="material-symbols-outlined
-                    <%= 'material-symbols-filled' if current_page?(event_path(@event.event_key)) %>">
+                    <%= bottom_tab_filled_class(event_path(@event.event_key)) %>">
                 info
               </span>
               <span class="text-gray-500">イベント詳細</span>
