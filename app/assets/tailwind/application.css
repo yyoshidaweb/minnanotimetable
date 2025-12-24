@@ -6,6 +6,9 @@
 /* ステージ用CSSを読み込む */
 @import "../stylesheets/event.css";
 
+/* googleマテリアルアイコン用のCSSを読み込む */
+@import "../stylesheets/material-symbols.css";
+
 @config '../../../config/tailwind.config.js';
 
 /*

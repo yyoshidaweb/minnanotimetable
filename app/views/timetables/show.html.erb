@@ -78,23 +78,48 @@
         ※このタイムテーブルは非公式です。<br>
         必ず公式情報をご確認の上、ご利用ください。
       </small>
+      <%# 下部タブメニュー（選択中のタブは自動で塗りつぶされる） %>
       <nav class="h-full w-full">
-        <ul class="flex justify-around text-xs text-gray-800">
-          <li class="flex flex-col items-center">
-            <span class="material-symbols-outlined">table</span>
-            <span>タイムテーブル</span>
+        <ul class="flex justify-around text-xs">
+          <li>
+            <%= link_to show_timetable_path(@event.event_key),
+                class: "flex flex-col items-center gap-0.5" do %>
+              <span class="material-symbols-outlined
+                    <%= 'material-symbols-filled' if current_page?(show_timetable_path(@event.event_key)) %>">
+                table
+              </span>
+              <span class="text-gray-500">タイムテーブル</span>
+            <% end %>
           </li>
-          <li class="flex flex-col items-center">
-            <span class="material-symbols-outlined">artist</span>
-            <span>出演者</span>
+          <li>
+            <%= link_to event_performers_path(@event.event_key),
+                          class: "flex flex-col items-center gap-0.5" do %>
+              <span class="material-symbols-outlined
+                    <%= 'material-symbols-filled' if current_page?(event_performers_path(@event.event_key)) %>">
+                artist
+              </span>
+              <span class="text-gray-500">出演者</span>
+            <% end %>
           </li>
-          <li class="flex flex-col items-center">
-            <span class="material-symbols-outlined">map</span>
-            <span>ステージ</span>
+          <li>
+            <%= link_to event_stages_path(@event.event_key),
+                                    class: "flex flex-col items-center gap-0.5" do %>
+              <span class="material-symbols-outlined
+                    <%= 'material-symbols-filled' if current_page?(event_stages_path(@event.event_key)) %>">
+                map
+              </span>
+              <span class="text-gray-500">ステージ</span>
+            <% end %>
           </li>
-          <li class="flex flex-col items-center">
-            <span class="material-symbols-outlined">info</span>
-            <span>イベント詳細</span>
+          <li>
+            <%= link_to event_path(@event.event_key),
+                                              class: "flex flex-col items-center gap-0.5" do %>
+              <span class="material-symbols-outlined
+                    <%= 'material-symbols-filled' if current_page?(event_path(@event.event_key)) %>">
+                info
+              </span>
+              <span class="text-gray-500">イベント詳細</span>
+            <% end %>
           </li>
         </ul>
       </nav>
