@@ -1,0 +1,54 @@
+<%# 下部タブメニュー %>
+<div class="flex flex-col items-center fixed bottom-0 left-0 w-full h-21 p-1
+    bg-white border-t z-200
+      pb-[env(safe-area-inset-bottom)]">
+  <small class="mb-1 text-xs text-gray-500 wrap-break-word">
+    ※このタイムテーブルは非公式です。<br>
+    必ず公式情報をご確認の上、ご利用ください。
+  </small>
+  <%# 下部タブメニュー（選択中のタブは自動で塗りつぶされる） %>
+  <nav class="h-full w-full">
+    <ul class="flex justify-around text-xs">
+      <li>
+        <%= link_to show_timetable_path(@event.event_key),
+                class: "flex flex-col items-center gap-0.5" do %>
+          <span class="material-symbols-outlined
+                    <%= bottom_tab_filled_class(show_timetable_path(@event.event_key)) %>">
+            table
+          </span>
+          <span class="text-gray-500">タイムテーブル</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to event_performers_path(@event.event_key),
+                          class: "flex flex-col items-center gap-0.5" do %>
+          <span class="material-symbols-outlined
+                    <%= bottom_tab_filled_class(event_performers_path(@event.event_key)) %>">
+            artist
+          </span>
+          <span class="text-gray-500">出演者</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to event_stages_path(@event.event_key),
+                                    class: "flex flex-col items-center gap-0.5" do %>
+          <span class="material-symbols-outlined
+                    <%= bottom_tab_filled_class(event_stages_path(@event.event_key)) %>">
+            map
+          </span>
+          <span class="text-gray-500">ステージ</span>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to event_path(@event.event_key),
+                                              class: "flex flex-col items-center gap-0.5" do %>
+          <span class="material-symbols-outlined
+                    <%= bottom_tab_filled_class(event_path(@event.event_key)) %>">
+            info
+          </span>
+          <span class="text-gray-500">イベント詳細</span>
+        <% end %>
+      </li>
+    </ul>
+  </nav>
+</div>
