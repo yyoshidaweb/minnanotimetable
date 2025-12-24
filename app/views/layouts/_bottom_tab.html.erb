@@ -2,8 +2,8 @@
 <div class="flex flex-col items-center fixed bottom-0 left-0 w-full h-21 p-1
     bg-white border-t z-200
       pb-[env(safe-area-inset-bottom)]">
-  <small class="mb-1 text-xs text-gray-500 wrap-break-word">
-    ※このタイムテーブルは非公式です。<br>
+  <small class="mb-1 text-center text-xs text-gray-500 whitespace-normal md:whitespace-nowrap">
+    ※<%= link_to "みんなのタイムテーブル", root_path, class: "underline" %>で作られた非公式タイムテーブルです。
     必ず公式情報をご確認の上、ご利用ください。
   </small>
   <%# 下部タブメニュー（選択中のタブは自動で塗りつぶされる） %>
