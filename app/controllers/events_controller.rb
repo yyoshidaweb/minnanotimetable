@@ -83,7 +83,7 @@ class EventsController < ApplicationController
 
     # Event 本体を更新（description など）
     if @event.update(event_params.except(:event_name_tag_attributes))
-      redirect_to edit_timetable_url(@event.event_key), notice: "イベントを更新しました"
+      redirect_to edit_event_path(@event.event_key), notice: "イベントを更新しました"
     else
       render :edit, status: :unprocessable_entity
     end

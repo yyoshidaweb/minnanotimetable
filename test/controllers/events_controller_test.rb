@@ -82,7 +82,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
       }
     }
 
-    assert_redirected_to edit_timetable_url(@event.event_key)
+    assert_redirected_to edit_event_path(@event.event_key)
 
     @event.reload
 
