@@ -72,8 +72,10 @@
     </div>
   </div>
 <% else %>
-  <%# 情報が揃った出演情報が0件の場合 %>
-  <div class="text-center text-bold">
+  <%# ===== 情報が揃った出演情報が0件の場合 ===== %>
+  <div class="h-svh pt-12 flex items-center justify-center text-bold pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
     <p>出演情報がありません</p>
   </div>
+  <%# 下部タブメニュー %>
+  <%= render "layouts/bottom_tab" %>
 <% end %>

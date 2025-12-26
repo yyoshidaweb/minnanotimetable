@@ -11,6 +11,7 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     # テスト用のログイン状態を再現
     sign_in @user
     @event = events(:one)
+    @no_performance_event = events(:no_performance_event)
     @day1 = days(:one)
     @day2 = days(:two)
     @performance1 = performances(:one)
@@ -58,5 +59,11 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     sign_in @user_two
     get edit_timetable_url(@event.event_key)
     assert_response :not_found
+  end
+
+  # 出演情報が0件の場合もタイムテーブルを表示できる
+  test "should show event timetable by event_key when no performances" do
+    get "/#{@no_performance_event.event_key}"
+    assert_response :success
   end
 end

@@ -63,8 +63,10 @@ class TimetablesController < ApplicationController
 
     # 選択された開催日をセット
     def set_selected_date
-      # クエリパラメータから日付を決定
-      @selected_date = params[:d].present? ? Date.parse(params[:d]) : @days.first.date
+      if @days.present?
+        # クエリパラメータから日付を決定
+        @selected_date = params[:d].present? ? Date.parse(params[:d]) : @days.first.date
+      end
     end
 
     # タイムテーブル描画に必要な情報がすべて揃った performance を取得

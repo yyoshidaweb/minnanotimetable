@@ -25,3 +25,10 @@ four:
   event_key: "four"
   description: "テスト用フェスイベント"
   is_published: true
+
+no_performance_event:
+  user: two
+  event_name_tag: one
+  event_key: "no_performance_event"
+  description: "出演情報がないテスト用フェスイベント"
+  is_published: true
