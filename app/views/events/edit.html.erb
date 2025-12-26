@@ -46,6 +46,10 @@
                 method: :delete,
                 data: { turbo_confirm: "⚠️ 削除しますか？ 一度削除すると元に戻せません" },
                 class: "w-full mt-12 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 hover:text-white transition cursor-pointer" %>
+    <!-- 作成日時 -->
+    <div class="text-xs text-gray-500 mt-4">
+      作成日: <%= l(@event.created_at.to_date, format: :default) %>
+    </div>
   </div>
 </div>
 <%# 下部タブメニュー %>
