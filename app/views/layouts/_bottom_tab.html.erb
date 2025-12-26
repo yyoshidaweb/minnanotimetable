@@ -7,8 +7,8 @@
     必ず公式情報をご確認の上、ご利用ください。
   </small>
   <%# 下部タブメニュー（選択中のタブは自動で塗りつぶされる） %>
-  <nav class="h-full w-full">
-    <ul class="flex justify-around text-xs">
+  <nav class="flex h-full w-full items-center">
+    <ul class="flex w-full justify-around text-xs">
       <li>
         <%= link_to show_timetable_path(@event.event_key),
                 class: "flex flex-col items-center gap-0.5" do %>
