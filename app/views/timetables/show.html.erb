@@ -14,7 +14,7 @@
     <% end %>
   </nav>
   <%# タイムテーブル表示画面のメインコンテナ（画面全体の高さに設定する） %>
-  <div class="h-svh flex flex-col overflow-hidden">
+  <div class="h-svh flex flex-col overflow-hidden pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
     <%# スクロールコンテナ（ヘッダーと日付選択タブの高さ分下げた位置に配置する） %>
     <div class="flex-1 pt-20 overflow-auto relative">
       <%# 横幅確保 %>
@@ -67,6 +67,8 @@
           <% end %>
         </div>
       </div>
+      <%# 下部タブメニュー %>
+      <%= render "layouts/bottom_tab" %>
     </div>
   </div>
 <% else %>
