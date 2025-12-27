@@ -76,7 +76,7 @@ class StagesController < ApplicationController
 
     # Stage本体を更新（ネストされたフィールドを除く）
     if @stage.update(stage_params.except(:stage_name_tag_attributes))
-      redirect_to edit_timetable_path(@event.event_key), notice: "ステージを更新しました。"
+      redirect_to event_stage_path(@event.event_key, @stage), notice: "ステージを更新しました。"
     else
       render :edit, status: :unprocessable_entity
     end
