@@ -41,7 +41,7 @@ class PerformersController < ApplicationController
     @performer.performer_name_tag = performer_name_tag
 
     if @performer.save
-      redirect_to edit_timetable_path(@event.event_key), notice: "出演者を追加しました。"
+      redirect_to event_performers_path(@event.event_key), notice: "出演者を作成しました。"
     else
       render :new, status: :unprocessable_entity
     end
