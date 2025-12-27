@@ -1,4 +1,11 @@
-<div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+<div class="relative max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">
+  <%# 編集ボタン（作成者本人のみ表示） %>
+  <% if user_signed_in? && current_user == @event.user %>
+    <%= link_to edit_event_stage_path(@event.event_key, @stage),
+                class: "absolute top-4 right-4 text-xs text-gray-800" do %>
+      <span class="material-symbols-outlined">edit</span>
+    <% end %>
+  <% end %>
   <%# ステージ名 %>
   <h1 class="text-xl font-bold text-gray-900 mb-4">
     <%= @stage.stage_name_tag.name %>
@@ -18,12 +25,4 @@
       </p>
     </div>
   <% end %>
-  <%# 編集ボタン（作成者のみ） %>
-  <div>
-    <% if @event.user == current_user %>
-      <%= link_to "編集",
-          edit_event_stage_path(@event.event_key, @stage),
-          class: "flex justify-center w-full py-2 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition cursor-pointer" %>
-    <% end %>
-  </div>
 </div>
