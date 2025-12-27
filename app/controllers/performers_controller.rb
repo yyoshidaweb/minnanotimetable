@@ -78,7 +78,7 @@ class PerformersController < ApplicationController
 
   def destroy
     @performer.destroy!
-    redirect_to edit_timetable_path(@event.event_key), notice: "出演者を削除しました。", status: :see_other
+    redirect_to event_performers_path(@event.event_key), notice: "出演者を削除しました。", status: :see_other
   end
 
   private

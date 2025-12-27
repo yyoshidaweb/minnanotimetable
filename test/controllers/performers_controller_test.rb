@@ -214,7 +214,7 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     assert_difference("@event.performers.count", -1) do
       delete event_performer_path(@event.event_key, @event.performers.first)
     end
-    assert_redirected_to edit_timetable_path(@event.event_key)
+    assert_redirected_to event_performers_path(@event.event_key)
   end
 
   # 他者の出演者は削除できない
