@@ -41,7 +41,7 @@ class PerformersController < ApplicationController
     @performer.performer_name_tag = performer_name_tag
 
     if @performer.save
-      redirect_to edit_timetable_path(@event.event_key), notice: "出演者を追加しました。"
+      redirect_to event_performers_path(@event.event_key), notice: "出演者を作成しました。"
     else
       render :new, status: :unprocessable_entity
     end
@@ -70,7 +70,7 @@ class PerformersController < ApplicationController
 
     # Performer本体を更新（ネストされたフィールドを除く）
     if @performer.update(performer_params.except(:performer_name_tag_attributes))
-      redirect_to edit_timetable_path(@event.event_key), notice: "出演者を更新しました。"
+      redirect_to event_performer_path(@event.event_key, @performer), notice: "出演者を更新しました。"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -78,7 +78,7 @@ class PerformersController < ApplicationController
 
   def destroy
     @performer.destroy!
-    redirect_to edit_timetable_path(@event.event_key), notice: "出演者を削除しました。", status: :see_other
+    redirect_to event_performers_path(@event.event_key), notice: "出演者を削除しました。", status: :see_other
   end
 
   private

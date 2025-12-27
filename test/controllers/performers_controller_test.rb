@@ -80,7 +80,7 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     # 出演者に紐付いていること
     assert_equal tag.id, created_performer.performer_name_tag_id
     # 正しいリダイレクト先
-    assert_redirected_to edit_timetable_url(@event.event_key)
+    assert_redirected_to event_performers_path(@event.event_key)
   end
 
   # 出演者が空文字の場合は追加できない
@@ -143,7 +143,7 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    assert_redirected_to edit_timetable_path(@event_two.event_key)
+    assert_redirected_to event_performers_path(@event_two.event_key)
   end
 
   # 出演者編集ページ
@@ -172,7 +172,7 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
         performer_name_tag_attributes: { name: new_tag_name }
       }
     }
-    assert_redirected_to edit_timetable_url(@event.event_key)
+    assert_redirected_to event_performer_path(@event.event_key, performer)
     performer.reload
     # 出演者のタグが新しいものに置き換わっていること
     assert_equal new_tag_name, performer.performer_name_tag.name
@@ -214,7 +214,7 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     assert_difference("@event.performers.count", -1) do
       delete event_performer_path(@event.event_key, @event.performers.first)
     end
-    assert_redirected_to edit_timetable_path(@event.event_key)
+    assert_redirected_to event_performers_path(@event.event_key)
   end
 
   # 他者の出演者は削除できない
