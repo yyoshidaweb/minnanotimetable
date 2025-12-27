@@ -40,15 +40,10 @@
         <% end %>
       </li>
       <li>
-        <%# イベント作成者本人は edit、他者は show に遷移 %>
-        <% event_path_for_tab =
-            (user_signed_in? && current_user == @event.user) ?
-              edit_event_path(@event.event_key) :
-              event_path(@event.event_key) %>
-        <%= link_to event_path_for_tab,
-              class: "flex flex-col items-center gap-0.5" do %>
+        <%= link_to event_path(@event.event_key),
+                                              class: "flex flex-col items-center gap-0.5" do %>
           <span class="material-symbols-outlined
-                <%= bottom_tab_filled_class(event_path_for_tab) %>">
+                    <%= bottom_tab_filled_class(event_path(@event.event_key)) %>">
             info
           </span>
           <span class="text-gray-500">イベント詳細</span>
