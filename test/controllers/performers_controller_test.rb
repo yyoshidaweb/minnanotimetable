@@ -172,7 +172,7 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
         performer_name_tag_attributes: { name: new_tag_name }
       }
     }
-    assert_redirected_to edit_timetable_url(@event.event_key)
+    assert_redirected_to event_performer_path(@event.event_key, performer)
     performer.reload
     # 出演者のタグが新しいものに置き換わっていること
     assert_equal new_tag_name, performer.performer_name_tag.name

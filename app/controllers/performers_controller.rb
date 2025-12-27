@@ -70,7 +70,7 @@ class PerformersController < ApplicationController
 
     # Performer本体を更新（ネストされたフィールドを除く）
     if @performer.update(performer_params.except(:performer_name_tag_attributes))
-      redirect_to edit_timetable_path(@event.event_key), notice: "出演者を更新しました。"
+      redirect_to event_performer_path(@event.event_key, @performer), notice: "出演者を更新しました。"
     else
       render :edit, status: :unprocessable_entity
     end
