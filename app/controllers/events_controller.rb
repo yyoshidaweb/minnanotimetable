@@ -55,7 +55,7 @@ class EventsController < ApplicationController
     @event.event_key = SecureRandom.urlsafe_base64(8)
 
     if @event.save
-      redirect_to edit_timetable_url(@event.event_key), notice: "イベントを作成しました"
+      redirect_to show_timetable_path(@event.event_key), notice: "イベントを作成しました"
     else
       # 保存に失敗したら new を再表示（validation メッセージを @event に持たせる）
       render :new, status: :unprocessable_entity
@@ -83,7 +83,7 @@ class EventsController < ApplicationController
 
     # Event 本体を更新（description など）
     if @event.update(event_params.except(:event_name_tag_attributes))
-      redirect_to edit_event_path(@event.event_key), notice: "イベントを更新しました"
+      redirect_to event_path(@event.event_key), notice: "イベントを更新しました"
     else
       render :edit, status: :unprocessable_entity
     end
