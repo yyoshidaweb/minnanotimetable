@@ -6,17 +6,27 @@
 <% if @performers.any? %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
     <% @performers.each do |performer| %>
-      <%= link_to event_performer_path(@event.event_key, performer),
-                  class: "block bg-white shadow-md rounded-lg p-4 border hover:shadow-xl hover:bg-gray-50 transition" do %>
-        <%# 名前 %>
-        <p class="text-lg font-semibold text-blue-600">
-          <%= performer.performer_name_tag.name %>
-        </p>
-        <%# 説明文 %>
-        <p class="text-gray-700 mt-2 line-clamp-2">
-          <%= performer.description %>
-        </p>
-      <% end %>
+      <div class="relative bg-white shadow-md rounded-lg p-4 border
+              hover:shadow-xl hover:bg-gray-50 transition">
+        <%= link_to event_performer_path(@event.event_key, performer),
+                    class: "block pr-12" do %>
+          <%# 名前 %>
+          <p class="text-lg font-semibold text-gray-800">
+            <%= performer.performer_name_tag.name %>
+          </p>
+          <%# 説明文 %>
+          <p class="text-gray-700 mt-2 line-clamp-2">
+            <%= performer.description %>
+          </p>
+        <% end %>
+        <%# 編集ボタン（作成者本人のみ表示） %>
+        <% if user_signed_in? && current_user == @event.user %>
+          <%= link_to edit_event_performer_path(@event.event_key, performer),
+                        class: "absolute top-4 right-4 text-xs text-gray-800" do %>
+            <span class="material-symbols-outlined">edit</span>
+          <% end %>
+        <% end %>
+      </div>
     <% end %>
   </div>
 <% else %>
