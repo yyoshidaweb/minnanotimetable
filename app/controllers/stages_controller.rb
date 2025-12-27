@@ -45,7 +45,7 @@ class StagesController < ApplicationController
     @stage.stage_name_tag = stage_name_tag
 
     if @stage.save
-      redirect_to edit_timetable_path(@event.event_key), notice: "ステージを追加しました。"
+      redirect_to event_stages_path(@event.event_key), notice: "ステージを作成しました。"
     else
       render :new, status: :unprocessable_entity
     end
@@ -76,7 +76,7 @@ class StagesController < ApplicationController
 
     # Stage本体を更新（ネストされたフィールドを除く）
     if @stage.update(stage_params.except(:stage_name_tag_attributes))
-      redirect_to edit_timetable_path(@event.event_key), notice: "ステージを更新しました。"
+      redirect_to event_stage_path(@event.event_key, @stage), notice: "ステージを更新しました。"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -85,7 +85,7 @@ class StagesController < ApplicationController
   # ステージ削除処理
   def destroy
     @stage.destroy!
-    redirect_to edit_timetable_path(@event.event_key), notice: "ステージを削除しました。", status: :see_other
+    redirect_to event_stages_path(@event.event_key), notice: "ステージを削除しました。", status: :see_other
   end
 
   private

@@ -80,7 +80,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     # ステージに紐付いていること
     assert_equal tag.id, created_stage.stage_name_tag_id
     # 正しいリダイレクト先
-    assert_redirected_to edit_timetable_url(@event.event_key)
+    assert_redirected_to event_stages_path(@event.event_key)
   end
 
   # ステージが空文字の場合は追加できない
@@ -127,7 +127,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    assert_redirected_to edit_timetable_path(@event_two.event_key)
+    assert_redirected_to event_stages_path(@event_two.event_key)
   end
 
   # ステージ編集ページ
@@ -156,7 +156,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
         stage_name_tag_attributes: { name: new_tag_name }
       }
     }
-    assert_redirected_to edit_timetable_url(@event.event_key)
+    assert_redirected_to event_stage_path(@event.event_key, stage)
     stage.reload
     # ステージのタグが新しいものに置き換わっていること
     assert_equal new_tag_name, stage.stage_name_tag.name
@@ -198,7 +198,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     assert_difference("@event.stages.count", -1) do
       delete event_stage_path(@event.event_key, @event.stages.first)
     end
-    assert_redirected_to edit_timetable_path(@event.event_key)
+    assert_redirected_to event_stages_path(@event.event_key)
   end
 
   # 他者のステージは削除できない
