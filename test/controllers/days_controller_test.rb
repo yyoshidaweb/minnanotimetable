@@ -17,6 +17,12 @@ class DaysControllerTest < ActionDispatch::IntegrationTest
     @current_day = Date.current
   end
 
+  # 開催日一覧ページ
+  test "should get index" do
+    get event_days_path(@event.event_key)
+    assert_response :success
+  end
+
   # 開催日追加ページ
   test "should get new" do
     get new_event_day_url(@event.event_key)
@@ -30,7 +36,7 @@ class DaysControllerTest < ActionDispatch::IntegrationTest
         day: { date: "2025-01-01" }
       }
     end
-    assert_redirected_to edit_timetable_path(@event.event_key)
+    assert_redirected_to event_days_path(@event.event_key)
   end
 
   # 開催日が空文字の場合は追加できない
@@ -60,7 +66,7 @@ class DaysControllerTest < ActionDispatch::IntegrationTest
         day: { date: @current_day }
       }
     end
-    assert_redirected_to edit_timetable_path(@event_two.event_key)
+    assert_redirected_to event_days_path(@event_two.event_key)
   end
 
   # 開催日削除
@@ -68,7 +74,7 @@ class DaysControllerTest < ActionDispatch::IntegrationTest
     assert_difference("@event.days.count", -1) do
       delete event_day_path(@event.event_key, @event.days.first)
     end
-    assert_redirected_to edit_timetable_path(@event.event_key)
+    assert_redirected_to event_days_path(@event.event_key)
   end
 
   # 他者の開催日は削除できない

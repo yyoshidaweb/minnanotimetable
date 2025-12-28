@@ -2,8 +2,12 @@ class EventsController < ApplicationController
   # ログイン必須（show以外）
   before_action :authenticate_user!, only: [ :index, :new, :create, :update ]
 
-  # ログインユーザーが持つイベントのみ取得するフィルタ（見つからない場合は404エラー）
-  before_action :set_event, only: [ :edit, :update, :destroy ]
+  # イベントを取得する
+  before_action :set_event, only: [ :show, :edit, :update, :destroy ]
+  # 所有者本人かどうかチェック
+  before_action :authorize_event!, only: [ :edit, :update, :destroy ]
+  # 開催日を昇順で取得
+  before_action :set_days, only: [ :show, :edit ]
 
   # 作成したイベント一覧
   def index
@@ -14,7 +18,6 @@ class EventsController < ApplicationController
 
   # 未ログインでも閲覧可能
   def show
-    @event = Event.find_by!(event_key: params[:event_key])
     @page_title = "#{@event.event_name_tag.name} 概要"
   end
 
@@ -97,9 +100,19 @@ class EventsController < ApplicationController
 
   private
 
-  # ログインユーザーが持つイベントのみ取得するフィルタ（見つからない場合は404エラー）
+  # イベントを取得
   def set_event
-    @event = current_user.events.find_by!(event_key: params[:event_key])
+    @event = Event.find_by!(event_key: params[:event_key])
+  end
+
+  # イベントの所有者かどうかチェック（異なる場合は404エラーを発生させる）
+  def authorize_event!
+    raise ActiveRecord::RecordNotFound unless @event.user == current_user
+  end
+
+  # 開催日を昇順にセットする
+  def set_days
+    @days = @event.days.order(:date)
   end
 
   # 許可するパラメーター
