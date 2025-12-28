@@ -5,7 +5,12 @@ class DaysController < ApplicationController
   # 所有者本人かどうかチェック
   before_action :authorize_event!
   before_action :set_day, only: %i[ destroy ]
-  before_action :set_page_title, only: %i[ new create ]
+  before_action :set_page_title, only: %i[ index new create ]
+
+  # 開催日の追加と削除を行うページ
+  def index
+    @days = @event.days.order(:date)
+  end
 
   # 開催日追加ページ表示
   def new
@@ -17,7 +22,7 @@ class DaysController < ApplicationController
     @day = @event.days.build(day_params)
 
     if @day.save
-      redirect_to edit_timetable_path(@event.event_key), notice: "開催日を追加しました。"
+      redirect_to event_days_path(@event.event_key), notice: "開催日を追加しました。"
     else
       render :new, status: :unprocessable_entity
     end
@@ -26,7 +31,7 @@ class DaysController < ApplicationController
   # 開催日削除処理
   def destroy
     @day.destroy!
-    redirect_to edit_timetable_path(@event.event_key), notice: "開催日を削除しました。", status: :see_other
+    redirect_to event_days_path(@event.event_key), notice: "開催日を削除しました。", status: :see_other
   end
 
   private
@@ -49,6 +54,8 @@ class DaysController < ApplicationController
     def set_page_title
       @page_title =
         case action_name
+        when "index"
+          "開催日一覧"
         when "new", "create"
           "開催日を追加"
         end

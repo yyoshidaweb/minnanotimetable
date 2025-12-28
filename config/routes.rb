@@ -40,7 +40,7 @@ Rails.application.routes.draw do
 
   # イベント関連
   resources :events, param: :event_key, only: [ :index, :new, :create, :show, :edit, :update, :destroy ] do
-    resources :days, only: [ :new, :create, :destroy ]
+    resources :days, only: [ :index, :new, :create, :destroy ]
     resources :stages, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
     resources :performers, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
     resources :performances, only: [ :new, :create, :edit, :update, :destroy ]
