@@ -17,7 +17,16 @@
     </div>
     <%# 開催日 %>
     <div class="text-gray-800 mb-2">
-      <h2 class="font-bold text-md">開催日</h2>
+      <div class="flex">
+        <h2 class="mr-1 font-bold text-md">開催日</h2>
+        <%# 開催日編集ボタン（作成者本人のみ表示） %>
+        <% if user_signed_in? && current_user == @event.user %>
+          <%= link_to edit_event_path(@event.event_key),
+                            class: "text-gray-800" do %>
+            <span class="material-symbols-outlined">edit</span>
+          <% end %>
+        <% end %>
+      </div>
       <% if @days.present? %>
         <ul>
           <% @days.each do |day| %>
