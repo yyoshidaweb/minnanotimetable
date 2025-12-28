@@ -2,7 +2,7 @@ class EventsController < ApplicationController
   # ログイン必須（show以外）
   before_action :authenticate_user!, only: [ :index, :new, :create, :update ]
 
-  # ログインユーザーが持つイベントのみ取得するフィルタ（見つからない場合は404エラー）
+  # イベントを取得する
   before_action :set_event, only: [ :show, :edit, :update, :destroy ]
   # 所有者本人かどうかチェック
   before_action :authorize_event!, only: [ :edit, :update, :destroy ]

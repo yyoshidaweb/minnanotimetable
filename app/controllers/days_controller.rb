@@ -2,6 +2,8 @@ class DaysController < ApplicationController
   # ログイン必須
   before_action :authenticate_user!
   before_action :set_event
+  # 所有者本人かどうかチェック
+  before_action :authorize_event!
   before_action :set_day, only: %i[ destroy ]
   before_action :set_page_title, only: %i[ new create ]
 
@@ -28,9 +30,14 @@ class DaysController < ApplicationController
   end
 
   private
-    # ログインユーザーが持つイベントのみ取得するフィルタ（見つからない場合は404エラー）
+    # イベントを取得
     def set_event
-      @event = current_user.events.find_by!(event_key: params[:event_event_key])
+      @event = Event.find_by!(event_key: params[:event_event_key])
+    end
+
+    # イベントの所有者かどうかチェック（異なる場合は404エラーを発生させる）
+    def authorize_event!
+      raise ActiveRecord::RecordNotFound unless @event.user == current_user
     end
 
     # イベントに紐づく開催日のみ取得
