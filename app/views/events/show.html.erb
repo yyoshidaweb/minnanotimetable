@@ -8,15 +8,23 @@
       <% end %>
     <% end %>
     <!-- タイトル -->
-    <h1 class="text-xl font-bold text-gray-900 mb-4">
+    <h1 class="text-xl font-bold text-gray-800 mb-2">
       <%= @event.event_name_tag.name %>
     </h1>
     <!-- 説明欄 -->
-    <div class="mb-6">
-      <p class="text-gray-800 whitespace-pre-line">
-        <%= @event.description %>
-      </p>
+    <div class="mb-2">
+      <p class="text-gray-800 whitespace-pre-line"><%= @event.description %></p>
     </div>
+    <% if @days.present? %>
+      <div class="text-gray-800 mb-2">
+        <h2 class="font-bold text-md">開催日</h2>
+        <ul>
+          <% @days.each do |day| %>
+            <li class="list-disc list-inside"><%= day.date.strftime("%-Y/%-m/%-d") %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
     <!-- 作成日時 -->
     <div class="text-xs text-gray-500 mt-4">
       作成日: <%= l(@event.created_at.to_date, format: :default) %>
