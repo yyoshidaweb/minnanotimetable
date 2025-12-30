@@ -9,4 +9,9 @@ export default class extends Controller {
     // モーダル全体の中身を空にする
     if (frame) frame.innerHTML = ""
   }
+
+  // 背景への click 伝播を止める
+  stop(event) {
+    event.stopPropagation()
+  }
 }

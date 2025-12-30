@@ -1,8 +1,10 @@
 <%# モーダル %>
 <%= turbo_frame_tag "modal" do %>
   <div class="fixed inset-0 z-300 flex items-center justify-center bg-black/40",
-        data-controller="modal">
-    <div class="relative bg-white rounded-lg shadow-lg max-w-md w-full mx-4">
+        data-controller="modal"
+        data-action="click->modal#close">
+    <div class="relative bg-white rounded-lg shadow-lg max-w-md w-full mx-4",
+          data-action="click->modal#stop">
       <%# × ボタン %>
       <button type="button"
               class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 cursor-pointer"
