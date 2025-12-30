@@ -23,6 +23,7 @@ class StagesController < ApplicationController
 
   # ステージ作成処理
   def create
+    @stages = @event.stages
     @stage = @event.stages.build(stage_params)
 
     # フォームで受け取るタグ名（fields_for で post される形）

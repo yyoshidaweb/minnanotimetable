@@ -1,0 +1,10 @@
+<%# 出演情報作成ページのステージ選択部分のパーシャル %>
+<%= select_tag "performance[stage_id]",
+    options_from_collection_for_select(
+        stages,
+        :id,
+        :display_name,
+        selected_stage
+    ),
+    include_blank: "未定",
+    class: "mb-2 w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800" %>
