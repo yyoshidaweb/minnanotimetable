@@ -1,7 +1,6 @@
 <% if user_signed_in? && current_user == @event.user %>
   <%= link_to "ステージ作成",
             new_event_stage_path,
-            data: { turbo_frame: "modal" },
             class: "inline-block mb-6 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900" %>
 <% end %>
 <% if @stages.any? %>
