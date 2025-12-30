@@ -57,7 +57,29 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  # ステージ作成処理（タグ未存在の場合にステージ作成と同時にタグも作成されることを確認）
+  # モーダル表示でステージを作成後にモーダルが閉じる
+  test "turbo_stream: stage is created and modal is closed" do
+    stage_name = "タグ未存在の名前"
+    assert_difference([ "Stage.count", "StageNameTag.count" ], 1) do
+      post event_stages_path(@event.event_key), params: {
+        stage: {
+          # ネスト属性でタグ名を送信
+          stage_name_tag_attributes: { name: stage_name },
+          description: "説明",
+          address: "住所"
+        }
+      },
+      headers: { "Accept" => "text/vnd.turbo-stream.html" } # Turbo Streamとして送信
+    end
+
+    assert_response :success
+    assert_equal "text/vnd.turbo-stream.html", response.media_type
+
+    # モーダルを閉じる Turbo Stream が返っているか
+    assert_includes response.body, 'turbo-stream action="update" target="modal"'
+  end
+
+  # 通常遷移でステージ作成処理（タグ未存在の場合にステージ作成と同時にタグも作成されることを確認）
   test "should create stage and create tag when tag not exists" do
     stage_name = "タグ未存在の名前"
     assert_difference([ "Stage.count", "StageNameTag.count" ], 1) do
