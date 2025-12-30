@@ -39,7 +39,13 @@
                               :id,
                               :display_name,
                               { include_blank: "未定" },
-                              { class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800" } %>
+                              { class: "mb-2 w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800" } %>
+      <div class="flex justify-end">
+        <%= link_to "ステージを追加",
+              new_event_stage_path,
+              data: { turbo_frame: "modal" },
+              class: "text-xs text-blue-800 underline" %>
+      </div>
     </div>
     <%# 開始時刻（任意） %>
     <div>
