@@ -45,7 +45,10 @@ class StagesController < ApplicationController
     @stage.stage_name_tag = stage_name_tag
 
     if @stage.save
-      redirect_to event_stages_path(@event.event_key), notice: "ステージを作成しました。"
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to event_stages_path(@event.event_key), notice: "ステージを作成しました。" }
+      end
     else
       render :new, status: :unprocessable_entity
     end
