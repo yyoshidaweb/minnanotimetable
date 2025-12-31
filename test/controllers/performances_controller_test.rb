@@ -46,7 +46,7 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    assert_redirected_to edit_timetable_path(@event.event_key)
+    assert_redirected_to show_timetable_path(@event.event_key)
   end
 
   # 出演者名だけで出演情報を作成できる
@@ -58,7 +58,7 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    assert_redirected_to edit_timetable_path(@event.event_key)
+    assert_redirected_to show_timetable_path(@event.event_key)
   end
 
   # 出演情報が空文字の場合は作成できない

@@ -19,7 +19,7 @@ class PerformancesController < ApplicationController
   def create
     @performance = Performance.new(performance_params)
     if @performance.save
-      redirect_to edit_timetable_path(@event.event_key), notice: "出演情報を作成しました。"
+      redirect_to show_timetable_path(@event.event_key), notice: "出演情報を作成しました。"
     else
       # エラー時に select の選択値を保持する
       restore_time_virtual_attributes
