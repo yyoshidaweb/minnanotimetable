@@ -1,20 +1,5 @@
-<div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-  <%= form_with model: @day,
-                url: event_days_path(@event.event_key),
-                class: "space-y-6" do |f| %>
-    <%# エラーメッセージ %>
-    <%= render "devise/shared/error_messages", resource: @day %>
-    <%# 日付入力 %>
-    <div>
-      <%= f.label :date, "開催日", class: "block text-sm font-semibold text-gray-800 mb-1" %>
-      <%= f.date_field :date,
-        class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800
-                focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800" %>
-    </div>
-    <%# 作成ボタン %>
-    <div>
-      <%= f.submit "作成",
-        class: "w-full py-2 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition cursor-pointer" %>
-    </div>
-  <% end %>
-</div>
+<% if turbo_frame_request? %>
+  <%= render "modal_new", day: @day %>
+<% else %>
+  <%= render "form", day: @day %>
+<% end %>
