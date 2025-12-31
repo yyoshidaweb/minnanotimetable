@@ -1,0 +1,10 @@
+<%= select_tag "performance[performer_id]",
+    options_from_collection_for_select(
+        performers,
+        :id,
+        :display_name,
+        selected_performer
+        ),
+        prompt: "選択してください",
+        class: "w-full border border-gray-300 rounded-md mb-2 px-3 py-2 text-gray-800
+                focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800" %>

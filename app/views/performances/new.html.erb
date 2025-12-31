@@ -11,13 +11,18 @@
       <span class="ml-1 text-xs text-red-600">※必須</span>
     </div>
     <div>
-      <%= f.collection_select :performer_id,
-                              @performers,
-                              :id,
-                              :display_name,
-                              { prompt: "選択してください" },
-                              { class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800
-                                        focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800" } %>
+      <%# 作成モーダルに対応するためにパーシャルとして表示する %>
+      <div id="performer_select">
+        <%= render "performances/performer_select",
+                    performers: @performers,
+                    selected_performer: @performance&.performer_id %>
+      </div>
+      <div class="flex justify-end">
+        <%= link_to "出演者を追加",
+                    new_event_performer_path,
+                    data: { turbo_frame: "modal" },
+                    class: "text-xs text-blue-800 underline" %>
+      </div>
     </div>
     <%# 開催日（任意） %>
     <div>
