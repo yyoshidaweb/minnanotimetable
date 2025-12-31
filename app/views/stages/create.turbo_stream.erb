@@ -1,0 +1,8 @@
+<%# モーダルの中身を空にする %>
+<%= turbo_stream.update "modal", "" %>
+<%# ステージの選択肢を更新する %>
+<%= turbo_stream.update "stage_select" do %>
+  <%= render "performances/stage_select",
+            stages: @stages,
+            selected_stage: @stage.id %>
+<% end %>

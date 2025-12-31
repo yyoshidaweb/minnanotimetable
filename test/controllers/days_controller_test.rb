@@ -29,7 +29,7 @@ class DaysControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  # 開催日を追加
+  # 通常遷移で開催日追加処理
   test "should create day" do
     assert_difference("@event.days.count") do
       post event_days_path(@event.event_key), params: {
@@ -37,6 +37,22 @@ class DaysControllerTest < ActionDispatch::IntegrationTest
       }
     end
     assert_redirected_to event_days_path(@event.event_key)
+  end
+
+  # モーダル表示でステージを作成後にモーダルが閉じる
+  test "turbo_stream: day is created and modal is closed" do
+    assert_difference([ "Day.count" ], 1) do
+      post event_days_path(@event.event_key), params: {
+        day: { date: "2025-01-01" }
+      },
+      headers: { "Accept" => "text/vnd.turbo-stream.html" } # Turbo Streamとして送信
+    end
+
+    assert_response :success
+    assert_equal "text/vnd.turbo-stream.html", response.media_type
+
+    # モーダルを閉じる Turbo Stream が返っているか
+    assert_includes response.body, 'turbo-stream action="update" target="modal"'
   end
 
   # 開催日が空文字の場合は追加できない

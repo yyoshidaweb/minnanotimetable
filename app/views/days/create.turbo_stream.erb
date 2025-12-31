@@ -1,0 +1,8 @@
+<%# モーダルの中身を空にする %>
+<%= turbo_stream.update "modal", "" %>
+<%# 選択肢を更新する %>
+<%= turbo_stream.update "day_select" do %>
+  <%= render "performances/day_select",
+            days: @days,
+            selected_day: @day.id %>
+<% end %>

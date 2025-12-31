@@ -19,10 +19,14 @@ class DaysController < ApplicationController
 
   # 開催日追加処理
   def create
+    @days = @event.days.order(:date)
     @day = @event.days.build(day_params)
 
     if @day.save
-      redirect_to event_days_path(@event.event_key), notice: "開催日を追加しました。"
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to event_days_path(@event.event_key), notice: "開催日を追加しました。" }
+      end
     else
       render :new, status: :unprocessable_entity
     end
