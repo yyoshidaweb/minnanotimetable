@@ -57,7 +57,7 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  # 出演者作成処理（タグ未存在の場合に出演者作成と同時にタグも作成されることを確認）
+  # 通常遷移で出演者作成処理（タグ未存在の場合に出演者作成と同時にタグも作成されることを確認）
   test "should create performer and create tag when tag not exists" do
     performer_name = "タグ未存在の名前"
     assert_difference([ "Performer.count", "PerformerNameTag.count" ], 1) do
@@ -81,6 +81,28 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     assert_equal tag.id, created_performer.performer_name_tag_id
     # 正しいリダイレクト先
     assert_redirected_to event_performers_path(@event.event_key)
+  end
+
+  # モーダル表示で作成後にモーダルが閉じる
+  test "turbo_stream: performer is created and modal is closed" do
+    performer_name = "タグ未存在の名前"
+    assert_difference([ "Performer.count", "PerformerNameTag.count" ], 1) do
+      post event_performers_path(@event.event_key), params: {
+        performer: {
+          # ネスト属性でタグ名を送信
+          performer_name_tag_attributes: { name: performer_name },
+          description: "説明",
+          website_url: "https://example.com"
+        }
+      },
+      headers: { "Accept" => "text/vnd.turbo-stream.html" } # Turbo Streamとして送信
+    end
+
+    assert_response :success
+    assert_equal "text/vnd.turbo-stream.html", response.media_type
+
+    # モーダルを閉じる Turbo Stream が返っているか
+    assert_includes response.body, 'turbo-stream action="update" target="modal"'
   end
 
   # 出演者が空文字の場合は追加できない

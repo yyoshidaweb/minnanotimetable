@@ -1,0 +1,8 @@
+<%# モーダルの中身を空にする %>
+<%= turbo_stream.update "modal", "" %>
+<%# 選択肢を更新する %>
+<%= turbo_stream.update "performer_select" do %>
+  <%= render "performances/performer_select",
+            performers: @performers,
+            selected_performer: @performer.id %>
+<% end %>

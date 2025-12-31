@@ -19,6 +19,7 @@ class PerformersController < ApplicationController
   end
 
   def create
+    @performers = @event.performers
     @performer = @event.performers.build(performer_params)
 
     # フォームで受け取るタグ名（fields_for で post される形）
@@ -41,7 +42,10 @@ class PerformersController < ApplicationController
     @performer.performer_name_tag = performer_name_tag
 
     if @performer.save
-      redirect_to event_performers_path(@event.event_key), notice: "出演者を作成しました。"
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to event_performers_path(@event.event_key), notice: "出演者を作成しました。" }
+      end
     else
       render :new, status: :unprocessable_entity
     end

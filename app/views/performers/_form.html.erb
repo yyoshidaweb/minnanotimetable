@@ -1,7 +1,10 @@
 <div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg"
      data-controller="tag-suggestion"
      data-tag-suggestion-url-value="<%= search_performer_name_tags_path %>">
-  <%= form_with model: @performer, url: event_performers_path(@event.event_key), class: "space-y-6" do |f| %>
+  <%= form_with model: @performer,
+                data: { turbo: turbo_frame_request? },
+                url: event_performers_path(@event.event_key),
+                class: "space-y-6" do |f| %>
     <%# エラーメッセージ %>
     <%= render "devise/shared/error_messages", resource: @performer %>
     <%# ─ 出演者名（タグ入力＋候補表示） ─ %>
