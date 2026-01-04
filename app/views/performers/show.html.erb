@@ -1,4 +1,4 @@
-<div class="relative max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">
+<div class="relative max-w-md mx-auto p-4">
   <%# 編集ボタン（作成者本人のみ表示） %>
   <% if user_signed_in? && current_user == @event.user %>
     <%= link_to edit_event_performer_path(@event.event_key, @performer),
