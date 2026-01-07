@@ -4,7 +4,7 @@ class PerformersController < ApplicationController
   # indexとshow以外のアクションは所有者本人のみアクセス可能
   before_action :authorize_event!, except: %i[index show]
   before_action :set_performer, only: %i[ show edit update destroy ]
-  before_action :set_performances, only: %i[ show edit ]
+  before_action :set_performances, only: %i[ show ]
   before_action :set_page_title, except: %i[ destroy ]
 
   def index
