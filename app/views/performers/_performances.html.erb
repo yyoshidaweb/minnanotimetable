@@ -1,0 +1,37 @@
+<div class="mb-4">
+  <% if performances.empty? %>
+    <p class="text-gray-500 border-b py-4">出演情報がありません</p>
+  <% else %>
+    <% performances.each do |performance| %>
+      <div class="flex justify-between border-b py-2">
+        <div>
+          <div class="text-sm text-gray-800">
+            <p>
+              <% if performance.day.present? %>
+                <%= performance.day.date.strftime("%-Y/%-m/%-d") %>
+              <% else %>
+                出演日：未定
+              <% end %>
+              <% if performance.start_time.present? && performance.end_time.present? %>
+                <%= "#{performance.start_time.strftime("%H:%M")}~" %>
+              <% else %>
+                時刻：未定
+              <% end %>
+            </p>
+          </div>
+          <div class="text-sm text-gray-800">
+            <% if performance.stage.present? %>
+              <%= performance.stage.display_name %>
+            <% else %>
+              <p>ステージ：未定</p>
+            <% end %>
+          </div>
+        </div>
+        <% if user_signed_in? && current_user == @event.user %>
+          <%= link_to "編集", edit_event_performance_path(@event.event_key, performance),
+                  class: "text-sm text-blue-600" %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

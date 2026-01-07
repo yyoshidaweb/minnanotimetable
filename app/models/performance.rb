@@ -20,6 +20,17 @@ class Performance < ApplicationRecord
       .where(performers: { event_id: event.id })
   }
 
+  # 開催日と開始時刻順で並べ、必要な関連も事前ロードするスコープ
+  scope :ordered_for_performer_detail, -> {
+    left_joins(:day)
+      .includes(:day, :stage)
+      .order(
+        Arel.sql("days.date IS NULL ASC"), # dayあり → dayなし の順
+        "days.date ASC",
+        "performances.start_time ASC"
+      )
+  }
+
   # タイムテーブル描画に必要な情報がすべて揃った performance を取得するスコープ
   scope :timetable_ready_for_event_on_date, ->(event, date) {
     joins(:performer, :day, :stage)

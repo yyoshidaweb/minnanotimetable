@@ -10,6 +10,9 @@
   <h1 class="text-xl font-bold text-gray-900">
     <%= @performer.performer_name_tag.name %>
   </h1>
+  <%# 出演情報を一覧表示 %>
+  <%= render "performances",
+        performances: @performances %>
   <%# 説明 %>
   <% if @performer.description.present? %>
     <div class="mb-6">
