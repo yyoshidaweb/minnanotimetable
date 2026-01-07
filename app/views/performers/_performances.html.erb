@@ -19,9 +19,13 @@
               <% end %>
             </p>
           </div>
-          <div class="text-sm text-gray-800">
+          <div class="text-sm">
             <% if performance.stage.present? %>
-              <%= performance.stage.display_name %>
+              <%= link_to event_stage_path(@event.event_key, performance.stage),
+                        class: "flex items-center text-blue-600" do %>
+                <%= performance.stage.display_name %>
+                <span class="material-symbols-outlined" style="font-size: 1.2rem;">moved_location</span>
+              <% end %>
             <% else %>
               <p>ステージ：未定</p>
             <% end %>
