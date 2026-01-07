@@ -13,7 +13,7 @@
                 出演日：未定
               <% end %>
               <% if performance.start_time.present? && performance.end_time.present? %>
-                <%= "#{performance.start_time.strftime("%H:%M")}~" %>
+                <%= "#{performance.start_time.strftime("%H:%M")}~#{performance.end_time.strftime("%H:%M")}" %>
               <% else %>
                 時刻：未定
               <% end %>
