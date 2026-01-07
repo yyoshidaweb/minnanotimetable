@@ -37,7 +37,7 @@ class PerformancesController < ApplicationController
 
   def update
     if @performance.update(performance_params)
-      redirect_to edit_timetable_path(@event.event_key), notice: "出演情報を更新しました。"
+      redirect_to event_performer_url(@event.event_key, @performance.performer), notice: "出演情報を更新しました。"
     else
       restore_time_virtual_attributes
       render :edit, status: :unprocessable_entity

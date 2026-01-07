@@ -116,8 +116,8 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
         end_time_minute: "25"
       }
     }
-    assert_redirected_to edit_timetable_path(@event.event_key)
     @performance.reload
+    assert_redirected_to event_performer_url(@event.event_key, @performance.performer)
     assert_equal @event.performers.second.id, @performance.performer_id
     assert_equal @event.days.second.id,       @performance.day_id
     assert_equal @event.stages.second.id,     @performance.stage_id
@@ -134,8 +134,8 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
         performer_id: @event.performers.second.id
       }
     }
-    assert_redirected_to edit_timetable_path(@event.event_key)
     @performance.reload
+    assert_redirected_to event_performer_url(@event.event_key, @performance.performer)
     assert_equal @event.performers.second.id, @performance.performer_id
   end
 
