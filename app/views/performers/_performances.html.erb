@@ -28,8 +28,10 @@
           </div>
         </div>
         <% if user_signed_in? && current_user == @event.user %>
-          <%= link_to "編集", edit_event_performance_path(@event.event_key, performance),
-                  class: "text-sm text-blue-600" %>
+          <%= link_to edit_event_performance_path(@event.event_key, performance),
+                  class: "flex items-center text-sm text-gray-800" do %>
+            <span class="material-symbols-outlined">edit_calendar</span>
+          <% end %>
         <% end %>
       </div>
     <% end %>
