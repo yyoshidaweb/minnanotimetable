@@ -4,6 +4,7 @@ class PerformersController < ApplicationController
   # indexとshow以外のアクションは所有者本人のみアクセス可能
   before_action :authorize_event!, except: %i[index show]
   before_action :set_performer, only: %i[ show edit update destroy ]
+  before_action :set_performances, only: %i[ show ]
   before_action :set_page_title, except: %i[ destroy ]
 
   def index
@@ -99,6 +100,11 @@ class PerformersController < ApplicationController
     # 出演者を取得
     def set_performer
       @performer = @event.performers.find(params[:id])
+    end
+
+    # 出演情報を取得
+    def set_performances
+      @performances = @performer.performances.ordered_for_performer_detail
     end
 
     # ページタイトルを設定

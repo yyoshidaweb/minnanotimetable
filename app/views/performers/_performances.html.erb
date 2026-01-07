@@ -1,0 +1,43 @@
+<div class="mb-4">
+  <% if performances.empty? %>
+    <p class="text-gray-500 border-b py-4">出演情報がありません</p>
+  <% else %>
+    <% performances.each do |performance| %>
+      <div class="flex justify-between border-b py-2">
+        <div>
+          <div class="text-sm text-gray-800">
+            <p>
+              <% if performance.day.present? %>
+                <%= performance.day.date.strftime("%-Y/%-m/%-d") %>
+              <% else %>
+                出演日：未定
+              <% end %>
+              <% if performance.start_time.present? && performance.end_time.present? %>
+                <%= "#{performance.start_time.strftime("%H:%M")}~#{performance.end_time.strftime("%H:%M")}" %>
+              <% else %>
+                時刻：未定
+              <% end %>
+            </p>
+          </div>
+          <div class="text-sm">
+            <% if performance.stage.present? %>
+              <%= link_to event_stage_path(@event.event_key, performance.stage),
+                        class: "flex items-center text-blue-600" do %>
+                <%= performance.stage.display_name %>
+                <span class="material-symbols-outlined" style="font-size: 1.2rem;">moved_location</span>
+              <% end %>
+            <% else %>
+              <p>ステージ：未定</p>
+            <% end %>
+          </div>
+        </div>
+        <% if user_signed_in? && current_user == @event.user %>
+          <%= link_to edit_event_performance_path(@event.event_key, performance),
+                  class: "flex items-center text-sm text-gray-800" do %>
+            <span class="material-symbols-outlined">edit_calendar</span>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
