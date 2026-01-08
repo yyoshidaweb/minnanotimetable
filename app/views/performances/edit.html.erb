@@ -5,21 +5,9 @@
                 class: "space-y-6" do |f| %>
     <%# エラーメッセージ %>
     <%= render "devise/shared/error_messages", resource: @performance %>
-    <%# 出演者（必須） %>
-    <div class="flex items-end mb-1">
-      <%= f.label :performer_id, "出演者",
-                  class: "block text-sm font-semibold text-gray-800" %>
-      <span class="ml-1 text-xs text-red-600">※必須</span>
-    </div>
-    <div>
-      <%= f.collection_select :performer_id,
-                              @performers,
-                              :id,
-                              :display_name,
-                              { prompt: "選択してください" },
-                              { class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800
-                                        focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800" } %>
-    </div>
+    <h3 class="text-xl font-bold text-gray-900">
+      <%= @performance.performer.display_name %>
+    </h3>
     <%# 開催日（任意） %>
     <div>
       <%= f.label :day_id, "開催日",
