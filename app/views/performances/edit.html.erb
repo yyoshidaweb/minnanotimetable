@@ -29,12 +29,18 @@
     <div>
       <%= f.label :stage_id, "ステージ",
                   class: "block text-sm font-semibold text-gray-800 mb-1" %>
-      <%= f.collection_select :stage_id,
-                              @stages,
-                              :id,
-                              :display_name,
-                              { include_blank: "未定" },
-                              { class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800" } %>
+      <%# ステージ作成モーダルに対応するためにパーシャルとして表示する %>
+      <div id="stage_select">
+        <%= render "performances/stage_select",
+                    stages: @stages,
+                    selected_stage: @performance&.stage_id %>
+      </div>
+      <div class="flex justify-end">
+        <%= link_to "ステージを追加",
+                    new_event_stage_path,
+                    data: { turbo_frame: "modal" },
+                    class: "text-xs text-blue-800 underline" %>
+      </div>
     </div>
     <%# 開始時刻（任意） %>
     <div>
