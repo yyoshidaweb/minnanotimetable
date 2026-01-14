@@ -103,11 +103,10 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  # 出演情報を全項目編集
+  # 出演情報を出演者以外の全項目編集
   test "should update performance" do
     patch event_performance_path(@event.event_key, @performance), params: {
       performance: {
-        performer_id: @event.performers.second.id,
         day_id: @event.days.second.id,
         stage_id: @event.stages.second.id,
         start_time_hour: "11",
@@ -118,7 +117,6 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     }
     @performance.reload
     assert_redirected_to event_performer_url(@event.event_key, @performance.performer)
-    assert_equal @event.performers.second.id, @performance.performer_id
     assert_equal @event.days.second.id,       @performance.day_id
     assert_equal @event.stages.second.id,     @performance.stage_id
     assert_equal 11, @performance.start_time.hour
@@ -127,26 +125,18 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 25, @performance.end_time.min
   end
 
-  # 出演者名だけで出演情報を編集できる
-  test "should update performance only with performer" do
+  # 出演情報編集時にperformer_idを送信しても変更されない
+  test "should not update performance with performer" do
+    original_performer_id = @performance.performer_id
     patch event_performance_path(@event.event_key, @performance), params: {
       performance: {
         performer_id: @event.performers.second.id
       }
     }
-    @performance.reload
     assert_redirected_to event_performer_url(@event.event_key, @performance.performer)
-    assert_equal @event.performers.second.id, @performance.performer_id
-  end
-
-  # 出演情報が空文字の場合は編集できない
-  test "should not update blank performance" do
-    patch event_performance_path(@event.event_key, @performance), params: {
-        performance: {
-          performer_id: ""
-        }
-      }
-    assert_response :unprocessable_entity
+    @performance.reload
+    # 編集前と編集後のperformer_idが変更されていないことを確認
+    assert_equal @performance.performer_id, original_performer_id
   end
 
   # 時刻が正しくないと出演情報を編集できない

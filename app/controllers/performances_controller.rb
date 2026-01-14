@@ -17,7 +17,7 @@ class PerformancesController < ApplicationController
   end
 
   def create
-    @performance = Performance.new(performance_params)
+    @performance = Performance.new(performance_params_for_create)
     if @performance.save
       redirect_to show_timetable_path(@event.event_key), notice: "出演情報を作成しました。"
     else
@@ -36,7 +36,7 @@ class PerformancesController < ApplicationController
   end
 
   def update
-    if @performance.update(performance_params)
+    if @performance.update(performance_params_for_update)
       redirect_to event_performer_url(@event.event_key, @performance.performer), notice: "出演情報を更新しました。"
     else
       restore_time_virtual_attributes
@@ -93,10 +93,32 @@ class PerformancesController < ApplicationController
         end
     end
 
-    # 許可するパラメーター
-    def performance_params
+    # create時に許可するパラメーター
+    def performance_params_for_create
       params.require(:performance).permit(
         :performer_id,
+        :day_id,
+        :stage_id,
+        :start_time_hour,
+        :start_time_minute,
+        :end_time_hour,
+        :end_time_minute
+      ).tap do |p|
+        # hour / minute から Time を組み立てる
+        p[:start_time] = parse_time_from_hour_minute(
+          p[:start_time_hour],
+          p[:start_time_minute]
+        )
+        p[:end_time] = parse_time_from_hour_minute(
+          p[:end_time_hour],
+          p[:end_time_minute]
+        )
+      end
+    end
+
+    # update時に許可するパラメーター
+    def performance_params_for_update
+      params.require(:performance).permit(
         :day_id,
         :stage_id,
         :start_time_hour,
