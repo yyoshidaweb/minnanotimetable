@@ -411,7 +411,7 @@ GEM
     tailwindcss-ruby (4.1.16-arm64-darwin)
     tailwindcss-ruby (4.1.16-x86_64-linux-gnu)
     tailwindcss-ruby (4.1.16-x86_64-linux-musl)
-    thor (1.4.0)
+    thor (1.5.0)
     thruster (0.1.17)
     thruster (0.1.17-aarch64-linux)
     thruster (0.1.17-arm64-darwin)
