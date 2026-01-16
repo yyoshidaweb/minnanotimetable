@@ -46,7 +46,7 @@ class PerformancesController < ApplicationController
 
   def destroy
     @performance.destroy!
-    redirect_to edit_timetable_path(@event.event_key), notice: "出演情報を削除しました。", status: :see_other
+    redirect_to event_performer_url(@event.event_key, @performance.performer), notice: "出演情報を削除しました。", status: :see_other
   end
 
   private

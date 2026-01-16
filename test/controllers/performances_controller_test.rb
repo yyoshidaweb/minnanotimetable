@@ -175,7 +175,7 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Performance.for_event(@event).count", -1) do
       delete event_performance_path(@event.event_key, @performance)
     end
-    assert_redirected_to edit_timetable_path(@event.event_key)
+    assert_redirected_to event_performer_url(@event.event_key, @performance.performer)
   end
 
   # 他者の出演情報は削除できない
