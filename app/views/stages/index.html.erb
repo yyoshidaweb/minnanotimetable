@@ -6,21 +6,18 @@
 <% if @stages.any? %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
     <% @stages.each do |stage| %>
-      <div class="relative bg-white shadow-md rounded-lg p-4 border
-                  hover:shadow-xl hover:bg-gray-50 transition">
-        <%# カード全体：詳細ページ %>
-        <%= link_to event_stage_path(@event.event_key, stage),
-                    class: "block pr-12" do %>
-          <%# タイトル %>
-          <p class="text-lg font-semibold text-gray-800">
-            <%= stage.stage_name_tag.name %>
-          </p>
-          <%# 説明文 %>
-          <p class="text-gray-700 mt-2 line-clamp-2">
-            <%= stage.description %>
-          </p>
-        <% end %>
-      </div>
+      <%# カード全体：詳細ページ %>
+      <%= link_to event_stage_path(@event.event_key, stage),
+                  class: "bg-white shadow-md rounded-lg p-4 border hover:bg-gray-50 transition" do %>
+        <%# タイトル %>
+        <p class="text-lg font-semibold text-gray-800">
+          <%= stage.stage_name_tag.name %>
+        </p>
+        <%# 説明文 %>
+        <p class="text-gray-700 mt-2 line-clamp-2">
+          <%= stage.description %>
+        </p>
+      <% end %>
     <% end %>
   </div>
 <% else %>
