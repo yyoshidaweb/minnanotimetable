@@ -20,13 +20,6 @@
             <%= stage.description %>
           </p>
         <% end %>
-        <%# 編集ボタン（作成者本人のみ表示） %>
-        <% if user_signed_in? && current_user == @event.user %>
-          <%= link_to edit_event_stage_path(@event.event_key, stage),
-                class: "absolute top-4 right-4 text-xs text-gray-800" do %>
-            <span class="material-symbols-outlined">edit</span>
-          <% end %>
-        <% end %>
       </div>
     <% end %>
   </div>
