@@ -1,56 +1,60 @@
-<div class="max-w-md mx-auto my-4 p-6 bg-white shadow-md rounded-lg"
-     data-controller="tag-suggestion"
-     data-tag-suggestion-url-value="<%= search_stage_name_tags_path %>">
-  <%= form_with model: @stage,
-                url: event_stage_path(@event.event_key, @stage),
-                method: :patch,
-                class: "space-y-6" do |f| %>
-    <%# エラーメッセージ %>
-    <%= render "devise/shared/error_messages", resource: @stage %>
-    <%# ステージ名（タグ入力＋候補表示） %>
-    <div>
-      <%= f.label :stage_name_tag, "ステージ名", class: "block text-sm font-semibold text-gray-800 mb-1" %>
-      <%= f.fields_for :stage_name_tag do |ff| %>
-        <%= ff.text_field :name,
-          value: @stage.stage_name_tag&.name,
-          class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800 
-                  focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800",
+<div class="pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
+  <div class="max-w-md mx-auto my-4 p-6 bg-white shadow-md rounded-lg"
+       data-controller="tag-suggestion"
+       data-tag-suggestion-url-value="<%= search_stage_name_tags_path %>">
+    <%= form_with model: @stage,
+                  url: event_stage_path(@event.event_key, @stage),
+                  method: :patch,
+                  class: "space-y-6" do |f| %>
+      <%# エラーメッセージ %>
+      <%= render "devise/shared/error_messages", resource: @stage %>
+      <%# ステージ名（タグ入力＋候補表示） %>
+      <div>
+        <%= f.label :stage_name_tag, "ステージ名", class: "block text-sm font-semibold text-gray-800 mb-1" %>
+        <%= f.fields_for :stage_name_tag do |ff| %>
+          <%= ff.text_field :name,
+            value: @stage.stage_name_tag&.name,
+            class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800 
+                    focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800",
+            data: {
+              tag_suggestion_target: "input",
+              action: "input->tag-suggestion#search"
+            } %>
+          <div class="relative" data-tag-suggestion-target="results"></div>
+        <% end %>
+      </div>
+      <%# 説明欄 %>
+      <div>
+        <%= f.label :description, "説明", class: "block text-sm font-semibold text-gray-800 mb-1" %>
+        <%= f.text_area :description,
+          class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800
+                  focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800 min-h-24 resize-none",
+          rows: 3,
           data: {
-            tag_suggestion_target: "input",
-            action: "input->tag-suggestion#search"
+            controller: "autosize",
+            action: "input->autosize#resize",
+            autosize_target: "textarea"
           } %>
-        <div class="relative" data-tag-suggestion-target="results"></div>
-      <% end %>
-    </div>
-    <%# 説明欄 %>
-    <div>
-      <%= f.label :description, "説明", class: "block text-sm font-semibold text-gray-800 mb-1" %>
-      <%= f.text_area :description,
-        class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800
-                focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800 min-h-24 resize-none",
-        rows: 3,
-        data: {
-          controller: "autosize",
-          action: "input->autosize#resize",
-          autosize_target: "textarea"
-        } %>
-    </div>
-    <%# 住所 %>
-    <div>
-      <%= f.label :address, "住所", class: "block text-sm font-semibold text-gray-800 mb-1" %>
-      <%= f.text_field :address,
-        class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800
-                focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800" %>
-    </div>
-    <%# 更新ボタン %>
-    <div>
-      <%= f.submit "更新",
-        class: "w-full py-2 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition cursor-pointer" %>
-    </div>
-  <% end %>
-  <%= button_to "削除",
-              event_stage_path(@event.event_key, @stage),
-              method: :delete,
-              data: { turbo_confirm: "⚠️ 削除しますか？ 一度削除すると元に戻せません" },
-              class: "flex justify-center w-full mt-24 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 hover:text-white transition cursor-pointer" %>
+      </div>
+      <%# 住所 %>
+      <div>
+        <%= f.label :address, "住所", class: "block text-sm font-semibold text-gray-800 mb-1" %>
+        <%= f.text_field :address,
+          class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800
+                  focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800" %>
+      </div>
+      <%# 更新ボタン %>
+      <div>
+        <%= f.submit "更新",
+          class: "w-full py-2 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition cursor-pointer" %>
+      </div>
+    <% end %>
+    <%= button_to "削除",
+                event_stage_path(@event.event_key, @stage),
+                method: :delete,
+                data: { turbo_confirm: "⚠️ 削除しますか？ 一度削除すると元に戻せません" },
+                class: "flex justify-center w-full mt-24 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 hover:text-white transition cursor-pointer" %>
+  </div>
 </div>
+<%# 下部タブメニュー %>
+<%= render "layouts/bottom_tab" %>
