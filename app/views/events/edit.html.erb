@@ -1,5 +1,5 @@
 <div class="pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
-  <div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg"
+  <div class="max-w-md mx-auto my-4 p-6 bg-white shadow-md rounded-lg"
        data-controller="tag-suggestion"
        data-tag-suggestion-url-value="<%= search_event_name_tags_path %>">
     <%= form_with model: @event, url: event_path(@event.event_key), method: :patch, class: "space-y-6" do |f| %>
