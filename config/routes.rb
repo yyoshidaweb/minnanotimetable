@@ -46,10 +46,6 @@ Rails.application.routes.draw do
     resources :performances, only: [ :new, :create, :edit, :update, :destroy ]
   end
 
-
-  # タイムテーブル編集ページ（/:event_key/edit）
-  get "/:event_key/edit", to: "timetables#edit", as: :edit_timetable
-
   # イベント詳細ページ（/:event_key）
   get "/:event_key", to: "timetables#show", as: :show_timetable
 end
