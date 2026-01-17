@@ -4,7 +4,7 @@
 <% if @events.any? %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     <% @events.each do |event| %>
-      <%= link_to edit_timetable_path(event.event_key),
+      <%= link_to show_timetable_path(event.event_key),
                   class: "block bg-white shadow-md rounded-lg p-4 border hover:shadow-xl hover:bg-gray-50 transition" do %>
         <!-- タイトル -->
         <p class="text-lg font-semibold text-blue-600">

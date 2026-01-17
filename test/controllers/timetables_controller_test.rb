@@ -47,20 +47,6 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     assert_select "p", text: @performance2.performer.performer_name_tag.name, count: 0
   end
 
-  # タイムテーブル編集ページ
-  test "should response to edit url" do
-    get edit_timetable_url(@event.event_key)
-    assert_response :success
-  end
-
-  # 作成者本人以外はタイムテーブル編集ページにアクセスできない
-  test "should not access to edit url" do
-    sign_out @user
-    sign_in @user_two
-    get edit_timetable_url(@event.event_key)
-    assert_response :not_found
-  end
-
   # 出演情報が0件の場合もタイムテーブルを表示できる
   test "should show event timetable by event_key when no performances" do
     get "/#{@no_performance_event.event_key}"

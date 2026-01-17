@@ -1,4 +1,4 @@
-<div class="relative max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">
+<div class="relative max-w-md mx-auto p-4 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
   <%# 編集ボタン（作成者本人のみ表示） %>
   <% if user_signed_in? && current_user == @event.user %>
     <%= link_to edit_event_stage_path(@event.event_key, @stage),
@@ -7,7 +7,7 @@
     <% end %>
   <% end %>
   <%# ステージ名 %>
-  <h1 class="text-xl font-bold text-gray-900 mb-4">
+  <h1 class="text-xl font-bold text-gray-900 mb-2">
     <%= @stage.stage_name_tag.name %>
   </h1>
   <%# 説明 %>
@@ -19,10 +19,10 @@
   <%# 住所 %>
   <% if @stage.address.present? %>
     <div class="mb-6">
-      <h2 class="text-md font-bold text-gray-900">住所</h2>
-      <p class="text-gray-800 whitespace-pre-line">
-        <%= @stage.address %>
-      </p>
+      <h2 class="text-md font-bold text-gray-900 mb-2">住所</h2>
+      <p class="text-gray-800 whitespace-pre-line"><%= @stage.address %></p>
     </div>
   <% end %>
 </div>
+<%# 下部タブメニュー %>
+<%= render "layouts/bottom_tab" %>

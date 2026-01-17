@@ -12,18 +12,18 @@
       <%= @event.event_name_tag.name %>
     </h1>
     <!-- 説明欄 -->
-    <div class="mb-2">
+    <div class="mb-6">
       <p class="text-gray-800 whitespace-pre-line"><%= @event.description %></p>
     </div>
     <%# 開催日 %>
     <div class="text-gray-800 mb-2">
-      <div class="flex">
-        <h2 class="mr-1 font-bold text-md">開催日</h2>
+      <div class="relative flex">
+        <h2 class="mb-2 font-bold text-md">開催日</h2>
         <%# 開催日編集ボタン（作成者本人のみ表示） %>
         <% if user_signed_in? && current_user == @event.user %>
           <%= link_to event_days_path(@event.event_key),
-                            class: "text-gray-800" do %>
-            <span class="material-symbols-outlined">edit</span>
+                            class: "absolute top-0 right-0 text-gray-800" do %>
+            <span class="material-symbols-outlined">edit_calendar</span>
           <% end %>
         <% end %>
       </div>
