@@ -1,5 +1,9 @@
 <% if turbo_frame_request? %>
   <%= render "modal_new", day: @day %>
 <% else %>
-  <%= render "form", day: @day %>
+  <div class="my-4 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
+    <%= render "form", day: @day %>
+  </div>
+  <%# 下部タブメニュー %>
+  <%= render "layouts/bottom_tab" %>
 <% end %>
