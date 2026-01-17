@@ -44,7 +44,7 @@
 <%# 出演情報作成ボタン %>
 <% if user_signed_in? && current_user == @event.user %>
   <div class="flex justify-end items-center mb-4">
-    <%= link_to new_event_performance_path(@event.event_key),
+    <%= link_to new_event_performance_path(@event.event_key, performer_id: @performer.id),
                     class: "flex items-center justify-center p-2 bg-gray-800 text-white rounded-full shadow hover:bg-gray-900" do %>
       <span class="material-symbols-outlined">calendar_add_on</span>
     <% end %>

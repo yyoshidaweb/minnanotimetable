@@ -14,6 +14,10 @@ class PerformancesController < ApplicationController
 
   def new
     @performance = Performance.new
+    @fixed_performer = params[:performer_id].present?
+    if @fixed_performer
+      @performance.performer_id = params[:performer_id]
+    end
   end
 
   def create
