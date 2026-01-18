@@ -117,7 +117,7 @@ class PerformersController < ApplicationController
         when "new", "create"
           "出演者を作成"
         when "show"
-          "#{@performer.performer_name_tag.name}"
+          "出演者詳細"
         when "edit", "update"
           "出演者を編集"
         end

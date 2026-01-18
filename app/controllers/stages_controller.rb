@@ -118,7 +118,7 @@ class StagesController < ApplicationController
         when "new", "create"
           "ステージを作成"
         when "show"
-          "#{@stage.stage_name_tag.name}"
+          "ステージ詳細"
         when "edit", "update"
           "ステージを編集"
         end
