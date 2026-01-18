@@ -35,7 +35,7 @@
     <%# 成功メッセージ %>
     <%= render "devise/shared/notice_messages" %>
     <%# メイン要素（@no_marginがtrueの場合はmainに対するマージンを取り除く） %>
-    <main class="pt-16 <%= @no_margin ? "" : "m-2" %>">
+    <main class="<%= @timetable_view  ? "" : "m-2 pt-16" %>">
       <%= yield %>
       <!-- モーダル用 -->
       <%= turbo_frame_tag "modal" %>

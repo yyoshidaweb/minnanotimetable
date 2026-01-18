@@ -1,6 +1,6 @@
 <% if @performances.present? %>
   <%# 日付選択タブ（イベントヘッダーの高さ分下げて配置する） %>
-  <nav class="flex h-8 fixed top-12 z-160 w-full justify-around overflow-x-auto bg-white border-t border-gray-200">
+  <nav class="flex h-8 fixed top-16 z-160 w-full justify-around overflow-x-auto bg-white border-t border-gray-200">
     <% @days.each do |day| %>
       <%# 日付を MM/DD 形式でラベルに整形 %>
       <% label = day.date.strftime("%-m/%-d") %>
@@ -23,7 +23,7 @@
   <%# タイムテーブル表示画面のメインコンテナ（画面全体の高さに設定する） %>
   <div class="h-svh flex flex-col overflow-hidden pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
     <%# スクロールコンテナ（ヘッダーと日付選択タブの高さ分下げた位置に配置する） %>
-    <div class="flex-1 pt-20 overflow-auto relative">
+    <div class="flex-1 pt-24 overflow-auto relative">
       <%# 横幅確保 %>
       <div class="min-w-max">
         <%# ヘッダー行 %>
