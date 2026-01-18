@@ -6,26 +6,33 @@
       <%# エラーメッセージ %>
       <%= render "devise/shared/error_messages", resource: @performance %>
       <%# 出演者（必須） %>
-      <div class="flex items-end mb-1">
-        <%= f.label :performer_id, "出演者",
+      <% if session[:fixed_performer_id].present? %>
+        <%# 出演者名表示用 %>
+        <h3 class="text-xl font-bold text-gray-900"><%= @performance.performer.display_name %></h3>
+        <%# performer_id送信用 %>
+        <%= hidden_field_tag "performance[performer_id]", @performance.performer_id %>
+      <% else %>
+        <div class="flex items-end mb-1">
+          <%= f.label :performer_id, "出演者",
                   class: "block text-sm font-semibold text-gray-800" %>
-        <span class="ml-1 text-xs text-red-600">※必須</span>
-      </div>
-      <div>
-        <%# 作成モーダルに対応するためにパーシャルとして表示する %>
-        <div id="performer_select">
-          <%= render "performances/performer_select",
+          <span class="ml-1 text-xs text-red-600">※必須</span>
+        </div>
+        <div>
+          <%# 作成モーダルに対応するためにパーシャルとして表示する %>
+          <div id="performer_select">
+            <%= render "performances/performer_select",
                     performers: @performers,
                     selected_performer: @performance&.performer_id %>
-        </div>
-        <div class="flex justify-end">
-          <span class="text-xs text-gray-500">または、</span>
-          <%= link_to "出演者を追加",
+          </div>
+          <div class="flex justify-end">
+            <span class="text-xs text-gray-500">または、</span>
+            <%= link_to "出演者を追加",
                     new_event_performer_path,
                     data: { turbo_frame: "modal" },
                     class: "text-xs text-blue-800 underline" %>
+          </div>
         </div>
-      </div>
+      <% end %>
       <%# 開催日（任意） %>
       <div>
         <%= f.label :day_id, "出演日",
