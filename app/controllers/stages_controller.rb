@@ -5,6 +5,7 @@ class StagesController < ApplicationController
   before_action :authorize_event!, except: %i[index show]
   before_action :set_stage, only: %i[ show edit update destroy ]
   before_action :set_page_title, except: %i[ destroy ]
+  before_action :show_event_header, except: %i[ destroy ]
 
   # ステージ一覧
   def index
@@ -121,6 +122,12 @@ class StagesController < ApplicationController
         when "edit", "update"
           "ステージを編集"
         end
+    end
+
+    # イベントヘッダー表示フラグ
+    def show_event_header
+      # イベント用ヘッダー表示フラグ
+      @show_event_header = true
     end
 
     # 許可するパラメーター
