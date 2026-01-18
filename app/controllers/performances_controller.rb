@@ -17,20 +17,27 @@ class PerformancesController < ApplicationController
     # 出演者詳細ページから遷移した場合は出演者をセットする
     if params[:performer_id].present?
       @performance.performer_id = params[:performer_id]
+      performer = Performer.find(params[:performer_id])
+      # リダイレクト先をセッションに保存
+      session[:performances_return_to] = event_performer_url(@event.event_key, performer)
+    else
+      # 通常作成時はセッションをクリア
+      session.delete(:performances_return_to)
     end
   end
 
   def create
     @performance = Performance.new(performance_params_for_create)
     if @performance.save
-      redirect_to show_timetable_path(@event.event_key), notice: "出演情報を作成しました。"
+      redirect_to(session.delete(:performances_return_to) ||
+                  show_timetable_path(@event.event_key),
+                  notice: "出演情報を作成しました。")
     else
       # エラー時に select の選択値を保持する
       restore_time_virtual_attributes
       render :new, status: :unprocessable_entity
     end
   end
-
 
   def edit
     @performance.start_time_hour   = @performance.start_time&.hour
