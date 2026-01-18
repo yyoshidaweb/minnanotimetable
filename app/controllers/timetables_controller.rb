@@ -25,16 +25,6 @@ class TimetablesController < ApplicationController
     @show_event_header = true
   end
 
-  # タイムテーブル編集ページ表示
-  def edit
-    # ヘッダー非表示フラグ
-    @hidden_header = true
-    # イベント用ヘッダー表示フラグ
-    @show_event_header = true
-    # マージン不要フラグ
-    @no_margin = true
-  end
-
   private
     # イベントを取得
     def set_event
