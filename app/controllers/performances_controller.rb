@@ -14,8 +14,8 @@ class PerformancesController < ApplicationController
 
   def new
     @performance = Performance.new
-    @fixed_performer = params[:performer_id].present?
-    if @fixed_performer
+    # 出演者詳細ページから遷移した場合は出演者をセットする
+    if params[:performer_id].present?
       @performance.performer_id = params[:performer_id]
     end
   end
