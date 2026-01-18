@@ -11,6 +11,7 @@ class PerformancesController < ApplicationController
   before_action :set_performance, only: %i[ edit update destroy ]
   # ページタイトル設定
   before_action :set_page_title, except: %i[ destroy ]
+  before_action :show_event_header, except: %i[ destroy ]
 
   def new
     @performance = Performance.new
@@ -111,6 +112,12 @@ class PerformancesController < ApplicationController
         when "edit", "update"
           "出演情報を編集"
         end
+    end
+
+    # イベントヘッダー表示フラグ
+    def show_event_header
+      # イベント用ヘッダー表示フラグ
+      @show_event_header = true
     end
 
     # create時に許可するパラメーター
