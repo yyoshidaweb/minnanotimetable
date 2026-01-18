@@ -8,17 +8,17 @@ class EventsController < ApplicationController
   before_action :authorize_event!, only: [ :edit, :update, :destroy ]
   # 開催日を昇順で取得
   before_action :set_days, only: [ :show, :edit ]
+  before_action :set_page_title, except: %i[ destroy ]
+  before_action :show_event_header, except: %i[ destroy ]
 
   # 作成したイベント一覧
   def index
     # 自分が作成したイベントのみ取得（最新順）
     @events = current_user.events.order(created_at: :desc)
-    @page_title = "作成したイベント一覧"
   end
 
   # 未ログインでも閲覧可能
   def show
-    @page_title = "#{@event.event_name_tag.name} 概要"
   end
 
   # イベント作成ページ表示
@@ -26,7 +26,6 @@ class EventsController < ApplicationController
     @event = Event.new
     # nested form 用に空のタグオブジェクトを用意
     @event.build_event_name_tag
-    @page_title = "イベント作成"
   end
 
   # イベント作成処理
@@ -66,7 +65,6 @@ class EventsController < ApplicationController
   end
 
   def edit
-    @page_title = "イベント情報編集"
   end
 
   def update
@@ -113,6 +111,27 @@ class EventsController < ApplicationController
   # 開催日を昇順にセットする
   def set_days
     @days = @event.days.order(:date)
+  end
+
+  # ページタイトルを設定
+  def set_page_title
+    @page_title =
+      case action_name
+      when "index"
+        "作成したイベント一覧"
+      when "new", "create"
+        "イベントを作成"
+      when "show"
+        "イベント詳細"
+      when "edit", "update"
+        "イベントを編集"
+      end
+  end
+
+  # イベントヘッダー表示フラグ
+  def show_event_header
+    # イベント用ヘッダー表示フラグ
+    @show_event_header = true
   end
 
   # 許可するパラメーター

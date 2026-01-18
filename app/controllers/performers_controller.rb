@@ -6,6 +6,7 @@ class PerformersController < ApplicationController
   before_action :set_performer, only: %i[ show edit update destroy ]
   before_action :set_performances, only: %i[ show ]
   before_action :set_page_title, except: %i[ destroy ]
+  before_action :show_event_header, except: %i[ destroy ]
 
   def index
     @performers = @event.performers
@@ -116,10 +117,16 @@ class PerformersController < ApplicationController
         when "new", "create"
           "出演者を作成"
         when "show"
-          "#{@performer.performer_name_tag.name}"
+          "出演者詳細"
         when "edit", "update"
           "出演者を編集"
         end
+    end
+
+    # イベントヘッダー表示フラグ
+    def show_event_header
+      # イベント用ヘッダー表示フラグ
+      @show_event_header = true
     end
 
     # 許可するパラメーター

@@ -6,6 +6,7 @@ class DaysController < ApplicationController
   before_action :authorize_event!
   before_action :set_day, only: %i[ destroy ]
   before_action :set_page_title, only: %i[ index new create ]
+  before_action :show_event_header, except: %i[ destroy ]
 
   # 開催日の追加と削除を行うページ
   def index
@@ -63,6 +64,12 @@ class DaysController < ApplicationController
         when "new", "create"
           "開催日を追加"
         end
+    end
+
+    # イベントヘッダー表示フラグ
+    def show_event_header
+      # イベント用ヘッダー表示フラグ
+      @show_event_header = true
     end
 
     # 許可するパラメーター

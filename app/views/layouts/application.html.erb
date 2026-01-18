@@ -34,8 +34,8 @@
     <%= render "layouts/event-header" %>
     <%# 成功メッセージ %>
     <%= render "devise/shared/notice_messages" %>
-    <%# メイン要素（@no_marginがtrueの場合はmainに対するマージンを取り除く） %>
-    <main class="<%= @no_margin ? "" : "m-2" %>">
+    <%# メイン要素（@timetable_viewがtrueの場合はマージンやパディングを指定しない） %>
+    <main class="<%= @timetable_view  ? "" : "m-2 pt-24" %>">
       <%= yield %>
       <!-- モーダル用 -->
       <%= turbo_frame_tag "modal" %>

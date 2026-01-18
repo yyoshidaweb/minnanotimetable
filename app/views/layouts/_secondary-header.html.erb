@@ -1,6 +1,6 @@
 <%# セカンドヘッダー共通テンプレート %>
 <% if defined?(@page_title) && @page_title.present? %>
-  <header class=" mt-12 fixed top-0 left-0 w-full h-8 bg-white border-b border-gray-100 z-50 flex items-center">
+  <header class="fixed top-16 left-0 w-full h-8 bg-white border-b border-gray-100 z-50 flex items-center">
     <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center relative">
       <%# 戻るボタン%>
       <%= link_to request.referer || root_path, class: "cursor-pointer" do %>
@@ -11,5 +11,4 @@
       <h1 class="text-sm text-gray-800 absolute left-1/2 -translate-x-1/2"><%= @page_title %></h1>
     </div>
   </header>
-  <div class="h-8"></div>
 <% end %>
