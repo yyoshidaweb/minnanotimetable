@@ -40,9 +40,9 @@
 
     background-size:
         /* 1時間 */
-        100% 12rem,
+        100% 6rem,
         /* 10分 */
-        100% 2rem;
+        100% 1rem;
 
     background-repeat: repeat-y;
     background-position: top left;

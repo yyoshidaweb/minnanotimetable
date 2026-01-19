@@ -14,7 +14,7 @@ module PerformancesHelper
     # 終了時刻は「次の時間」に切り上げ
     end_hour = end_time.min.zero? ? end_time.hour : end_time.hour + 1
     total_hours = end_hour - start_hour
-    rem_per_hour = 12.0
+    rem_per_hour = 6.0
     total_hours * rem_per_hour
   end
 
@@ -32,7 +32,7 @@ module PerformancesHelper
   timetable_start_min = timetable_start_minute
   start_min = performance.start_time.hour * 60 + performance.start_time.min
   diff_min  = start_min - timetable_start_min
-  rem_per_hour = 12.0
+  rem_per_hour = 6.0
   rem_per_min  = rem_per_hour / 60.0
   diff_min * rem_per_min
   end
@@ -54,7 +54,7 @@ module PerformancesHelper
 
   # performance の高さを rem で返す
   def performance_height_rem(performance)
-    rem_per_hour = 12.0
+    rem_per_hour = 6.0
     rem_per_min  = rem_per_hour / 60.0
     duration_min = performance.duration
     duration_min * rem_per_min
