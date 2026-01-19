@@ -32,7 +32,7 @@
           <div class="sticky left-0 w-5 bg-white z-100"></div>
           <%# ステージヘッダー %>
           <% @stages.each do |stage| %>
-            <div class="stage-header-col flex-1 min-w-30 z-95 border-b text-xs font-bold text-center p-2">
+            <div class="stage-header-col flex-1 min-w-10 z-95 border-b text-xs font-bold text-center p-2">
               <%= stage.stage_name_tag.name %>
             </div>
           <% end %>
@@ -49,7 +49,7 @@
           </div>
           <%# ステージを展開 %>
           <% @stages.each do |stage| %>
-            <div class="timetable-body-col flex-1 min-w-30 relative"
+            <div class="timetable-body-col flex-1 min-w-10 relative"
                 style="height: <%= timetable_height_rem(@performances) %>rem;">
               <%# 各ステージの出演情報を検索 %>
               <% if @performances_by_stage[stage.id].present? %>
