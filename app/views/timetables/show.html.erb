@@ -32,7 +32,7 @@
           <div class="sticky left-0 w-5 bg-white z-100"></div>
           <%# ステージヘッダー %>
           <% @stages.each do |stage| %>
-            <div class="stage-header-col flex-1 min-w-10 z-95 border-b text-xs font-bold text-center p-2">
+            <div class="stage-header-col flex-1 flex justify-center items-center min-h-8 max-h-16 min-w-10 z-95 border-b text-xs font-bold text-center p-px">
               <%= stage.stage_name_tag.name %>
             </div>
           <% end %>
