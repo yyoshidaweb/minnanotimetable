@@ -11,11 +11,6 @@
     background-color: #d1d5db;
 }
 
-/* 最後のステージ以外の右端にボーダーをつける */
-.stage-header-col:not(:last-child) {
-    border-right: 1px solid white;
-}
-
 /* ===== テーブルボディ部分の背景 ===== */
 /* テーブルボディ部分の背景色（偶数） */
 .timetable-body-col:nth-child(odd) {
