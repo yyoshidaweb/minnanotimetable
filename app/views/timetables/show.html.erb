@@ -55,7 +55,7 @@
               <% if @performances_by_stage[stage.id].present? %>
                 <% @performances_by_stage[stage.id].each do |performance| %>
                   <%# 出演情報カード %>
-                  <%= link_to "#",
+                  <%= link_to event_performer_path(@event.event_key, performance.performer),
                       class: "absolute left-px right-px bg-white rounded shadow-xs p-px text-xs",
                       style: "
                         top: #{performance_top_rem(performance)}rem;
