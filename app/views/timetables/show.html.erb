@@ -32,7 +32,7 @@
           <div class="sticky left-0 w-5 bg-white z-100"></div>
           <%# ステージヘッダー %>
           <% @stages.each do |stage| %>
-            <div class="stage-header-col flex-1 flex justify-center items-center min-h-8 max-h-12 min-w-10 z-95 border-b text-xs font-bold text-center p-px">
+            <div class="stage-header-col flex-1 flex justify-center items-center min-h-8 max-h-12 min-w-15 z-95 border-b text-xs font-bold text-center p-px">
               <span class="line-clamp-3"><%= stage.stage_name_tag.name %></span>
             </div>
           <% end %>
@@ -49,26 +49,25 @@
           </div>
           <%# ステージを展開 %>
           <% @stages.each do |stage| %>
-            <div class="timetable-body-col flex-1 min-w-10 relative"
+            <div class="timetable-body-col flex-1 min-w-15 relative"
                 style="height: <%= timetable_height_rem(@performances) %>rem;">
               <%# 各ステージの出演情報を検索 %>
               <% if @performances_by_stage[stage.id].present? %>
                 <% @performances_by_stage[stage.id].each do |performance| %>
                   <%# 出演情報カード %>
                   <%= link_to "#",
-                class: "absolute left-1 right-1 bg-white rounded shadow p-1 text-xs",
+                class: "absolute left-px right-px bg-white rounded shadow-xs p-px text-xs",
                 style: "
                   top: #{performance_top_rem(performance)}rem;
                   height: #{performance_height_rem(performance)}rem;" do %>
                     <% if performance.show_start_time? %>
-                      <div class="text-[10px] text-gray-500">
+                      <div class="text-[10px] leading-none text-gray-500">
                         <%= formatted_time(performance.start_time) %>
                       </div>
                     <% end %>
                     <% line_clamp = line_clamp_class_by_duration(performance.duration) %>
-                    <p class="font-semibold text-xs leading-3 wrap-break-word <%= line_clamp %>">
-                      <%= performance.performer.performer_name_tag.name %>
-                    </p>
+                    <%# 出演者名 %>
+                    <p class="font-semibold text-xs leading-none wrap-break-word <%= line_clamp %>"><%= performance.performer.performer_name_tag.name %></p>
                   <% end %>
                 <% end %>
               <% end %>
