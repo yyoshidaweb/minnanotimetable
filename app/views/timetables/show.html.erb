@@ -34,7 +34,7 @@
           <% @stages.each do |stage| %>
             <%= link_to event_stage_path(@event.event_key, stage),
                 class: "stage-header-col flex-1 flex justify-center items-center
-                        min-h-8 max-h-12 min-w-15 z-95 border-b text-xs font-bold text-center p-px" do %>
+                        min-h-8 max-h-12 min-w-16 z-95 border-b text-xs font-bold text-center p-px" do %>
               <span class="line-clamp-3"><%= stage.stage_name_tag.name %></span>
             <% end %>
           <% end %>
@@ -51,7 +51,7 @@
           </div>
           <%# ステージを展開 %>
           <% @stages.each do |stage| %>
-            <div class="timetable-body-col flex-1 min-w-15 relative"
+            <div class="timetable-body-col flex-1 min-w-16 relative"
                 style="height: <%= timetable_height_rem(@performances) %>rem;">
               <%# 各ステージの出演情報を検索 %>
               <% if @performances_by_stage[stage.id].present? %>
