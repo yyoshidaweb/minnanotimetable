@@ -55,15 +55,10 @@ module TimetablesHelper
   # 出演時間に応じた line-clamp クラスを返す
   def line_clamp_class_by_duration(duration)
     case duration
-    when ..5  then "line-clamp-1"
-    when ..10 then "line-clamp-1"
     when ..15 then "line-clamp-1"
     when ..20 then "line-clamp-2"
-    when ..25 then "line-clamp-3"
-    when ..30 then "line-clamp-3"
     when ..35 then "line-clamp-3"
     when ..40 then "line-clamp-4"
-    when ..45 then "line-clamp-5"
     when ..50 then "line-clamp-5"
     else           "line-clamp-6"
     end
