@@ -65,9 +65,15 @@
                         <%= formatted_time(performance.start_time) %>
                       </div>
                     <% end %>
-                    <% line_clamp = line_clamp_class_by_duration(performance.duration) %>
+                    <% duration = performance.duration %>
+                    <% line_clamp = line_clamp_class_by_duration(duration) %>
+                    <% font_size = font_size_class_by_duration(duration) %>
+                    <% translate_y = translate_y_by_duration(duration) %>
                     <%# 出演者名 %>
-                    <p class="font-semibold text-xs leading-none wrap-break-word <%= line_clamp %>"><%= performance.performer.performer_name_tag.name %></p>
+                    <p class="font-semibold leading-none wrap-break-word
+                              <%= font_size %> <%= line_clamp %> <%= translate_y %>">
+                      <%= performance.performer.performer_name_tag.name %>
+                    </p>
                   <% end %>
                 <% end %>
               <% end %>

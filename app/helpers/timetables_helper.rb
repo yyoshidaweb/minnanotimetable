@@ -63,4 +63,17 @@ module TimetablesHelper
     else           "line-clamp-6"
     end
   end
+
+  # 出演時間に応じた文字サイズクラスを返す
+  def font_size_class_by_duration(duration)
+    case duration
+    when ..5 then "text-[10px]"
+    else           "text-xs"
+    end
+  end
+
+  # 出演時間が5分以下の場合のみ文字を少し上に移動する
+  def translate_y_by_duration(duration)
+    duration <= 5 ? "-translate-y-0.5" : ""
+  end
 end
