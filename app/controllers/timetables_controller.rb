@@ -1,20 +1,18 @@
 class TimetablesController < ApplicationController
   # イベントをセット
   before_action :set_event
-  # 所有者本人のみアクセス可能
-  before_action :authorize_event!, only: %i[ edit ]
   # === 出演者、開催日、ステージをセット ===
-  before_action :set_performers, only: %i[ show edit ]
-  before_action :set_days, only: %i[ show edit ]
-  before_action :set_stages, only: %i[ show edit ]
+  before_action :set_performers, only: %i[ show ]
+  before_action :set_days, only: %i[ show ]
+  before_action :set_stages, only: %i[ show ]
   # 選択された開催日をセット
-  before_action :set_selected_date, only: %i[ show edit ]
+  before_action :set_selected_date, only: %i[ show ]
   # タイムテーブル描画に必要な情報がすべて揃った performance を取得
-  before_action :set_timetable_ready_for_event_on_date, only: %i[ show edit ]
+  before_action :set_timetable_ready_for_event_on_date, only: %i[ show ]
   # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
-  before_action :performances_by_stage, only: %i[ show edit ]
+  before_action :performances_by_stage, only: %i[ show ]
   # ビュー上でパフォーマンスを素早く検索できるようにHash化しておく
-  before_action :set_performance_map, only: %i[ show edit ]
+  before_action :set_performance_map, only: %i[ show ]
 
   def show
     @timetable_view = true
