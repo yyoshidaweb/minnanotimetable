@@ -9,7 +9,7 @@ class EventsController < ApplicationController
   # 開催日を昇順で取得
   before_action :set_days, only: [ :show, :edit ]
   before_action :set_page_title, except: %i[ destroy ]
-  before_action :show_event_header, except: %i[ index destroy ]
+  before_action :show_event_header, except: %i[ index new create destroy ]
 
   # 作成したイベント一覧
   def index

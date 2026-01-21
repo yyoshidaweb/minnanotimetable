@@ -34,8 +34,8 @@
     <%= render "layouts/event-header" %>
     <%# 成功メッセージ %>
     <%= render "devise/shared/notice_messages" %>
-    <%# メイン要素（@timetable_viewがtrueの場合はマージンやパディングを指定しない） %>
-    <main class="<%= @timetable_view  ? "" : "m-2 pt-24" %>">
+    <%# メイン要素（ヘルパーでクラスを生成） %>
+    <main class="<%= main_element_class %>">
       <%= yield %>
       <!-- モーダル用 -->
       <%= turbo_frame_tag "modal" %>
