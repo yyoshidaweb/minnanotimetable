@@ -1,4 +1,9 @@
-<div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+<div class="relative max-w-md mx-auto my-4 p-4">
+  <%# 編集ボタン %>
+  <%= link_to edit_profile_path,
+                class: "absolute top-4 right-4 text-xs text-gray-800" do %>
+    <span class="material-symbols-outlined">edit</span>
+  <% end %>
   <%# 名前 %>
   <div class="mb-4">
     <label class="block text-sm font-semibold text-gray-800 mb-1">名前</label>
@@ -15,30 +20,16 @@
     <p class="text-gray-800"><%= current_user.username %></p>
   </div>
   <%# メールアドレス %>
-  <div class="mb-6">
+  <div class="">
     <label class="block text-sm font-semibold text-gray-800 mb-1">メールアドレス</label>
     <p class="text-gray-800"><%= current_user.email %></p>
   </div>
-  <%# 編集ボタン %>
-  <div class="mb-4">
-    <%= link_to "編集",
-      edit_profile_path,
-      class: "w-full block text-center py-2 rounded-md border border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white transition" %>
-  </div>
   <%# ログアウト %>
-  <div class="mt-12 mb-4">
+  <div class="mt-24">
     <%= button_to "ログアウト",
       destroy_user_session_path,
       method: :delete,
       data: { turbo_confirm: "⚠️ ログアウトしますか？" },
-      class: "w-full py-2 rounded-md border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition" %>
-  </div>
-  <%# アカウント削除 %>
-  <div>
-    <%= button_to "アカウント削除",
-      profile_path,
-      method: :delete,
-      data: { turbo_confirm: "⚠️ 削除しますか？ アカウントは一度削除すると元に戻せません" },
-      class: "w-full py-2 rounded-md bg-red-500 text-white hover:bg-red-600 hover:text-white transition" %>
+      class: "w-full py-2 rounded-md border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition cursor-pointer" %>
   </div>
 </div>

@@ -1,13 +1,13 @@
 <%= link_to "タイムテーブル作成",
             new_event_path,
-            class: "inline-block mb-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+            class: "inline-block mb-6 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900" %>
 <% if @events.any? %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     <% @events.each do |event| %>
       <%= link_to show_timetable_path(event.event_key),
                   class: "block bg-white shadow-md rounded-lg p-4 border hover:shadow-xl hover:bg-gray-50 transition" do %>
         <!-- タイトル -->
-        <p class="text-lg font-semibold text-blue-600">
+        <p class="text-lg font-semibold text-gray-800">
           <%= event.event_name_tag.name %>
         </p>
         <!-- 説明文 -->

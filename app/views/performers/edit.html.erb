@@ -46,14 +46,14 @@
       <%# 更新ボタン %>
       <div>
         <%= f.submit "更新",
-          class: "w-full py-2 rounded-md bg-gray-600 text-white hover:bg-gray-700 transition cursor-pointer" %>
+          class: "w-full py-2 rounded-md bg-gray-800 text-white hover:bg-gray-900 transition cursor-pointer" %>
       </div>
     <% end %>
     <%= button_to "削除",
                 event_performer_path(@event.event_key, @performer),
                 method: :delete,
                 data: { turbo_confirm: "⚠️ この出演者に紐づく出演情報もすべて削除されます。 本当に削除しますか？" },
-                class: "flex justify-center w-full mt-24 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 hover:text-white transition cursor-pointer" %>
+                class: "flex justify-center w-full mt-24 py-2 rounded-md bg-gray-800 text-red-500 hover:bg-red-700 hover:text-red-200 transition cursor-pointer" %>
   </div>
 </div>
 <%# 下部タブメニュー %>
