@@ -11,15 +11,12 @@
           ステージング環境
         </span>
       <% end %>
-      <%# 右側：ハンバーガーメニュー（動作未実装） %>
-      <div class="space-y-1 w-6 cursor-pointer">
-        <div class="h-0.5 bg-gray-700"></div>
-        <%# ハンバーガー1本目 %>
-        <div class="h-0.5 bg-gray-700"></div>
-        <%# ハンバーガー2本目 %>
-        <div class="h-0.5 bg-gray-700"></div>
-        <%# ハンバーガー3本目 %>
-      </div>
+      <% if user_signed_in? %>
+        <%= link_to profile_path,
+                        class: "flex justify-center items-center text-gray-800" do %>
+          <span class="material-symbols-outlined">person</span>
+        <% end %>
+      <% end %>
     </div>
   </header>
 <% end %>
