@@ -1,6 +1,19 @@
-<div>
-  <h1 class="font-bold text-4xl">みんなのタイムテーブル</h1>
+<div class="mt-24 flex flex-col justify-center items-center">
+  <div class="w-full max-w-md flex flex-col justify-center items-center">
+    <div class="w-full flex justify-center mb-8">
+      <p class="text-3xl text-gray-800 leading-relaxed">
+        <span class="font-bold text-4xl">スマホ</span>でも見やすい、<br>
+        <span class="font-bold text-4xl">タイムテーブル</span>を作ろう
+      </p>
+    </div>
+    <div class="min-w-xs max-w-xs space-y-8">
+      <% if user_signed_in? %>
+        <%= link_to new_event_path,
+                        class: "flex justify-center items-center w-full px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-900" do %>
+          <span class="material-symbols-outlined mr-1">table</span>
+          <span class="font-semibold">タイムテーブルを作る →</span>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
 </div>
-<%= link_to "プロフィール", profile_path %><br>
-<%= link_to "タイムテーブル作成", new_event_path %><br>
-<%= link_to "作成したイベント", events_path, class: "underline" %>
