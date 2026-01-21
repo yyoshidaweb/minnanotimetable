@@ -45,7 +45,7 @@
                 event_path(@event.event_key),
                 method: :delete,
                 data: { turbo_confirm: "⚠️ 削除しますか？ 一度削除すると元に戻せません" },
-                class: "w-full mt-12 py-2 rounded-md bg-gray-800 text-red-500 hover:bg-red-700 hover:text-red-200 transition cursor-pointer" %>
+                class: "w-full mt-24 py-2 rounded-md bg-gray-800 text-red-500 hover:bg-red-700 hover:text-red-200 transition cursor-pointer" %>
     <!-- 作成日時 -->
     <div class="text-xs text-gray-500 mt-4">
       作成日: <%= l(@event.created_at.to_date, format: :default) %>
