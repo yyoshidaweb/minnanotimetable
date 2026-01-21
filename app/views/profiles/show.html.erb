@@ -32,12 +32,4 @@
       data: { turbo_confirm: "⚠️ ログアウトしますか？" },
       class: "w-full py-2 rounded-md border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition cursor-pointer" %>
   </div>
-  <%# アカウント削除 %>
-  <div>
-    <%= button_to "アカウント削除",
-      profile_path,
-      method: :delete,
-      data: { turbo_confirm: "⚠️ 削除しますか？ アカウントは一度削除すると元に戻せません" },
-      class: "w-full py-2 rounded-md bg-gray-800 text-red-500 hover:bg-red-700 hover:text-red-200 transition cursor-pointer" %>
-  </div>
 </div>
