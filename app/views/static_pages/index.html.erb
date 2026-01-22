@@ -13,6 +13,11 @@
           <span class="material-symbols-outlined mr-1">table</span>
           <span class="font-semibold">タイムテーブルを作る →</span>
         <% end %>
+      <% else %>
+        <div class="flex flex-col justify-center items-center">
+          <%# Googleログインボタン %>
+          <%= render "layouts/google_login_button" %>
+        </div>
       <% end %>
     </div>
   </div>
