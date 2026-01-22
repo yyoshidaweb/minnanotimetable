@@ -1,7 +1,7 @@
-<%# Googleログインボタン %>
+<%# Googleログインボタン（親要素の横幅いっぱいに広がるように!w-fullを指定） %>
 <%= button_to user_google_oauth2_omniauth_authorize_path,
                 method: :post, data: { turbo: false },
-                class: "gsi-material-button" do %>
+                class: "gsi-material-button !w-full" do %>
   <%# Google SVGロゴ %>
   <div class="gsi-material-button-state"></div>
   <div class="gsi-material-button-content-wrapper">
