@@ -10,9 +10,16 @@
       </span>
     <% end %>
     <% if user_signed_in? %>
+      <%# プロフィールリンク（ログイン時） %>
       <%= link_to profile_path,
                       class: "flex justify-center items-center text-gray-800" do %>
         <span class="material-symbols-outlined">person</span>
+      <% end %>
+    <% else %>
+      <%# トップページリンク（未ログイン時） %>
+      <%= link_to root_path,
+                      class: "flex justify-center items-center text-gray-800" do %>
+        <span class="material-symbols-outlined">login</span>
       <% end %>
     <% end %>
   </div>
