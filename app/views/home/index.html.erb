@@ -1,6 +1,6 @@
-<div class="mt-8 flex flex-col justify-center items-center">
+<div class="flex flex-col justify-center items-center">
   <div class="w-full max-w-md flex flex-col justify-center items-center">
-    <div class="w-full flex justify-center mb-8">
+    <div class="w-full flex justify-center my-4">
       <h1 class="font-semibold text-2xl text-gray-800 leading-relaxed">
         <span class="font-bold text-4xl">スマホ</span>でも見やすい<br>
         <span class="font-bold text-4xl">タイムテーブル</span>を作ろう
@@ -10,7 +10,7 @@
       <% if user_signed_in? %>
         <%= link_to new_event_path,
                         class: "flex justify-center items-center w-full px-4 py-2 bg-gray-800 text-white
-                                rounded-md hover:bg-gray-900 mb-16" do %>
+                                rounded-md hover:bg-gray-900 mb-12" do %>
           <span class="material-symbols-outlined mr-1">add</span>
           <span class="font-semibold">タイムテーブルを作る</span>
         <% end %>
