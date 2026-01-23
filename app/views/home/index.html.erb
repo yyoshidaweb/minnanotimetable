@@ -10,34 +10,34 @@
       <% if user_signed_in? %>
         <%= link_to new_event_path,
                         class: "flex justify-center items-center w-full px-4 py-2 bg-gray-800 text-white
-                                rounded-md hover:bg-gray-900 mb-12" do %>
+                                rounded-md hover:bg-gray-900 mb-8" do %>
           <span class="material-symbols-outlined mr-1">add</span>
           <span class="font-semibold">タイムテーブルを作る</span>
         <% end %>
         <h2 class="font-semibold text-xl text-gray-800 mb-4">最近作成したタイムテーブル</h2>
         <% if @events.any? %>
-          <div class="space-y-2">
-            <div class="flex flex-col gap-6">
-              <% @events.each do |event| %>
-                <%= link_to show_timetable_path(event.event_key),
+          <div class="flex flex-col space-y-4">
+            <% @events.each do |event| %>
+              <%= link_to show_timetable_path(event.event_key),
                     class: "block bg-white shadow-md rounded-lg p-4 border hover:shadow-xl hover:bg-gray-50 transition" do %>
-                  <!-- タイトル -->
-                  <p class="text-lg font-semibold text-gray-800">
-                    <%= event.event_name_tag.name %>
-                  </p>
-                  <!-- 説明文 -->
-                  <p class="text-gray-700 mt-2 line-clamp-2">
-                    <%= event.description %>
-                  </p>
-                  <!-- 作成日 -->
-                  <p class="text-xs text-gray-500 mt-3">
-                    作成日: <%= l(event.created_at.to_date, format: :default) %>
-                  </p>
-                <% end %>
+                <!-- タイトル -->
+                <p class="text-lg font-semibold text-gray-800">
+                  <%= event.event_name_tag.name %>
+                </p>
+                <!-- 説明文 -->
+                <p class="text-gray-700 mt-2 line-clamp-2">
+                  <%= event.description %>
+                </p>
+                <!-- 作成日 -->
+                <p class="text-xs text-gray-500 mt-3">
+                  作成日: <%= l(event.created_at.to_date, format: :default) %>
+                </p>
               <% end %>
+            <% end %>
+            <div class="flex justify-end">
               <%= link_to events_path,
-                          class: "flex justify-end text-md text-blue-800 underline" do %>
-                <span class="font-semibold">もっと見る →</span>
+                            class: "text-md text-blue-800 hover:underline" do %>
+                <span class="font-semibold">もっと見る→</span>
               <% end %>
             </div>
           </div>
