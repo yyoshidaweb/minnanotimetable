@@ -10,8 +10,8 @@
       <% if user_signed_in? %>
         <%= link_to new_event_path,
                         class: "flex justify-center items-center w-full px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900" do %>
-          <span class="material-symbols-outlined mr-1">table</span>
-          <span class="font-semibold">タイムテーブルを作る →</span>
+          <span class="material-symbols-outlined mr-1">add</span>
+          <span class="font-semibold">タイムテーブルを作る</span>
         <% end %>
         <%= link_to events_path,
                         class: "flex justify-end w-full text-md text-blue-800 underline" do %>
