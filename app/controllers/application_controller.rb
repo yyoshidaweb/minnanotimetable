@@ -7,4 +7,13 @@ class ApplicationController < ActionController::Base
 
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
+
+  # 未ログイン時はログイン画面ではなくトップページへリダイレクトされるようにオーバーライド
+  def authenticate_user!
+    unless user_signed_in?
+      redirect_to root_path
+    else
+      super
+    end
+  end
 end
