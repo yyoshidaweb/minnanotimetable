@@ -5,9 +5,9 @@
     <%= form_with model: @event, url: event_path(@event.event_key), method: :patch, class: "space-y-6" do |f| %>
       <%# エラーメッセージ %>
       <%= render "devise/shared/error_messages", resource: @event %>
-      <%# ─ イベント名（タグ入力＋候補表示） ─ %>
+      <%# ─ タイムテーブル名（タグ入力＋候補表示） ─ %>
       <div>
-        <%= f.label :event_name_tag, "イベント名", class: "block text-sm font-semibold text-gray-800 mb-1" %>
+        <%= f.label :event_name_tag, "タイムテーブル名", class: "block text-sm font-semibold text-gray-800 mb-1" %>
         <%# fields_for を使って nested attributes の形で name を送る (event[event_name_tag_attributes][name]) %>
         <%= f.fields_for :event_name_tag do |ff| %>
           <%= ff.text_field :name,
@@ -41,7 +41,7 @@
           class: "w-full py-2 rounded-md bg-gray-800 text-white hover:bg-gray-900 transition cursor-pointer" %>
       </div>
     <% end %>
-    <%= button_to "イベントを削除する",
+    <%= button_to "タイムテーブルを削除する",
                 event_path(@event.event_key),
                 method: :delete,
                 data: { turbo_confirm: "⚠️ 削除しますか？ 一度削除すると元に戻せません" },

@@ -91,7 +91,9 @@
   <%# ===== 情報が揃った出演情報が0件の場合 ===== %>
   <div class="h-svh p-12 flex flex-col items-center justify-center pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
     <% if user_signed_in? && current_user == @event.user %>
-      <p class="text-gray-800 mb-4">出演情報を追加して、タイムテーブルを作りましょう</p>
+      <p class="text-gray-800 mb-4">出演情報を追加して<br>
+        タイムテーブルを完成させよう
+      </p>
       <%= link_to new_event_performance_path(@event.event_key),
                 class: "relative flex items-center justify-center p-3 bg-gray-800 text-white rounded-full shadow hover:bg-gray-900" do %>
         <span class="material-symbols-outlined">calendar_add_on</span>

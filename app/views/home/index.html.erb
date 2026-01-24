@@ -1,0 +1,53 @@
+<div class="min-h-[calc(100svh-12rem)] flex flex-col justify-center items-center">
+  <div class="w-full max-w-md flex flex-col justify-center items-center">
+    <div class="w-full flex justify-center my-4">
+      <h1 class="font-semibold text-2xl text-gray-800 leading-relaxed">
+        <span class="font-bold text-4xl">スマホ</span>でも見やすい<br>
+        <span class="font-bold text-4xl">タイムテーブル</span>を作ろう
+      </h1>
+    </div>
+    <div class="min-w-xs max-w-xs">
+      <% if user_signed_in? %>
+        <%= link_to new_event_path,
+                        class: "flex justify-center items-center w-full px-4 py-2 bg-gray-800 text-white
+                                rounded-md hover:bg-gray-900 mb-8" do %>
+          <span class="material-symbols-outlined mr-1">add</span>
+          <span class="font-semibold">タイムテーブルを作る</span>
+        <% end %>
+        <% if @events.any? %>
+          <div class="flex flex-col space-y-4">
+            <h2 class="font-semibold text-xl text-gray-800 mb-4">最近作成したタイムテーブル</h2>
+            <% @events.each do |event| %>
+              <%= link_to show_timetable_path(event.event_key),
+                    class: "block bg-white shadow-md rounded-lg p-4 border hover:shadow-xl hover:bg-gray-50 transition" do %>
+                <!-- タイトル -->
+                <p class="text-lg font-semibold text-gray-800">
+                  <%= event.event_name_tag.name %>
+                </p>
+                <!-- 説明文 -->
+                <p class="text-gray-700 mt-2 line-clamp-2">
+                  <%= event.description %>
+                </p>
+                <!-- 作成日 -->
+                <p class="text-xs text-gray-500 mt-3">
+                  作成日: <%= l(event.created_at.to_date, format: :default) %>
+                </p>
+              <% end %>
+            <% end %>
+            <div class="flex justify-end">
+              <%= link_to events_path,
+                            class: "text-md text-blue-800 hover:underline" do %>
+                <span class="font-semibold">もっと見る→</span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="w-full">
+          <%# Googleログインボタン %>
+          <%= render "layouts/google_login_button" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

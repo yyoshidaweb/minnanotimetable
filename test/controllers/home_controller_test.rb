@@ -1,6 +1,6 @@
 require "test_helper"
 
-class StaticPagesControllerTest < ActionDispatch::IntegrationTest
+class HomeControllerTest < ActionDispatch::IntegrationTest
   # トップページ表示
   test "should get index" do
     get "/"

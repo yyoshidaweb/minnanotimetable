@@ -76,13 +76,13 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
   test "should redirect update when not logged in" do
     sign_out @user
     patch profile_url, params: { user: { name: "Hacker" } }
-    assert_redirected_to new_user_session_url # 未ログインは更新不可
+    assert_redirected_to root_url # 未ログインは更新不可
   end
 
   # ログアウト時プロフィール表示アクションのテスト
   test "should redirect show when not logged in" do
     sign_out @user # ログアウト状態を再現
     get profile_url # プロフィールページにアクセス
-    assert_redirected_to new_user_session_url # deviseログインページ
+    assert_redirected_to root_url # deviseログインページ
   end
 end
