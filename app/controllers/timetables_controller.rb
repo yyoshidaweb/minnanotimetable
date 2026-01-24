@@ -43,7 +43,7 @@ class TimetablesController < ApplicationController
 
     # ステージを取得
     def set_stages
-      @stages = @event.stages.includes(:stage_name_tag)
+      @stages = @event.stages.order(:position).includes(:stage_name_tag)
     end
 
     # 選択された開催日をセット
