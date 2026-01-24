@@ -2,9 +2,6 @@ class Stage < ApplicationRecord
   belongs_to :event
   belongs_to :stage_name_tag
 
-  # ステージをpositionの昇順で取得するためのデフォルトスコープ
-  default_scope { order(:position) }
-
   # 出演情報がある場合も削除可能
   has_many :performances, dependent: :nullify
 
