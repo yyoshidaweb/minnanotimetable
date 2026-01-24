@@ -57,7 +57,7 @@ class EventsController < ApplicationController
     @event.event_key = SecureRandom.urlsafe_base64(8)
 
     if @event.save
-      redirect_to show_timetable_path(@event.event_key), notice: "イベントを作成しました"
+      redirect_to show_timetable_path(@event.event_key), notice: "タイムテーブルを作成しました"
     else
       # 保存に失敗したら new を再表示（validation メッセージを @event に持たせる）
       render :new, status: :unprocessable_entity
@@ -84,7 +84,7 @@ class EventsController < ApplicationController
 
     # Event 本体を更新（description など）
     if @event.update(event_params.except(:event_name_tag_attributes))
-      redirect_to event_path(@event.event_key), notice: "イベントを更新しました"
+      redirect_to event_path(@event.event_key), notice: "タイムテーブルを更新しました"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -93,7 +93,7 @@ class EventsController < ApplicationController
   # 削除処理
   def destroy
     @event.destroy!
-    redirect_to events_path, notice: "イベントを削除しました"
+    redirect_to events_path, notice: "タイムテーブルを削除しました"
   end
 
   private
@@ -118,13 +118,13 @@ class EventsController < ApplicationController
     @page_title =
       case action_name
       when "index"
-        "作成したイベント一覧"
+        "作成したタイムテーブル一覧"
       when "new", "create"
-        "イベントを作成"
+        "タイムテーブルを作成"
       when "show"
-        "イベント詳細"
+        "概要"
       when "edit", "update"
-        "イベントを編集"
+        "タイムテーブルを編集"
       end
   end
 

@@ -2,9 +2,9 @@ ja:
   activerecord:
     models:
       user: "ユーザー"
-      event: "イベント"
-      event_name_tag: "イベント名タグ"
-      event_favorite: "お気に入りイベント"
+      event: "タイムテーブル"
+      event_name_tag: "タイムテーブル名タグ"
+      event_favorite: "お気に入りタイムテーブル"
       day: "開催日"
       stage: "ステージ"
       stage_name_tag: "ステージ名タグ"
@@ -22,27 +22,27 @@ ja:
 
       event:
         description: "説明"
-        event_key: "イベントキー"
-        event_name_tag_id: "イベント名タグ"
-        event_name_tag: "イベント名"
+        event_key: "タイムテーブルキー"
+        event_name_tag_id: "タイムテーブル名タグ"
+        event_name_tag: "タイムテーブル名"
         is_published: "公開設定"
         user_id: "作成者"
 
       event_name_tag:
-        name: "イベント名"
+        name: "タイムテーブル名"
 
       event_favorite:
         user_id: "ユーザー"
-        event_id: "イベント"
+        event_id: "タイムテーブル"
 
       day:
         date: "日付"
-        event_id: "イベント"
+        event_id: "タイムテーブル"
 
       stage:
         address: "住所"
         description: "説明"
-        event_id: "イベント"
+        event_id: "タイムテーブル"
         position: "表示順"
         stage_name_tag_id: "ステージ名タグ"
         stage_name_tag: "ステージ名"
@@ -52,7 +52,7 @@ ja:
 
       performer:
         description: "説明"
-        event_id: "イベント"
+        event_id: "タイムテーブル"
         performer_name_tag_id: "出演者名タグ"
         performer_name_tag: "出演者名"
         website_url: "Official website"
