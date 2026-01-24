@@ -14,9 +14,9 @@
           <span class="material-symbols-outlined mr-1">add</span>
           <span class="font-semibold">タイムテーブルを作る</span>
         <% end %>
-        <h2 class="font-semibold text-xl text-gray-800 mb-4">最近作成したタイムテーブル</h2>
         <% if @events.any? %>
           <div class="flex flex-col space-y-4">
+            <h2 class="font-semibold text-xl text-gray-800 mb-4">最近作成したタイムテーブル</h2>
             <% @events.each do |event| %>
               <%= link_to show_timetable_path(event.event_key),
                     class: "block bg-white shadow-md rounded-lg p-4 border hover:shadow-xl hover:bg-gray-50 transition" do %>
@@ -41,8 +41,6 @@
               <% end %>
             </div>
           </div>
-        <% else %>
-          <p class="text-gray-600">作成したタイムテーブルはありません。</p>
         <% end %>
       <% else %>
         <div class="w-full">
