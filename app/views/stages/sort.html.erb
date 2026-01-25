@@ -11,7 +11,7 @@
         <li data-id="<%= stage.id %>"
             class="stage-card block bg-white shadow-sm rounded-lg p-4 border">
           <%= stage.display_name %>
-          <span class="material-symbols-outlined float-right text-gray-400">drag_handle</span>
+          <span class="stage-handle material-symbols-outlined float-right text-gray-400">drag_handle</span>
           <%= hidden_field_tag "stage_ids[]", stage.id %>
         </li>
       <% end %>
