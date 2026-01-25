@@ -13,13 +13,15 @@
       <%= link_to event_stage_path(@event.event_key, stage),
                   class: "bg-white shadow-md rounded-lg p-4 border hover:bg-gray-50 transition" do %>
         <%# タイトル %>
-        <p class="text-lg font-semibold text-gray-800">
+        <p class="text-lg font-semibold text-gray-800 line-clamp-2">
           <%= stage.stage_name_tag.name %>
         </p>
         <%# 説明文 %>
-        <p class="text-gray-700 mt-2 line-clamp-2">
-          <%= stage.description %>
-        </p>
+        <% if stage.description.present? %>
+          <p class="text-gray-700 mt-2 line-clamp-2">
+            <%= stage.description %>
+          </p>
+        <% end %>
       <% end %>
     <% end %>
   </div>
