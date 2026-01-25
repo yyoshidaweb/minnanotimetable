@@ -3,9 +3,11 @@
 /* GoogleログインボタンのCSSを読み込む */
 @import "../stylesheets/google-sign-in-btn.css";
 
-/* ステージ用CSSを読み込む */
+/* イベント用CSSを読み込む */
 @import "../stylesheets/event.css";
 
+/* ステージ用CSSを読み込む */
+@import "../stylesheets/stage.css";
 /* googleマテリアルアイコン用のCSSを読み込む */
 @import "../stylesheets/material-symbols.css";
 

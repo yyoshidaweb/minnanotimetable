@@ -1,0 +1,30 @@
+<div class="h-[calc(100svh-7rem)] flex flex-col items-center">
+  <%= form_with url: update_sort_event_stages_path(@event.event_key),
+                method: :patch,
+                class: "flex flex-col w-full max-w-md gap-4 pb-[calc(5.25rem+env(safe-area-inset-bottom))]",
+                data: { turbo: false } do %>
+    <%# スクロール領域 %>
+    <ul data-controller="sortable" id="stage-list" 
+            class="overflow-y-auto h-[calc(100svh-18rem)] w-full bg-gray-100 border rounded-md py-6 px-2 flex flex-col gap-2">
+      <% @stages.each do |stage| %>
+        <li data-id="<%= stage.id %>"
+              class="flex justify-between items-center stage-card block bg-white shadow-sm rounded-lg p-4 border">
+          <span class="line-clamp-2">
+            <%= stage.display_name %>
+          </span>
+          <span class="stage-handle material-symbols-outlined text-gray-400">drag_handle</span>
+          <%= hidden_field_tag "stage_ids[]", stage.id %>
+        </li>
+      <% end %>
+    </ul>
+    <div>
+      <%= submit_tag "保存する",
+                      class: "w-full py-2 rounded-md bg-gray-800 text-white hover:bg-gray-900 transition cursor-pointer" %>
+      <div class="w-full flex justify-center mt-1">
+        <small class="text-xs text-gray-500">※並び順は保存後に反映されます。</small>
+      </div>
+    </div>
+  <% end %>
+</div>
+<%# 下部タブメニュー %>
+<%= render "layouts/bottom_tab" %>

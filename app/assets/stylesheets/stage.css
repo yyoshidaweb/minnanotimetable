@@ -1,0 +1,9 @@
+.stage-handle {
+    cursor: grab;
+}
+
+.stage-card.sortable-chosen {
+    border-color: var(--color-gray-800);
+    border-style: var(--tw-border-style);
+    border-width: 2px;
+}

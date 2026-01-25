@@ -9,7 +9,7 @@ class StagesController < ApplicationController
 
   # ステージ一覧
   def index
-    @stages = @event.stages
+    @stages = @event.stages.order(:position)
   end
 
   # ステージ
@@ -24,7 +24,7 @@ class StagesController < ApplicationController
 
   # ステージ作成処理
   def create
-    @stages = @event.stages
+    @stages = @event.stages.order(:position)
     @stage = @event.stages.build(stage_params)
 
     # フォームで受け取るタグ名（fields_for で post される形）
@@ -93,6 +93,21 @@ class StagesController < ApplicationController
     redirect_to event_stages_path(@event.event_key), notice: "ステージを削除しました。", status: :see_other
   end
 
+  # ステージ並び替えページ
+  def sort
+    @stages = @event.stages.order(:position)
+  end
+
+  # ステージ並び替え処理
+  def update_sort
+    stage_ids = params[:stage_ids]
+    stage_ids.each_with_index do |id, index|
+      @event.stages.where(id: id).update_all(position: index)
+    end
+    redirect_to event_stages_path(@event.event_key),
+                notice: "ステージの並び順を保存しました"
+  end
+
   private
     # イベントを取得
     def set_event
@@ -121,6 +136,8 @@ class StagesController < ApplicationController
           "ステージ詳細"
         when "edit", "update"
           "ステージを編集"
+        when "sort", "update_sort"
+          "ステージを並び替え"
         end
     end
 

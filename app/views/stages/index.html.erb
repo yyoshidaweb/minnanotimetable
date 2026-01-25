@@ -1,7 +1,13 @@
 <% if user_signed_in? && current_user == @event.user %>
-  <%= link_to "ステージ作成",
-            new_event_stage_path,
-            class: "inline-block mb-6 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900" %>
+  <div class="flex justify-between items-center mb-6">
+    <%= link_to "ステージ作成",
+              new_event_stage_path,
+              class: "inline-block px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900" %>
+    <% if @stages.any? %>
+      <%= link_to "ステージを並び替える→", sort_event_stages_path(@event.event_key),
+                class: "text-sm text-blue-800 hover:underline" %>
+    <% end %>
+  </div>
 <% end %>
 <% if @stages.any? %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
@@ -10,13 +16,15 @@
       <%= link_to event_stage_path(@event.event_key, stage),
                   class: "bg-white shadow-md rounded-lg p-4 border hover:bg-gray-50 transition" do %>
         <%# タイトル %>
-        <p class="text-lg font-semibold text-gray-800">
+        <p class="text-lg font-semibold text-gray-800 line-clamp-2">
           <%= stage.stage_name_tag.name %>
         </p>
         <%# 説明文 %>
-        <p class="text-gray-700 mt-2 line-clamp-2">
-          <%= stage.description %>
-        </p>
+        <% if stage.description.present? %>
+          <p class="text-gray-700 mt-2 line-clamp-2">
+            <%= stage.description %>
+          </p>
+        <% end %>
       <% end %>
     <% end %>
   </div>

@@ -1,9 +1,8 @@
 class Stage < ApplicationRecord
+  before_create :set_position_to_last
+
   belongs_to :event
   belongs_to :stage_name_tag
-
-  # ステージをpositionの昇順で取得するためのデフォルトスコープ
-  default_scope { order(:position) }
 
   # 出演情報がある場合も削除可能
   has_many :performances, dependent: :nullify
@@ -24,4 +23,12 @@ class Stage < ApplicationRecord
   def display_name
     stage_name_tag.name
   end
+
+  private
+
+    # 新規作成時に position を最後尾に設定
+    def set_position_to_last
+      self.position =
+        event.stages.maximum(:position).to_i + 1
+    end
 end
