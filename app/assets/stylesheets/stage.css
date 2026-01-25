@@ -1,0 +1,12 @@
+.stage-card {
+    cursor: grab;
+}
+
+.stage-card.sortable-chosen,
+.stage-card.sortable-drag,
+.sortable-ghost {
+    cursor: grabbing;
+    border-color: var(--color-gray-800);
+    border-style: var(--tw-border-style);
+    border-width: 2px;
+}
