@@ -103,7 +103,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_084144) do
     t.datetime "created_at", null: false
     t.text "description"
     t.integer "event_id", null: false
-    t.integer "position", default: 0, null: false
+    t.integer "position", null: false
     t.integer "stage_name_tag_id", null: false
     t.datetime "updated_at", null: false
     t.index ["event_id"], name: "index_stages_on_event_id"

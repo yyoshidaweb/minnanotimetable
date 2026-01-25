@@ -7,7 +7,7 @@ class CreateStages < ActiveRecord::Migration[8.1]
       t.string :address, limit: 50
 
       # ステージの表示順を管理するためのカラム
-      t.integer :position, null: false, default: 0
+      t.integer :position, null: false
 
       t.timestamps
     end
