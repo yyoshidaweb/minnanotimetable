@@ -10,12 +10,13 @@ module TimetablesHelper
     total_hours * rem_per_hour
   end
 
-  # タイムテーブル全体の開始時刻（分）
+  # タイムテーブル全体の開始時刻（正時のみ取得し、分は切り捨てる）
   def timetable_start_minute
     # 最初の1回だけ計算して、1リクエスト中は結果を使い回す
     @timetable_start_minute ||= begin
       earliest = @performances.min_by(&:start_time).start_time
-      earliest.hour * 60 + earliest.min
+      # タイムテーブル描画開始位置を正時にするため、minuteを切り捨てる
+      earliest.hour * 60
     end
   end
 
