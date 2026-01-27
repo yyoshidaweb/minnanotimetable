@@ -11,6 +11,9 @@
 /* googleマテリアルアイコン用のCSSを読み込む */
 @import "../stylesheets/material-symbols.css";
 
+/* フォント用CSSを読み込む */
+@import "../stylesheets/fonts.css";
+
 @config '../../../config/tailwind.config.js';
 
 /*

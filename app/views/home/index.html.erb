@@ -1,10 +1,13 @@
 <div class="min-h-[calc(100svh-12rem)] flex flex-col justify-center items-center">
   <div class="w-full max-w-md flex flex-col justify-center items-center">
-    <div class="w-full flex justify-center my-4">
-      <h1 class="font-semibold text-2xl text-gray-800 leading-relaxed">
-        <span class="font-bold text-4xl">スマホ</span>でも見やすい<br>
-        <span class="font-bold text-4xl">タイムテーブル</span>を作ろう
+    <div class="w-full flex flex-col justify-center items-center mb-6">
+      <h1 class="yusei-magic-regular font-semibold text-4xl text-gray-800 leading-relaxed mb-2">
+        みんなのタイムテーブル
       </h1>
+      <p class="w-full min-w-xs max-w-xs text-lg text-gray-500 leading-relaxed">
+        文字だけで、タイムテーブルができる。<br>
+        スマホでもPCでも、誰でも使える。
+      </p>
     </div>
     <div class="min-w-xs max-w-xs">
       <% if user_signed_in? %>
@@ -16,7 +19,7 @@
         <% end %>
         <% if @events.any? %>
           <div class="flex flex-col space-y-4">
-            <h2 class="font-semibold text-xl text-gray-800 mb-4">最近作成したタイムテーブル</h2>
+            <h2 class="font-semibold text-xl text-gray-800 mb-2">最近作成したタイムテーブル</h2>
             <% @events.each do |event| %>
               <%= link_to show_timetable_path(event.event_key),
                     class: "block bg-white shadow-md rounded-lg p-4 border hover:shadow-xl hover:bg-gray-50 transition" do %>
