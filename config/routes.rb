@@ -44,7 +44,7 @@ Rails.application.routes.draw do
     resources :stages, only: [ :index, :new, :create, :show, :edit, :update, :destroy ] do
       collection do
         get :sort   # ステージを並び替えページ /events/:event_key/stages/sort
-        patch :update_sort  # ステージ並び替え処理 /events/:event_key/stages/sort
+        patch :update_sort  # ステージ並び替え処理 /events/:event_key/stages/update_sort
       end
     end
     resources :performers, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
