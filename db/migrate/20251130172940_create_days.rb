@@ -6,5 +6,6 @@ class CreateDays < ActiveRecord::Migration[8.1]
 
       t.timestamps
     end
+    add_index :days, [ :event_id, :date ], unique: true
   end
 end

@@ -22,15 +22,15 @@ three:
 # ステージ並び替えテスト用
 sort_zero:
   event: one
-  stage_name_tag: one
+  stage_name_tag: sort_zero_tag
   position: "0"
 
 sort_one:
   event: one
-  stage_name_tag: one
+  stage_name_tag: sort_one_tag
   position: "1"
 
 sort_two:
   event: one
-  stage_name_tag: one
+  stage_name_tag: sort_two_tag
   position: "2"

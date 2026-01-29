@@ -11,5 +11,6 @@ class CreateStages < ActiveRecord::Migration[8.1]
 
       t.timestamps
     end
+    add_index :stages, [ :event_id, :stage_name_tag_id ], unique: true
   end
 end
