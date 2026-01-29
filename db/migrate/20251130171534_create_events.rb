@@ -4,7 +4,7 @@ class CreateEvents < ActiveRecord::Migration[8.1]
       t.string :event_key, null: false, limit: 50
       t.references :user, null: false, foreign_key: true
       t.references :event_name_tag, null: false, foreign_key: true
-      t.boolean :is_published, null: false, default: false
+      t.boolean :is_published, null: false, default: true
       t.text :description
 
       t.timestamps
