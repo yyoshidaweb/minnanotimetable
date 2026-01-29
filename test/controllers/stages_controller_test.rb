@@ -230,4 +230,31 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     end
     assert_response :not_found
   end
+
+  # ステージ並び替えページ
+  test "should get sort" do
+    get sort_event_stages_url(@event.event_key)
+    assert_response :success
+  end
+
+  # ステージ並び替え処理
+  test "should update stage sort order and redirect" do
+    stage1 = stages(:sort_zero)
+    stage2 = stages(:sort_one)
+    stage3 = stages(:sort_two)
+    # 並び替え後の順番
+    new_order = [ stage3.id, stage1.id, stage2.id ]
+    patch update_sort_event_stages_url(@event.event_key), params: {
+      stage_ids: new_order
+    }
+    # DBの最新状態を取得
+    stage1.reload
+    stage2.reload
+    stage3.reload
+    # 並び順が更新されていることを検証
+    assert_equal 1, stage1.position
+    assert_equal 2, stage2.position
+    assert_equal 0, stage3.position
+    assert_redirected_to event_stages_path(@event.event_key)
+  end
 end
