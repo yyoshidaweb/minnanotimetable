@@ -23,6 +23,9 @@ class Event < ApplicationRecord
   validates :event_name_tag, presence: true
   validates_associated :event_name_tag # event_name_tag のバリデーションエラーを event.errors に自動で伝播させる
 
+  # 1ユーザー内のイベント名はユニーク
+  validates :event_name_tag, presence: true, uniqueness: { scope: :user_id }
+
   # トップページ用に新しい順で最大3件取得するスコープ
   scope :recent_for_home, -> { order(created_at: :desc).limit(3) }
 
