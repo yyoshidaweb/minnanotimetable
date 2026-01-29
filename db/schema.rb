@@ -42,7 +42,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_084144) do
     t.text "description"
     t.string "event_key", limit: 50, null: false
     t.integer "event_name_tag_id", null: false
-    t.boolean "is_published", default: false, null: false
+    t.boolean "is_published", default: true, null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["event_key"], name: "index_events_on_event_key", unique: true
