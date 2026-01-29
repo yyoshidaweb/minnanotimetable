@@ -16,6 +16,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_084144) do
     t.date "date", null: false
     t.integer "event_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["event_id", "date"], name: "index_days_on_event_id_and_date", unique: true
     t.index ["event_id"], name: "index_days_on_event_id"
   end
 
@@ -46,6 +47,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_084144) do
     t.integer "user_id", null: false
     t.index ["event_key"], name: "index_events_on_event_key", unique: true
     t.index ["event_name_tag_id"], name: "index_events_on_event_name_tag_id"
+    t.index ["user_id", "event_name_tag_id"], name: "index_events_on_user_id_and_event_name_tag_id", unique: true
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 
@@ -87,6 +89,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_084144) do
     t.integer "performer_name_tag_id", null: false
     t.datetime "updated_at", null: false
     t.string "website_url", limit: 50
+    t.index ["event_id", "performer_name_tag_id"], name: "index_performers_on_event_id_and_performer_name_tag_id", unique: true
     t.index ["event_id"], name: "index_performers_on_event_id"
     t.index ["performer_name_tag_id"], name: "index_performers_on_performer_name_tag_id"
   end
@@ -106,6 +109,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_084144) do
     t.integer "position", null: false
     t.integer "stage_name_tag_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["event_id", "stage_name_tag_id"], name: "index_stages_on_event_id_and_stage_name_tag_id", unique: true
     t.index ["event_id"], name: "index_stages_on_event_id"
     t.index ["stage_name_tag_id"], name: "index_stages_on_stage_name_tag_id"
   end
