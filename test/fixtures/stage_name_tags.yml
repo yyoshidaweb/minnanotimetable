@@ -6,3 +6,12 @@ two:
 
 three:
   name: "Stage3"
+
+sort_zero_tag:
+  name: "Sort Stage 0"
+
+sort_one_tag:
+  name: "Sort Stage 1"
+
+sort_two_tag:
+  name: "Sort Stage 2"
