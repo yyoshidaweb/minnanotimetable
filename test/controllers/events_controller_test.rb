@@ -59,6 +59,35 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to show_timetable_path(created_event.event_key)
   end
 
+  # 1ユーザー内のイベント名が重複する場合は作成できない
+  test "should not create overlapping event" do
+    overlapping_event_name = "Event1"
+    assert_no_difference([ "Event.count" ]) do
+      post events_url, params: {
+        event: {
+          # ネスト属性でタグ名を送信
+          event_name_tag_attributes: { name: overlapping_event_name },
+          description: "説明"
+        }
+      }
+    end
+    assert_response :unprocessable_entity
+  end
+
+  # 別のユーザーが作成した同名イベントは作成可能
+  test "should create overlapping event in other user" do
+    overlapping_event_name = @other_event.display_name
+    assert_difference("Event.count") do
+      post events_url, params: {
+        event: {
+          # ネスト属性でタグ名を送信
+          event_name_tag_attributes: { name: overlapping_event_name },
+          description: "説明"
+        }
+      }
+    end
+  end
+
   # 編集フォームを表示
   test "should get edit" do
     get edit_event_url(@event.event_key)
