@@ -82,11 +82,16 @@
     <p class="text-sm md:text-base text-gray-700 leading-relaxed">本ポリシーに関するお問い合わせは、下記の窓口までお願いいたします。</p>
     <ul class="list-disc pl-6 space-y-2 text-sm md:text-base text-gray-700">
       <li>
-        <%= link_to "お問い合わせフォーム",
-                    "https://docs.google.com/forms/d/e/1FAIpQLSfJBlhMJb4MWDX_xWlc2lel1P_X5zGTmySXlcWU7De_XtSJmw/viewform?usp=dialog",
-                    class: "text-blue-700 hover:border-b border-blue-700 transition cursor-pointer",
-                    target: "_blank",
-                    rel: "noopener noreferrer" %>
+        <div class="flex items-center">
+          <%= link_to "https://docs.google.com/forms/d/e/1FAIpQLSfJBlhMJb4MWDX_xWlc2lel1P_X5zGTmySXlcWU7De_XtSJmw/viewform?usp=dialog",
+                      class: "flex items-center text-blue-700 border-b border-transparent hover:border-blue-700 cursor-pointer",
+                      target: "_blank",
+                      rel: "noopener noreferrer" do %>
+            お問い合わせフォーム
+            <span class="material-symbols-outlined ml-px"
+                  style="font-size: 1.25rem;">open_in_new</span>
+          <% end %>
+        </div>
       </li>
     </ul>
     <p class="text-sm md:text-base text-gray-700 leading-relaxed">制定日：2026年1月30日</p>
