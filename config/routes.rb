@@ -51,6 +51,10 @@ Rails.application.routes.draw do
     resources :performances, only: [ :new, :create, :edit, :update, :destroy ]
   end
 
+  # 利用規約・プライバシーポリシー
+  get "/terms", to: "static_pages#terms"
+  get "/privacy", to: "static_pages#privacy"
+
   # イベント詳細ページ（/:event_key）
   get "/:event_key", to: "timetables#show", as: :show_timetable
 end
