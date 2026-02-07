@@ -49,6 +49,12 @@
         <div class="w-full">
           <%# Googleログインボタン %>
           <%= render "layouts/google_login_button" %>
+          <small class="mt-4 text-xs text-gray-500">
+            Googleでログインすることで、
+            <%= link_to "利用規約", terms_path, class: "underline" %> および
+            <%= link_to "プライバシーポリシー", privacy_path, class: "underline" %>
+            に同意したものとみなされます。
+          </small>
         </div>
       <% end %>
     </div>
