@@ -2,11 +2,8 @@
 <% unless @show_event_header %>
   <footer class="mt-auto bg-gray-50">
     <div class="mx-auto max-w-7xl px-4 py-8">
-      <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
-        <div class="text-sm text-gray-700">
-          © <%= Time.current.year %> みんなのタイムテーブル
-        </div>
-        <div class="flex items-center flex-wrap gap-6 text-sm">
+      <div class="flex flex-col items-center justify-between gap-4">
+        <div class="flex items-center flex-wrap gap-8 text-sm">
           <%= link_to "利用規約", terms_path,
               class: "text-gray-700 hover:text-gray-900 hover:underline" %>
           <%= link_to "プライバシーポリシー", privacy_path,
@@ -15,6 +12,9 @@
                     class: "text-gray-700 hover:text-gray-900 hover:underline",
                     target: "_blank",
                     rel: "noopener noreferrer" %>
+        </div>
+        <div class="text-sm text-gray-700">
+          © <%= Time.current.year %> みんなのタイムテーブル
         </div>
       </div>
     </div>
