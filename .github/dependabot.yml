@@ -11,8 +11,8 @@ updates:
 - package-ecosystem: github-actions
   directory: "/"
   schedule:
-    interval: monthly
-    day: monday
-    time: "15:00"
+    interval: "cron"
+    # cronの意味… "分 時 日 月 曜"（毎月1~7日の期間内の月曜日15:00に実施）
+    cron: "0 15 1-7 * 1"
     timezone: Asia/Tokyo
   open-pull-requests-limit: 10
