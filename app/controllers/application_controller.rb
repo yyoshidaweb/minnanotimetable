@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
   # プレビュー環境で自動的にテストユーザーとしてログインする処理
   def auto_login_preview_user
     return unless ENV["IS_PULL_REQUEST"] == "true" # Preview環境以外なら何もしない
+    return if session[:preview_logged_out] # ログアウトしている場合は何もしない
     return if current_user.present? # 既にログイン済なら何もしない
     user = User.find_by(email: "user1@example.com")
     return unless user # テストユーザーが存在しない場合は何もしない
