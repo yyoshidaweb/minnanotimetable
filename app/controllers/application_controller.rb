@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
-  # プレビュー環境で自動的にプレビューユーザーとしてログインする
-  before_action :auto_login_preview_user
+  # プレビュー環境で自動的にプレビューユーザーとしてログインする（deviseのdestroyアクション以外）
+  before_action :auto_login_preview_user, unless: :devise_destroy_action?
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   unless Rails.env.development?
       # 本番・ステージングでのみ最新ブラウザのみ許可
@@ -29,5 +29,10 @@ class ApplicationController < ActionController::Base
     user = User.find_by(email: "user1@example.com")
     return unless user # テストユーザーが存在しない場合は何もしない
     sign_in(user) # Deviseでログイン
+  end
+
+  # Deviseのdestroyアクションかどうかを判定するヘルパーメソッド
+  def devise_destroy_action?
+    controller_name == "sessions" && action_name == "destroy"
   end
 end
