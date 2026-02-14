@@ -1,18 +1,27 @@
 version: 2
 updates:
-- package-ecosystem: bundler
-  directory: "/"
-  schedule:
-    interval: monthly
-    day: monday
-    time: "15:00"
-    timezone: Asia/Tokyo
-  open-pull-requests-limit: 10
-- package-ecosystem: github-actions
-  directory: "/"
-  schedule:
-    interval: "cron"
-    # cronの意味… "分 時 日 月 曜"（毎月1~7日の期間内の月曜日15:00に実施）
-    cronjob: "0 15 1-7 * MON"
-    timezone: Asia/Tokyo
-  open-pull-requests-limit: 10
+  - package-ecosystem: bundler
+    directory: "/"
+    schedule:
+      interval: weekly         # 毎週実行
+      day: monday              # 月曜日
+      time: "15:00"            # 15:00
+      timezone: Asia/Tokyo
+    open-pull-requests-limit: 1  # PR上限を1に制限
+    groups:
+      bundler-updates:          # すべてのGem更新を1つにまとめる
+        patterns:
+          - "*"
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "15:00"
+      timezone: Asia/Tokyo
+    open-pull-requests-limit: 1
+    groups:
+      actions-updates:
+        patterns:
+          - "*"
