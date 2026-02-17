@@ -59,7 +59,9 @@
         <%# プレビュー環境でのみ表示 %>
         <% if preview_environment? %>
           <div class="mt-4">
-            <%= link_to preview_login_path, method: :post, class: "w-full flex justify-center items-center bg-green-600 text-white py-3 mt-8 rounded-full" do %>
+            <%= button_to preview_login_path,
+                method: :post,
+                class: "w-full flex justify-center items-center bg-green-600 text-white py-3 mt-8 rounded-full cursor-pointer" do %>
               プレビューユーザーとしてログイン
             <% end %>
             <small class="mt-4 text-xs text-gray-500">
