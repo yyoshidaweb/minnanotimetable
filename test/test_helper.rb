@@ -1,6 +1,8 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
+# 全テストでstubを使用できるようにするため、minitest/mockをrequireする
+require "minitest/mock"
 
 module ActiveSupport
   class TestCase

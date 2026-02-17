@@ -56,6 +56,17 @@
             に同意したものとみなされます。
           </small>
         </div>
+        <%# プレビュー環境でのみ表示 %>
+        <% if preview_environment? %>
+          <div class="mt-4">
+            <%= link_to preview_login_path, method: :post, class: "w-full flex justify-center items-center bg-green-600 text-white py-3 mt-8 rounded-full" do %>
+              プレビューユーザーとしてログイン
+            <% end %>
+            <small class="mt-4 text-xs text-gray-500">
+              "プレビューユーザーとしてログイン"はプレビュー環境でのみ表示されます。
+            </small>
+          </div>
+        <% end %>
       <% end %>
     </div>
   </div>

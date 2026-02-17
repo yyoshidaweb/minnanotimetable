@@ -16,4 +16,16 @@ class ApplicationController < ActionController::Base
       super
     end
   end
+
+  # プレビュー環境かどうかを判定するヘルパーメソッド
+  def self.preview_environment?
+    Rails.env.production? && ENV["IS_PULL_REQUEST"] == "true"
+  end
+
+  # インスタンスメソッドとしてもpreview_environment?を使用できるようにする
+  def preview_environment?
+    self.class.preview_environment?
+  end
+  # ビューでpreview_environment?メソッドを使用できるようにする
+  helper_method :preview_environment?
 end

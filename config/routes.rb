@@ -7,6 +7,9 @@ Rails.application.routes.draw do
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
+  # プレビュー環境でのログイン用ルーティング
+  post "/preview_login", to: "preview_sessions#create"
+
   # ユーザー詳細ページ（/users/:username）
   resources :users, only: [ :show ], param: :username
 
