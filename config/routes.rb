@@ -4,9 +4,7 @@ Rails.application.routes.draw do
 
   # Deviseのルーティング設定でOmniauthコールバック用コントローラーを指定
   devise_for :users, controllers: {
-    omniauth_callbacks: "users/omniauth_callbacks",
-    # ログアウト処理をカスタマイズするためにセッションコントローラーも指定
-    sessions: "users/sessions"
+    omniauth_callbacks: "users/omniauth_callbacks"
   }
 
   # ユーザー詳細ページ（/users/:username）
