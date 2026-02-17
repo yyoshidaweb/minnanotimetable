@@ -1,6 +1,4 @@
 class ApplicationController < ActionController::Base
-  # プレビュー環境で自動的にプレビューユーザーとしてログインする
-  before_action :auto_login_preview_user
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   unless Rails.env.development?
       # 本番・ステージングでのみ最新ブラウザのみ許可
@@ -17,16 +15,5 @@ class ApplicationController < ActionController::Base
     else
       super
     end
-  end
-
-  private
-
-  # プレビュー環境で自動的にテストユーザーとしてログインする処理
-  def auto_login_preview_user
-    return unless ENV["IS_PULL_REQUEST"] == "true" # Preview環境以外なら何もしない
-    return if current_user.present? # 既にログイン済なら何もしない
-    user = User.find_by(email: "user1@example.com")
-    return unless user # テストユーザーが存在しない場合は何もしない
-    sign_in(user) # Deviseでログイン
   end
 end
