@@ -1,3 +1,8 @@
+> [!NOTE]
+> 現在、READMEは整備中です。\
+> このプロジェクトの詳細については以下から確認できます。\
+> https://github.com/yyoshidaweb/minnanotimetable/wiki
+
 # README
 
 This README would normally document whatever steps are necessary to get the
