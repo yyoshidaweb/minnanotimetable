@@ -29,6 +29,16 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
+  <%# Google Analyticsを利用するために必要なコード %>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-X5QSF6431B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-X5QSF6431B');
+  </script>
   <body class="min-h-svh flex flex-col">
     <%# メインヘッダー(@hidden_headerがtrueの場合は非表示) %>
     <%= render "layouts/header" %>
