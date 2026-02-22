@@ -95,7 +95,7 @@ bin/dev
 
 ### Googleログインを利用するための設定
 
-[Google認証機能作成手順 · yyoshidaweb/minnanotimetable Wiki](https://github.com/yyoshidaweb/minnanotimetable/wiki/Google%E8%AA%8D%E8%A8%BC%E6%A9%9F%E8%83%BD%E4%BD%9C%E6%88%90%E6%89%8B%E9%A0%86) を参考にしてGoogleログインに必要なクライアントIDとクライアントシークレットを正しく設定すると、Googleログインが利用可能になります。
+[Google認証機能作成手順 · yyoshidaweb/minnanotimetable Wiki](https://github.com/yyoshidaweb/minnanotimetable/wiki/Google%E8%AA%8D%E8%A8%BC%E6%A9%9F%E8%83%BD%E4%BD%9C%E6%88%90%E6%89%8B%E9%A0%86) を参考にして、Googleログインに必要なクライアントIDとクライアントシークレットを正しく設定すると、Googleログインが利用可能になります。
 
 
 
@@ -136,11 +136,13 @@ bin/rails test
 
 リアルタイムの開発状況は [カンバン](https://github.com/users/yyoshidaweb/projects/2) でも確認できます。
 
+
 ---
 
 ## 制作背景
 
-以前、音楽フェス「下北沢にて'24」で、あるバンドのMC中に「出演者が多すぎてタイムテーブルがすごく細かくなっている」という話を聞いた瞬間に、誰でも見やすいタイムテーブルを作れる「みんなのタイムテーブル」を作ろうと確信しました。\
+以前、音楽フェス「下北沢にて'24」で、あるバンドのMC中に「出演者が多すぎてタイムテーブルがすごく細かくなっている」という話を聞いた瞬間に、誰でも見やすいタイムテーブルを作れる「みんなのタイムテーブル」を作ろうと確信しました。
+
 「みんなのタイムテーブル」は、誰でも使えるサービスでありながら、将来的には公式フェスにも採用されるような信頼性のあるサービスを目指して開発しています。
 
 
@@ -150,7 +152,13 @@ bin/rails test
 現在β版のため、仕様変更やUI改善を随時行っています。\
 フィードバックをくれると嬉しいです。
 
+
+
+## 💡 さらに詳しい内容をまとめたWikiもあります
+[Home · yyoshidaweb/minnanotimetable Wiki](https://github.com/yyoshidaweb/minnanotimetable/wiki) にさらに詳しい内容をまとめています。\
+ぜひご覧ください。
+
 ## ライセンス
 
-本リポジトリのコードの著作権は作者に帰属します。
+本リポジトリのコードの著作権は作者に帰属します。\
 許可なく複製・改変・再配布・商用利用することを禁止します。
