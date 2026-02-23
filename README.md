@@ -40,7 +40,7 @@
 * ステージごとの出演管理
 * 公開用URL発行
 * Googleアカウントログイン
-* レスポンシブ対応（スマホでも見やすくなる）
+* レスポンシブ対応
 
 
 
@@ -53,6 +53,8 @@
 * Google OAuth
 * Render（ホスティング）
 * Puma（Webサーバー）
+
+依存関係のバーションは [Dependabot](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-security-updates) によって1週間に一度のスケジュールで最新バージョンにアップデートしています。
 
 
 
@@ -90,7 +92,8 @@ bin/rails db:prepare
 bin/dev
 ```
 
-[http://localhost:3000](http://localhost:3000) で起動します。\
+[http://localhost:3000](http://localhost:3000) で起動します。
+
 ※Googleログインは環境ごとにクライアントIDとクライアントシークレットを発行する必要があるため、次の手順を実行後に利用可能になります。
 
 ### Googleログインを利用するための設定
@@ -147,15 +150,15 @@ bin/rails test
 
 
 
-## β版について
+## フィードバックを募集しています
 
 現在β版のため、仕様変更やUI改善を随時行っています。\
-フィードバックをくれると嬉しいです。
+ご意見・ご要望など、 [みんなのタイムテーブル お問い合わせフォーム](https://docs.google.com/forms/d/e/1FAIpQLSfJBlhMJb4MWDX_xWlc2lel1P_X5zGTmySXlcWU7De_XtSJmw/viewform) からフィードバックをくれると嬉しいです。
 
 
 
 ## 💡 さらに詳しい内容をまとめたWikiもあります
-[Home · yyoshidaweb/minnanotimetable Wiki](https://github.com/yyoshidaweb/minnanotimetable/wiki) にさらに詳しい内容をまとめています。\
+[Home · yyoshidaweb/minnanotimetable Wiki](https://github.com/yyoshidaweb/minnanotimetable/wiki) に要件定義書やシーケンス図、ER図、開発中に詰まったポイントのTipsなどをまとめています。\
 ぜひご覧ください。
 
 ## ライセンス
