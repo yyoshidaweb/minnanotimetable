@@ -6,6 +6,11 @@
 
 現在β版として公開中です。
 
+
+## トップページのスクリーンショット
+
+<img width="300" height="552" alt="スマートフォンでトップページを表示した際のスクリーンショット" src="https://github.com/user-attachments/assets/65026ac1-41e8-4d5e-96d9-8d50162dd6a4" />
+
 ---
 
 ## サービス概要
