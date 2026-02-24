@@ -4,7 +4,8 @@
 
 - サービスURL：https://minnanotimetable.com
 
-<img width="300" alt="スマートフォンでトップページを表示した際のスクリーンショット" src="https://github.com/user-attachments/assets/65026ac1-41e8-4d5e-96d9-8d50162dd6a4" />
+<img width="300" alt="スマートフォンでトップページを表示した際のスクリーンショット" src="https://github.com/user-attachments/assets/1f7d060c-872c-4df3-9f48-ea29442c310d" />
+
 
 
 ## デモ動画（タイムテーブル作成〜最初の出演情報を追加）
