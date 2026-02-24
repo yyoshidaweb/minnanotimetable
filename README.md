@@ -8,9 +8,17 @@
 
 
 
-## デモ動画（タイムテーブル作成〜最初の出演情報を追加）
+## デモ動画
 
-https://github.com/user-attachments/assets/9aee078f-4536-40a7-8e22-44cd3f3c29d4
+<img width="300" alt="スマートフォンでタイムテーブルに出演情報を追加している場面のGIF画像" src="https://github.com/user-attachments/assets/c5a97ae9-1b15-4de4-856f-2ecfec9408a8" />
+
+<details>
+
+<summary>フルのデモ動画を見る（約38秒）</summary>
+<video src="https://github.com/user-attachments/assets/9aee078f-4536-40a7-8e22-44cd3f3c29d4"></video>
+</details>
+
+
 
 ---
 
