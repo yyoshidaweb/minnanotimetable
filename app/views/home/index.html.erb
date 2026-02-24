@@ -1,20 +1,28 @@
 <div class="min-h-[calc(100svh-12rem)] flex flex-col justify-center items-center">
   <div class="w-full max-w-md flex flex-col justify-center items-center">
-    <div class="w-full flex flex-col justify-center items-center mb-6">
+    <div class="w-full flex flex-col justify-center items-center mb-4">
       <h1 class="flex justify-center items-end yusei-magic-regular font-semibold mb-4">
         <span class="text-3xl text-gray-800">みんなのタイムテーブル</span>
         <span class="text-md text-gray-500">（β）</span>
       </h1>
-      <p class="w-full min-w-xs max-w-xs text-lg text-gray-500 leading-relaxed">
+      <%# ヒーローイメージ %>
+      <%= image_tag "hero.png", class: "mb-4" %>
+      <p class="mb-1 w-full min-w-xs max-w-xs text-lg text-gray-500 leading-relaxed">
         文字だけでタイムテーブルができる。<br>
         スマホでもPCでも、誰でも使える。
       </p>
+      <div class="w-full flex justify-center">
+        <%= link_to "https://minnanotimetable.com/vN8myFjXoKU",
+                                  class: "text-xs text-blue-600 hover:underline" do %>
+          <span class="font-semibold">サンプルを見る→</span>
+        <% end %>
+      </div>
     </div>
     <div class="min-w-xs max-w-xs">
       <% if user_signed_in? %>
         <%= link_to new_event_path,
                         class: "flex justify-center items-center w-full px-4 py-2 bg-gray-800 text-white
-                                rounded-md hover:bg-gray-900 mb-8" do %>
+                                rounded-full hover:bg-gray-900 mb-8" do %>
           <span class="material-symbols-outlined mr-1">add</span>
           <span class="font-semibold">タイムテーブルを作る</span>
         <% end %>
