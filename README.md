@@ -154,25 +154,30 @@ bin/rails test
 リアルタイムの開発状況は [カンバン](https://github.com/users/yyoshidaweb/projects/2) でも確認できます。
 
 
----
+
 
 ## 制作背景
 
-以前、音楽フェス「下北沢にて'24」で、あるバンドのMC中に「出演者が多すぎてタイムテーブルがすごく細かくなっている」という話を聞きました。
+以前、音楽フェス「下北沢にて'24」に参加した際、あるバンドのMC中に「出演者が多すぎてタイムテーブルがとても細かくなっている」という話を聞きました。
 
-このとき、「誰でも簡単に見やすいタイムテーブルを作れるサービスがあったらいいのに」と思ったことがきっかけです。
+このとき、「誰でも簡単に見やすいタイムテーブルを作れるサービスがあったらいいのに」と思ったことがきっかけで、みんなのタイムテーブルのアイデアが生まれました。
 
 
-## フィードバックを募集しています
 
-現在β版のため、仕様変更やUI改善を随時行っています。\
-ご意見・ご要望など、 [みんなのタイムテーブル お問い合わせフォーム](https://docs.google.com/forms/d/e/1FAIpQLSfJBlhMJb4MWDX_xWlc2lel1P_X5zGTmySXlcWU7De_XtSJmw/viewform) からフィードバックをくれると嬉しいです。
-
+---
 
 
 ## 💡 さらに詳しい内容をまとめたWikiもあります
 [Home · yyoshidaweb/minnanotimetable Wiki](https://github.com/yyoshidaweb/minnanotimetable/wiki) に要件定義書やシーケンス図、ER図、開発中に詰まったポイントのTipsなどをまとめています。\
 ぜひご覧ください。
+
+
+
+## フィードバックを募集しています
+
+現在β版のため、仕様変更やUI改善を随時行っています。\
+ご意見・ご要望など、 [みんなのタイムテーブル お問い合わせフォーム](https://docs.google.com/forms/d/e/1FAIpQLSfJBlhMJb4MWDX_xWlc2lel1P_X5zGTmySXlcWU7De_XtSJmw/viewform) からフィードバックをいただけると嬉しいです。
+
 
 ## ライセンス
 
