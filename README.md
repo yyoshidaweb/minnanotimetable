@@ -52,7 +52,6 @@ https://minnanotimetable.com
 ## 主な機能
 
 * タイムテーブル作成
-* ステージごとの出演管理
 * 公開用URL発行
 * Googleアカウントログイン
 * レスポンシブ対応
