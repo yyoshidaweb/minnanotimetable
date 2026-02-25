@@ -2,7 +2,10 @@
 文字を入力するだけでタイムテーブルができる。\
 スマホでもPCでも、誰でも使えるタイムテーブル作成サービス。
 
-- サービスURL：https://minnanotimetable.com
+## サービスURL
+https://minnanotimetable.com
+
+## トップページのスクリーンショット
 
 <img width="300" alt="スマートフォンでトップページを表示した際のスクリーンショット" src="https://github.com/user-attachments/assets/1f7d060c-872c-4df3-9f48-ea29442c310d" />
 
@@ -66,7 +69,7 @@
 * Render（ホスティング）
 * Puma（Webサーバー）
 
-依存関係のバーションは [Dependabot](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-security-updates) によって1週間に一度のスケジュールで最新バージョンにアップデートしています。
+依存関係のバーションは [Dependabot](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-security-updates) によって週1回アップデートしており、セキュリティ・安定性を保っています。
 
 
 
@@ -156,10 +159,9 @@ bin/rails test
 
 ## 制作背景
 
-以前、音楽フェス「下北沢にて'24」で、あるバンドのMC中に「出演者が多すぎてタイムテーブルがすごく細かくなっている」という話を聞いた瞬間に、誰でも見やすいタイムテーブルを作れる「みんなのタイムテーブル」を作ろうと確信しました。
+以前、音楽フェス「下北沢にて'24」で、あるバンドのMC中に「出演者が多すぎてタイムテーブルがすごく細かくなっている」という話を聞きました。
 
-「みんなのタイムテーブル」は、誰でも使えるサービスでありながら、将来的には公式フェスにも採用されるような信頼性のあるサービスを目指して開発しています。
-
+このとき、「誰でも簡単に見やすいタイムテーブルを作れるサービスがあったらいいのに」と思ったことがきっかけです。
 
 
 ## フィードバックを募集しています
