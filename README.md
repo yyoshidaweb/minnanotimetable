@@ -66,10 +66,27 @@ https://minnanotimetable.com
 * Tailwind CSS
 * Google OAuth
 * Render（ホスティング）
+    * ステージング環境：無料のFree instance
+    * 本番環境：有料のStarter instanceと、永続化ディスク（Persistent Disks）
 * Puma（Webサーバー）
 
 依存関係のバーションは [Dependabot](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-security-updates) によって週1回アップデートしており、セキュリティ・安定性を保っています。
 
+
+> [!WARNING]
+> RenderなどのPaaS環境でSQLiteを利用する場合、標準ではデプロイごとにデータがリセットされてしまいます。\
+> そのため、本番環境では、Renderの永続化ディスク（Persistent Disks）を利用する必要があります。
+
+
+### 技術選定方針
+
+本プロジェクトは、Rails 8の標準構成を最大限活かすことを方針としています。
+
+- 本番環境でもSQLiteを採用
+- 可能な限りRails標準に寄せた構成
+- 外部依存を増やさないシンプルなアーキテクチャ
+
+複雑化する構成ではなく、シンプルさを武器にした設計を目指しています。
 
 
 ## ローカル開発環境構築手順
@@ -126,12 +143,6 @@ bin/rails test
 
 
 
-## 本番環境構成
-
-* ホスティング先：Render（Starter instance）
-* DB：SQLite（Renderの永続化ディスク（Persistent Disks）を利用）
-
-
 
 ## デプロイフロー
 
@@ -160,7 +171,7 @@ bin/rails test
 
 以前、音楽フェス「下北沢にて'24」に参加した際、あるバンドのMC中に「出演者が多すぎてタイムテーブルがとても細かくなっている」という話を聞きました。
 
-このとき、「誰でも簡単に見やすいタイムテーブルを作れるサービスがあったらいいのに」と思ったことがきっかけで、みんなのタイムテーブルのアイデアが生まれました。
+このとき、「誰でも簡単に見やすいタイムテーブルを作れるサービスを作ろう！」と思ったことがきっかけで、みんなのタイムテーブルのアイデアが生まれました。
 
 
 
@@ -168,8 +179,16 @@ bin/rails test
 
 
 ## 💡 さらに詳しい内容をまとめたWikiもあります
-[Home · yyoshidaweb/minnanotimetable Wiki](https://github.com/yyoshidaweb/minnanotimetable/wiki) に要件定義書やシーケンス図、ER図、開発中に詰まったポイントのTipsなどをまとめています。\
-ぜひご覧ください。
+[Home · yyoshidaweb/minnanotimetable Wiki](https://github.com/yyoshidaweb/minnanotimetable/wiki) に要件定義書やシーケンス図、ER図、開発中に詰まったポイントのTipsなどをまとめています。
+
+
+
+### Wiki形式でドキュメント整備をしている理由
+このGitHub Wikiを作っている理由は、将来的にもしも自分が「みんなのタイムテーブル」の開発から離脱することになったとしても、ずっとこのサービスを続けたいからです。
+
+そのため、GitHub Wikiとしてオープンなドキュメントを整備することで、スムーズに協力者を募ることや、企業に譲渡することができる状態を維持したいと考えています。
+
+興味のある方は、ぜひご覧ください。
 
 
 
