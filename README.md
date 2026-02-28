@@ -13,8 +13,7 @@ https://minnanotimetable.com
 
 ## デモ動画
 
-<img width="300" alt="スマートフォンでタイムテーブルに出演情報を追加している場面のGIF画像" src="https://github.com/user-attachments/assets/c5a97ae9-1b15-4de4-856f-2ecfec9408a8" />
-
+<img width="300" alt="スマートフォンでタイムテーブルに出演情報を追加している場面のGIF画像" src="https://github.com/user-attachments/assets/a2d0d626-1d3f-40fd-98d0-a65799763be6" />
 
 
 🎥 [フルのデモ動画を見る（約38秒）→](https://github.com/user-attachments/assets/9aee078f-4536-40a7-8e22-44cd3f3c29d4)
@@ -174,6 +173,12 @@ bin/rails test
 このとき、「誰でも簡単に見やすいタイムテーブルを作れるサービスを作ろう！」と思ったことがきっかけで、みんなのタイムテーブルのアイデアが生まれました。
 
 
+
+## 関連記事
+- サービスに対する想い
+    - [フェスのタイムテーブル、見づらくないですか？ そんな悩みを解決するサービスをリリースしました🎉](https://note.com/yyoshidaweb/n/n376bca4c9b06)（note）
+- 技術的な話題
+    - [みんなのタイムテーブルβ版リリース🎉 技術構成と、表の描画速度改善の裏話](https://zenn.dev/yyoshidaweb/articles/299b6dbb16a067)（Zenn）
 
 ---
 
