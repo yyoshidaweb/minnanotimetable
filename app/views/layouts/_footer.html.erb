@@ -12,6 +12,17 @@
                     class: "text-gray-700 hover:text-gray-900 hover:underline",
                     target: "_blank",
                     rel: "noopener noreferrer" %>
+          <div class="flex items-center text-gray-700">
+            <span>運営：</span>
+            <%= link_to "https://piku.page/@yyoshidaweb",
+                      class: "flex items-center hover:text-gray-900 hover:underline",
+                      target: "_blank",
+                      rel: "noopener noreferrer" do %>
+              <%= image_tag "icon_yyoshidaweb.png",
+                            class: "mr-px w-7" %>
+              <span>@yyoshidaweb</span>
+            <% end %>
+          </div>
         </div>
         <div class="text-sm text-gray-700">
           © <%= Time.current.year %> みんなのタイムテーブル
