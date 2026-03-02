@@ -4,8 +4,8 @@ updates:
     directory: "/"
     schedule:
       interval: weekly         # 毎週実行
-      day: monday              # 月曜日
-      time: "15:00"            # 15:00
+      day: friday              # 金曜日
+      time: "19:00"            # 19:00
       timezone: Asia/Tokyo
     open-pull-requests-limit: 1  # PR上限を1に制限
     groups:
@@ -17,8 +17,8 @@ updates:
     directory: "/"
     schedule:
       interval: weekly
-      day: monday
-      time: "15:00"
+      day: friday
+      time: "19:00"
       timezone: Asia/Tokyo
     open-pull-requests-limit: 1
     groups:
