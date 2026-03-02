@@ -1,7 +1,7 @@
 ---
 name: Dependencies update
 about: 依存関係更新
-title: 'dependencies: '
+title: 'build: '
 labels: dependencies
 assignees: ''
 
