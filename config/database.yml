@@ -39,9 +39,9 @@ staging:
     migrations_paths: db/cable_migrate
 
 
-# Store production database in the storage/ directory, which by default
-# is mounted as a persistent Docker volume in config/deploy.yml.
+# 本番環境ではPostgreSQLを使用、PRプレビュー環境ではSQLite を使用するように指定
 production:
+  <% if ENV["IS_PULL_REQUEST"] == "true" %>
   primary:
     <<: *default
     database: storage/production.sqlite3
@@ -57,3 +57,16 @@ production:
     <<: *default
     database: storage/production_cable.sqlite3
     migrations_paths: db/cable_migrate
+  <% else %>
+  primary:
+    url: <%= ENV["DATABASE_URL"] %>
+  cache:
+    url: <%= ENV["DATABASE_URL"] %>
+    migrations_paths: db/cache_migrate
+  queue:
+    url: <%= ENV["DATABASE_URL"] %>
+    migrations_paths: db/queue_migrate
+  cable:
+    url: <%= ENV["DATABASE_URL"] %>
+    migrations_paths: db/cable_migrate
+  <% end %>
