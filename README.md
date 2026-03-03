@@ -61,31 +61,17 @@ https://minnanotimetable.com
 
 * Ruby
 * Ruby on Rails
-* SQLite（開発・ステージング・本番すべての環境で採用）
+* SQLite（開発・ステージング環境で利用）
+* PostgreSQL（本番環境で、Render Postgresを利用）
 * Tailwind CSS
 * Google OAuth
 * Render（ホスティング）
     * ステージング環境：無料のFree instance
-    * 本番環境：有料のStarter instanceと、永続化ディスク（Persistent Disks）
+    * 本番環境：有料のStarter instance
 * Puma（Webサーバー）
 
 依存関係のバーションは [Dependabot](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-security-updates) によって週1回アップデートしており、セキュリティ・安定性を保っています。
 
-
-> [!WARNING]
-> RenderなどのPaaS環境でSQLiteを利用する場合、標準ではデプロイごとにデータがリセットされてしまいます。\
-> そのため、本番環境では、Renderの永続化ディスク（Persistent Disks）を利用する必要があります。
-
-
-### 技術選定方針
-
-本プロジェクトは、Rails 8の標準構成を最大限活かすことを方針としています。
-
-- 本番環境でもSQLiteを採用
-- 可能な限りRails標準に寄せた構成
-- 外部依存を増やさないシンプルなアーキテクチャ
-
-複雑化する構成ではなく、シンプルさを武器にした設計を目指しています。
 
 
 ## ローカル開発環境構築手順
