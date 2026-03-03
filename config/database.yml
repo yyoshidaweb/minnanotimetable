@@ -41,5 +41,16 @@ staging:
 
 # Store production database in the storage/ directory, which by default
 # is mounted as a persistent Docker volume in config/deploy.yml.
+# 本番環境では、環境変数 DATABASE_URL を使用してデータベース接続情報を指定する
 production:
-  url: <%= ENV["DATABASE_URL"] %> # RenderのPostgresを使用
+  primary:
+    url: <%= ENV["DATABASE_URL"] %>
+  cache:
+    url: <%= ENV["DATABASE_URL"] %>
+    migrations_paths: db/cache_migrate
+  queue:
+    url: <%= ENV["DATABASE_URL"] %>
+    migrations_paths: db/queue_migrate
+  cable:
+    url: <%= ENV["DATABASE_URL"] %>
+    migrations_paths: db/cable_migrate
