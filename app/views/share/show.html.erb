@@ -42,11 +42,13 @@
         URLをコピーしました
       </div>
       <%# X共有 %>
-      <%= link_to "Xでシェアする",
-                        "https://x.com/intent/post?text=#{CGI.escape(@event.display_name + "のタイムテーブル" + "\n\n" + share_event_url + "\n\n" + '#みんなのタイムテーブル｜音楽フェスのタイムテーブルを作ろう！')}",
+      <%= link_to "https://x.com/intent/post?text=#{CGI.escape(@event.display_name + "のタイムテーブル" + "\n\n" + share_event_url + "\n\n" + '#みんなのタイムテーブル｜音楽フェスのタイムテーブルを作ろう！')}",
                         target: "_blank",
                         rel: "noopener noreferrer",
-                        class: "block w-full text-center bg-black text-white py-2 rounded-full mb-2" %>
+                        class: "flex items-center justify-center w-full text-center bg-black text-white py-2 rounded-full mb-2" do %>
+        <%= image_tag "x_logo.svg", class: "w-5 mr-2" %>
+        <span class="font-semibold">Xでシェアする</span>
+      <% end %>
     </div>
   </div>
 <% end %>
