@@ -3,8 +3,8 @@
   <div class="fixed inset-0 z-300 flex items-center justify-center bg-black/40",
         data-controller="modal clipboard"
         data-action="click->modal#close"
-    data-clipboard-text-value="<%= request.original_url %>">
-    <div class="relative max-h-[80svh] overflow-y-auto bg-white rounded-lg shadow-lg max-w-md w-full mx-4",
+    data-clipboard-text-value="<%= share_event_url %>">
+    <div class="flex flex-col justify-center items-center relative max-h-[80svh] overflow-y-auto bg-white rounded-lg shadow-lg max-w-md w-full mx-4 p-6",
           data-action="click->modal#stop">
       <%# × ボタン %>
       <button type="button"
@@ -13,26 +13,40 @@
         <span class="material-symbols-outlined">close</span>
       </button>
       <%# タイトル %>
-      <p class="mb-4 font-bold text-center text-lg">
-        このタイムテーブルを共有
-      </p>
-      <%# X共有 %>
-      <%= link_to "Xで共有",
-                "https://x.com/intent/post?url=#{CGI.escape(request.original_url)}&text=#{CGI.escape(@event.display_name + '｜みんなのタイムテーブル #みんなのタイムテーブル')}",
-                target: "_blank",
-                rel: "noopener noreferrer",
-                class: "block w-full text-center bg-black text-white py-2 rounded mb-2" %>
-      <%# URLコピー %>
-      <button data-action="click->clipboard#copy"
-        data-action="click->clipboard#copy"
-        class="block w-full text-center bg-gray-200 py-2 rounded">
-        URLをコピー
-      </button>
+      <div>
+        <h1 class="mb-6 text-2xl font-bold text-center line-clamp-6">
+          <%= @event.display_name %>
+        </h1>
+      </div>
+      <%# QRコード %>
+      <% require 'rqrcode' %>
+      <% qrcode = RQRCode::QRCode.new(share_event_url) %>
+      <div class="flex justify-center mb-6">
+        <%= raw qrcode.as_svg(module_size: 6, standalone: true) %>
+      </div>
+      <%# URLとコピーボタン %>
+      <div class="text-gray-600 hover:text-gray-700 flex items-center mb-6">
+        <span class="text-md mr-1.5"><%= share_event_url %></span>
+        <button data-action="click->clipboard#copy"
+          data-action="click->clipboard#copy"
+          class="flex items-center">
+          <span class="material-symbols-outlined"
+                    style="font-size: 1.25rem;">
+            content_copy
+          </span>
+        </button>
+      </div>
       <%# トースト通知表示用（最初は非表示） %>
       <div data-clipboard-target="toast"
                 class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-sm py-2 px-4 rounded opacity-0 transition-opacity duration-300">
         URLをコピーしました
       </div>
+      <%# X共有 %>
+      <%= link_to "Xでシェアする",
+                        "https://x.com/intent/post?text=#{CGI.escape(@event.display_name + "のタイムテーブル" + "\n\n" + share_event_url + "\n\n" + '#みんなのタイムテーブル｜音楽フェスのタイムテーブルを作ろう！')}",
+                        target: "_blank",
+                        rel: "noopener noreferrer",
+                        class: "block w-full text-center bg-black text-white py-2 rounded-full mb-2" %>
     </div>
   </div>
 <% end %>
