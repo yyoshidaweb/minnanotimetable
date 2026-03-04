@@ -2,6 +2,14 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="modal"
 export default class extends Controller {
+  // モーダルを開く
+  open(event) {
+    event.preventDefault() // linkの遷移を止める
+    const url = event.currentTarget.dataset.url // 開きたいURLを取得
+    const frame = document.getElementById("modal") // layoutに置くturbo-frame
+    if (frame) frame.src = url // Turboで内容を読み込む
+  }
+  
   // モーダルをクローズする
   close() {
     // モーダル全体を取得
