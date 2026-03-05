@@ -54,6 +54,8 @@ Rails.application.routes.draw do
     resources :performances, only: [ :new, :create, :edit, :update, :destroy ]
   end
 
+  get "/share/:event_key", to: "share#show", as: :share_event
+
   # 利用規約・プライバシーポリシー
   get "/terms", to: "static_pages#terms"
   get "/privacy", to: "static_pages#privacy"
