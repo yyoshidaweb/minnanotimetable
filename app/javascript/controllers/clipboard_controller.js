@@ -1,24 +1,15 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-    static values = { text: String }
-    static targets = ["toast"]
-
+    static targets = ["icon"]
     copy() {
         navigator.clipboard.writeText(this.textValue).then(() => {
-            this.showToast()
+            // アイコン要素を取得
+            const icon = this.iconTarget
+            // コピーアイコンをチェックマークに変更
+            icon.textContent = "check"
+            // 2秒後に元のコピーアイコンに戻す
+            setTimeout(() => icon.textContent = "content_copy", 2000)
         })
-    }
-
-    showToast() {
-        const toast = this.toastTarget
-        toast.classList.remove("opacity-0")
-        toast.classList.add("opacity-100")
-
-        // 2秒後にフェードアウト
-        setTimeout(() => {
-            toast.classList.remove("opacity-100")
-            toast.classList.add("opacity-0")
-        }, 2000)
     }
 }

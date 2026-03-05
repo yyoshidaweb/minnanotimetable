@@ -25,21 +25,17 @@
         <%= raw qrcode.as_svg(module_size: 6, standalone: true) %>
       </div>
       <%# URLとコピーボタン %>
-      <div class="text-gray-600 hover:text-gray-700 flex items-center mb-6">
+      <div class="text-gray-500 flex items-center mb-6">
         <span class="text-md mr-1.5"><%= share_event_url %></span>
         <button data-action="click->clipboard#copy"
           data-action="click->clipboard#copy"
-          class="flex items-center">
-          <span class="material-symbols-outlined"
-                    style="font-size: 1.25rem;">
+          class="flex items-center cursor-pointer hover:text-gray-700">
+          <span data-clipboard-target="icon"
+                class="material-symbols-outlined"
+                style="font-size: 1.25rem;">
             content_copy
           </span>
         </button>
-      </div>
-      <%# トースト通知表示用（最初は非表示） %>
-      <div data-clipboard-target="toast"
-                class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-black text-white text-sm py-2 px-4 rounded opacity-0 transition-opacity duration-300">
-        URLをコピーしました
       </div>
       <%# X共有 %>
       <%= link_to "https://x.com/intent/post?text=#{CGI.escape(@event.display_name + "のタイムテーブル" + "\n\n" + share_event_url + "\n\n" + '#みんなのタイムテーブル｜音楽フェスのタイムテーブルを作ろう！')}",
