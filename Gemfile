@@ -65,6 +65,8 @@ gem "openssl"
 
 # QRコード生成
 gem "rqrcode"
+# PostgreSQL データベースを使用するための gem
+gem "pg"
 
 
 group :development, :test do
