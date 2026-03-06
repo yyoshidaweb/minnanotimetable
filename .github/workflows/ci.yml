@@ -83,14 +83,21 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Run tests (fail if 0 runs)
+      - name: Run tests
         env:
           RAILS_ENV: test
         run: |
+          # テストの出力を保存するための一時ファイルを作成
+          readonly log=$(mktemp)
           set -euo pipefail
+          # データベーススキーマをロード
+          bin/rails db:schema:load
 
-          # テストを実行しつつ、0 runs を検知したら失敗
-          if bin/rails db:schema:load test | tee /dev/stderr | grep -q '^0 runs,'; then
+          # テストを実行し、出力を変数に保存
+          bin/rails test | tee "$log"
+
+          # 0 runs を検知したら失敗
+          if grep -q '^0 runs,' "$log"; then
             echo "::error::Minitest executed 0 tests"
             exit 1
           fi

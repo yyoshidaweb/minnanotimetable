@@ -22,7 +22,7 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
 
   # デフォルト（最古日付）での表示テスト
   test "should show event timetable by event_key" do
-    get "/#{@event.event_key}"
+    get show_timetable_path(@event.event_key)
     assert_response :success
     # 全日付へのリンクが含まれている
     assert_select "a[href=?]", show_timetable_path(@event.event_key, d: @day1.date)
@@ -49,7 +49,7 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
 
   # 出演情報が0件の場合もタイムテーブルを表示できる
   test "should show event timetable by event_key when no performances" do
-    get "/#{@no_performance_event.event_key}"
+    get show_timetable_path(@no_performance_event.event_key)
     assert_response :success
   end
 end
