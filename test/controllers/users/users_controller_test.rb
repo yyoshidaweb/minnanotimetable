@@ -11,13 +11,13 @@ class Users::UsersControllerTest < ActionDispatch::IntegrationTest
 
   # ユーザー詳細ページの表示テスト
   test "should get show by username" do
-    get user_url(@user.username)
+    get show_user_path(@user.username)
     assert_response :success
   end
 
   # 存在しない username に対する404エラーテスト
   test "should return 404 for invalid username" do
-      get user_url("unknown_username_123")
+      get show_user_path("unknown_username_123")
       assert_response :not_found
   end
 end
