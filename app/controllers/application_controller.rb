@@ -17,6 +17,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # ログイン後の遷移先をタイムテーブル一覧ページに固定
+  def after_sign_in_path_for(resource)
+    events_path
+  end
+
   # プレビュー環境かどうかを判定するヘルパーメソッド
   def self.preview_environment?
     Rails.env.production? && ENV["IS_PULL_REQUEST"] == "true"
