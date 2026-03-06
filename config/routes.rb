@@ -61,5 +61,5 @@ Rails.application.routes.draw do
   get "/privacy", to: "static_pages#privacy"
 
   # イベント詳細ページ（/:event_key）
-  get "/:event_key", to: "timetables#show", as: :show_timetable
+  get "/t/:event_key", to: "timetables#show", as: :show_timetable
 end
