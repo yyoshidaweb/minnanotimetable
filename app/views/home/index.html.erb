@@ -8,9 +8,9 @@
   <meta name="twitter:title" content="みんなのタイムテーブル">
   <meta name="twitter:description" content="文字だけでタイムテーブルができる。スマホでもPCでも、誰でも使える。">
 <% end %>
-<div class="min-h-[calc(100svh-12rem)] flex flex-col justify-center items-center">
+<div class="min-h-[calc(100svh-15rem)] flex flex-col justify-center items-center">
   <div class="w-full max-w-md flex flex-col justify-center items-center">
-    <div class="w-full flex flex-col justify-center items-center mb-4">
+    <div class="w-full flex flex-col justify-center items-center mb-6">
       <h1 class="flex justify-center items-end yusei-magic-regular font-semibold mb-4">
         <span class="text-3xl text-gray-800">みんなのタイムテーブル</span>
         <span class="text-md text-gray-500">（β）</span>
@@ -23,18 +23,22 @@
       </p>
       <div class="w-full flex justify-center">
         <%= link_to "https://minnanotimetable.com/t/VZAIkCmjJ2I",
-                                  class: "text-xs text-blue-600 hover:underline" do %>
-          <span class="font-semibold">サンプルを見る→</span>
+                    class: "flex justify-center items-center text-sm text-blue-600 border-b border-transparent hover:border-blue-600 transition",
+                    target: "_blank",
+                    rel: "noopener noreferrer" do %>
+          <span class="font-semibold">サンプルを見てみる</span>
+          <span class="material-symbols-outlined ml-px"
+                  style="font-size: 1rem;">open_in_new</span>
         <% end %>
       </div>
     </div>
     <div class="min-w-xs max-w-xs">
       <% if user_signed_in? %>
-        <%= link_to new_event_path,
+        <%= link_to events_path,
                         class: "flex justify-center items-center w-full px-4 py-2 bg-gray-800 text-white
                                 rounded-full hover:bg-gray-900 mb-8" do %>
-          <span class="material-symbols-outlined mr-1">add</span>
-          <span class="font-semibold">タイムテーブルを作る</span>
+          <span class="material-symbols-outlined mr-1">list</span>
+          <span class="font-semibold">タイムテーブル一覧 →</span>
         <% end %>
         <% if @events.any? %>
           <div class="flex flex-col space-y-4">
@@ -58,7 +62,7 @@
             <% end %>
             <div class="flex justify-end">
               <%= link_to events_path,
-                            class: "text-md text-blue-800 hover:underline" do %>
+                            class: "text-sm text-blue-600 hover:underline" do %>
                 <span class="font-semibold">もっと見る→</span>
               <% end %>
             </div>
