@@ -21,12 +21,12 @@
       <%# QRコード %>
       <% require 'rqrcode' %>
       <% qrcode = RQRCode::QRCode.new(share_event_url) %>
-      <div class="flex justify-center mb-6">
+      <div class="flex justify-center mb-2">
         <%= raw qrcode.as_svg(module_size: 6, standalone: true) %>
       </div>
       <%# URLとコピーボタン %>
       <div class="text-gray-500 flex items-center mb-6">
-        <span class="text-md mr-1.5"><%= share_event_url %></span>
+        <span class="text-xs mr-1.5"><%= share_event_url %></span>
         <button data-action="click->clipboard#copy"
           data-action="click->clipboard#copy"
           class="flex items-center cursor-pointer hover:text-gray-700">
