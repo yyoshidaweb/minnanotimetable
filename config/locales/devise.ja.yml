@@ -27,8 +27,8 @@ ja:
       password_change:
         subject: "パスワードが変更されました"
     omniauth_callbacks:
-      failure: "%{kind} による認証に失敗しました。"
-      success: "%{kind} アカウントで認証に成功しました。"
+      failure: "%{kind}ログインに失敗しました。"
+      success: "%{kind}アカウントでログインしました。"
     passwords:
       no_token: "パスワードリセットメールからアクセスしてください。正しいURLを使用していることを確認してください。"
       send_instructions: "数分以内にパスワードリセットの案内メールが届きます。"

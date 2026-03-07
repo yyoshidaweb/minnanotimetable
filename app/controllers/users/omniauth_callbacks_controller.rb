@@ -10,15 +10,13 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
       # ログイン成功メッセージを表示（ブラウザアクセス時のみ）
       set_flash_message(:notice, :success, kind: "Google") if is_navigational_format?
     else
-      # 保存できなかった認証情報を一時的にセッションへ保持（余計なデータは除外）
-      session["devise.google_data"] = request.env["omniauth.auth"].except(:extra)
       # 新規登録画面へリダイレクト＋エラーメッセージ表示
-      redirect_to new_user_registration_url, alert: "Google認証に失敗しました"
+      redirect_to root_path, alert: "Googleログインに失敗しました"
     end
   end
 
   # 認証処理が失敗したときの共通ハンドラー
   def failure
-    redirect_to root_path
+    redirect_to root_path, alert: "Googleログインに失敗しました"
   end
 end
