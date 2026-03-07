@@ -26,6 +26,7 @@
 
 /* タイムテーブルの区切り線（10分・1時間） */
 .timetable-body-col {
+    transform: translateZ(0);
     background-image:
         /* 1時間ごとの太線 */
         linear-gradient(to bottom,
