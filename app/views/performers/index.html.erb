@@ -1,7 +1,10 @@
 <% if user_signed_in? && current_user == @event.user %>
-  <%= link_to "出演者作成",
-            new_event_performer_path(@event.event_key),
-            class: "inline-block mb-6 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900" %>
+  <%= link_to new_event_performer_path(@event.event_key),
+                class: "mb-6 px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-900
+                        inline-flex justify-center items-center" do %>
+    <span class="material-symbols-outlined mr-1">person_add</span>
+    <span class="font-semibold">出演者を追加する</span>
+  <% end %>
 <% end %>
 <% if @performers.any? %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
@@ -16,7 +19,7 @@
     <% end %>
   </div>
 <% else %>
-  <p class="text-gray-600">出演者はいません。</p>
+  <p class="text-gray-600">まだ出演者がいません</p>
 <% end %>
 <%# 下部タブメニュー %>
 <%= render "layouts/bottom_tab" %>
