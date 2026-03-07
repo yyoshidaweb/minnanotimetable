@@ -1,6 +1,7 @@
 # 🎤 みんなのタイムテーブル（β）
-文字を入力するだけでタイムテーブルができる。\
-スマホでもPCでも、誰でも使えるタイムテーブル作成サービス。
+音楽フェス向けタイムテーブル作成サービス
+
+文字だけでタイムテーブルができる。スマホでもPCでも、誰でも使える。
 
 ## サービスURL
 https://minnanotimetable.com
@@ -25,16 +26,11 @@ https://minnanotimetable.com
 ## サービス概要
 
 「みんなのタイムテーブル」は、
-音楽フェスやライブイベントなどのタイムテーブルを見やすく作成できるWebサービスです。
+音楽フェスのWeb版タイムテーブルを簡単に作れるサービスです。
 
-従来の画像形式のタイムテーブルでは、
+これまで、タイムテーブルが画像形式しかない場合、スマホでは拡大しないと読めないという課題がありました。
 
-* スマホで見づらい
-* 拡大しないと読めない
-
-といった課題があります。
-
-本サービスは、これらの課題を解決することを目的に開発しています。
+本サービスはこの問題を解決することを目指しています。
 
 
 
@@ -50,8 +46,8 @@ https://minnanotimetable.com
 
 ## 主な機能
 
-* タイムテーブル作成
-* 公開用URL発行
+* 文字を入力するだけでタイムテーブルが出来上がる
+* 共有ボタンでタイムテーブルを共有
 * Googleアカウントログイン
 * レスポンシブ対応
 
@@ -59,18 +55,31 @@ https://minnanotimetable.com
 
 ## 技術スタック
 
+### フロントエンド
+* Hotwire
+* Tailwind CSS
+
+### バックエンド
 * Ruby
 * Ruby on Rails
+
+### DB
 * SQLite（開発・ステージング環境で利用）
 * PostgreSQL（本番環境で、Render Postgresを利用）
-* Tailwind CSS
+
+### 認証
 * Google OAuth
-* Render（ホスティング）
+
+### ホスティング
+* Render
     * ステージング環境：無料のFree instance
     * 本番環境：有料のStarter instance
-* Puma（Webサーバー）
 
-依存関係のバーションは [Dependabot](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-security-updates) によって週1回アップデートしており、セキュリティ・安定性を保っています。
+### 単体テスト
+* Minitest（ほとんど全てのコントローラーに対して作成）
+
+### 依存関係管理
+依存関係は [Dependabot](https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-security-updates) によって週1回アップデートしており、セキュリティ・安定性を保っています。
 
 
 
@@ -140,11 +149,9 @@ bin/rails test
 
 ## 今後の予定
 
-* タイムテーブルタブにSNS共有ボタンを追加する
+* マイタイムテーブル作成機能を実装
 * ページタイトルを動的に変化させる
 * ページごとに適切なOGP画像を設定する
-* マイタイムテーブル作成機能を実装
-* 削除ボタンを一覧ページのオーバーフローメニューに移動させる
 * etc...
 
 リアルタイムの開発状況は [カンバン](https://github.com/users/yyoshidaweb/projects/2) でも確認できます。
@@ -156,15 +163,16 @@ bin/rails test
 
 以前、音楽フェス「下北沢にて'24」に参加した際、あるバンドのMC中に「出演者が多すぎてタイムテーブルがとても細かくなっている」という話を聞きました。
 
-このとき、「誰でも簡単に見やすいタイムテーブルを作れるサービスを作ろう！」と思ったことがきっかけで、みんなのタイムテーブルのアイデアが生まれました。
+このとき、「音楽フェスのWeb版タイムテーブルを簡単に作れるサービスを作ろう！」と思ったことがきっかけで、みんなのタイムテーブルのアイデアが生まれました。
 
 
 
 ## 関連記事
-- サービスに対する想い
-    - [フェスのタイムテーブル、見づらくないですか？ そんな悩みを解決するサービスをリリースしました🎉](https://note.com/yyoshidaweb/n/n376bca4c9b06)（note）
-- 技術的な話題
-    - [みんなのタイムテーブルβ版リリース🎉 技術構成と、表の描画速度改善の裏話](https://zenn.dev/yyoshidaweb/articles/299b6dbb16a067)（Zenn）
+### サービスへの想い
+- [音楽フェスのWeb版タイムテーブルを簡単に作れるサービスをリリースしました🎉](https://note.com/yyoshidaweb/n/n376bca4c9b06)（note）
+
+### 技術構成と開発裏話
+- [みんなのタイムテーブルβ版リリース🎉 技術選定理由と表の描画速度改善の裏話](https://zenn.dev/yyoshidaweb/articles/299b6dbb16a067)（Zenn）
 
 ---
 
