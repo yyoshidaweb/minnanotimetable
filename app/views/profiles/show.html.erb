@@ -1,3 +1,6 @@
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@page_title} | みんなのタイムテーブル" %>
+<% content_for :description, "#{@page_title}。" %>
 <div class="relative max-w-md mx-auto my-4 p-4">
   <%# 編集ボタン %>
   <%= link_to edit_profile_path,
