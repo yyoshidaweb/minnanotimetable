@@ -1,3 +1,6 @@
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@event.display_name} #{@page_title} | みんなのタイムテーブル" %>
+<% content_for :description, "#{@event.display_name}の#{@page_title}。#{@event.description if @event.description.present?}" %>
 <% if user_signed_in? && current_user == @event.user %>
   <div class="flex justify-between items-center mb-6">
     <%= link_to new_event_stage_path(@event.event_key),
