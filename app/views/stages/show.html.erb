@@ -1,3 +1,6 @@
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@event.display_name} #{@stage.display_name} | みんなのタイムテーブル" %>
+<% content_for :description, "#{@event.display_name}のステージ「#{@stage.display_name}」の詳細。ステージ情報や住所を確認できます。" %>
 <div class="relative max-w-md mx-auto p-4 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
   <%# 編集ボタン（作成者本人のみ表示） %>
   <% if user_signed_in? && current_user == @event.user %>
