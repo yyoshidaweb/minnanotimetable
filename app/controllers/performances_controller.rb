@@ -50,6 +50,8 @@ class PerformancesController < ApplicationController
   end
 
   def edit
+    # 出演者詳細ページから遷移した場合は出演者をセットする
+    @performer = @performance.performer
     @performance.start_time_hour   = @performance.start_time&.hour
     @performance.start_time_minute = @performance.start_time&.min
     @performance.end_time_hour     = @performance.end_time&.hour
@@ -60,6 +62,8 @@ class PerformancesController < ApplicationController
     if @performance.update(performance_params_for_update)
       redirect_to event_performer_url(@event.event_key, @performance.performer), notice: "出演情報を更新しました。"
     else
+      # エラー時に出演者をセットする
+      @performer = @performance.performer
       restore_time_virtual_attributes
       render :edit, status: :unprocessable_entity
     end

@@ -10,7 +10,7 @@ class ProfilesController < ApplicationController
 
   def edit
     @user = current_user
-    @page_title = "プロフィール編集"
+    @page_title = "プロフィールを編集"
   end
 
   def update
@@ -20,7 +20,7 @@ class ProfilesController < ApplicationController
       redirect_to profile_path, notice: "プロフィールを更新しました。"
     else
       # 更新に失敗した場合、編集ページを再表示
-      @page_title = "プロフィール編集"
+      @page_title = "プロフィールを編集"
       render :edit, status: :unprocessable_entity
     end
   end

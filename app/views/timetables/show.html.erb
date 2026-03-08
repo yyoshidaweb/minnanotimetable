@@ -1,3 +1,6 @@
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@event.display_name} タイムテーブル | みんなのタイムテーブル" %>
+<% content_for :description, "#{@event.display_name}のタイムテーブル。#{@event.description if @event.description.present?}" %>
 <% if @performances.present? %>
   <%# 日付選択タブ（イベントヘッダーの高さ分下げて配置する） %>
   <nav class="flex h-8 fixed top-16 z-160 w-full justify-around overflow-x-auto bg-white border-t border-gray-200">
@@ -93,16 +96,16 @@
     <% if user_signed_in? && current_user == @event.user %>
       <p class="text-gray-800 mb-4">出演情報を追加して、<br>
         タイムテーブルを完成させましょう！</p>
-      </p>
-      <%= link_to new_event_performance_path(@event.event_key),
+    </p>
+    <%= link_to new_event_performance_path(@event.event_key),
                 class: "relative flex items-center justify-center p-3 bg-gray-800 text-white rounded-full shadow hover:bg-gray-900" do %>
-        <span class="material-symbols-outlined">calendar_add_on</span>
-        <small class="text-sm">出演情報を追加</small>
-      <% end %>
-    <% else %>
-      <p class="text-gray-800 mb-8">まだ、出演情報がありません</p>
+      <span class="material-symbols-outlined">calendar_add_on</span>
+      <small class="text-sm">出演情報を追加</small>
     <% end %>
-  </div>
-  <%# 下部タブメニュー %>
-  <%= render "layouts/bottom_tab" %>
+  <% else %>
+    <p class="text-gray-800 mb-8">まだ、出演情報がありません</p>
+  <% end %>
+</div>
+<%# 下部タブメニュー %>
+<%= render "layouts/bottom_tab" %>
 <% end %>

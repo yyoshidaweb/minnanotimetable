@@ -1,3 +1,6 @@
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@event.display_name} #{@performer.display_name} | みんなのタイムテーブル" %>
+<% content_for :description, "#{@event.display_name}の出演者「#{@performer.display_name}」の出演情報。出演時間や出演ステージを確認できます。" %>
 <div class="relative max-w-md mx-auto p-4 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
   <%# 編集ボタン（作成者本人のみ表示） %>
   <% if user_signed_in? && current_user == @event.user %>

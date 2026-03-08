@@ -1,13 +1,6 @@
-<%# 検索結果などに表示されるタイトル %>
+<%# 検索結果などに表示されるタイトルと説明 %>
 <% content_for :title, "みんなのタイムテーブル | 音楽フェス向けタイムテーブル作成サービス" %>
-<%# 検索結果などに表示される情報 %>
-<% content_for :head do %>
-  <meta name="description" content="文字だけでタイムテーブルができる。スマホでもPCでも、誰でも使える。音楽フェスのタイムテーブル作成に。">
-  <meta property="og:title" content="みんなのタイムテーブル">
-  <meta property="og:description" content="文字だけでタイムテーブルができる。スマホでもPCでも、誰でも使える。">
-  <meta name="twitter:title" content="みんなのタイムテーブル">
-  <meta name="twitter:description" content="文字だけでタイムテーブルができる。スマホでもPCでも、誰でも使える。">
-<% end %>
+<% content_for :description, "音楽フェスのWeb版タイムテーブルを簡単に作れるサービス。文字を入力するだけでタイムテーブルが出来上がる。スマホでもPCでも見やすい。" %>
 <div class="min-h-[calc(100svh-15rem)] flex flex-col justify-center items-center">
   <div class="w-full max-w-md flex flex-col justify-center items-center">
     <div class="w-full flex flex-col justify-center items-center mb-6">

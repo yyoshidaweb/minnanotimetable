@@ -1,3 +1,6 @@
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@page_title} #{@event.display_name} #{@performer.display_name} | みんなのタイムテーブル" %>
+<% content_for :description, "#{@event.display_name}の#{@page_title}「#{@performer.display_name}」。" %>
 <div class="pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
   <div class="max-w-md mx-auto my-4 p-6 bg-white shadow-md rounded-lg">
     <%= form_with model: @performance,
@@ -7,7 +10,7 @@
       <%# エラーメッセージ %>
       <%= render "devise/shared/error_messages", resource: @performance %>
       <h3 class="text-xl font-bold text-gray-900">
-        <%= @performance.performer.display_name %>
+        <%= @performer.display_name %>
       </h3>
       <%# 開催日（任意） %>
       <div>

@@ -1,3 +1,6 @@
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@page_title} #{@event.display_name} | みんなのタイムテーブル" %>
+<% content_for :description, "#{@event.display_name}の#{@page_title}。" %>
 <%= link_to "開催日を追加", new_event_day_url(@event.event_key),
         class: "inline-block mb-6 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900" %>
 <% if @days.present? %>

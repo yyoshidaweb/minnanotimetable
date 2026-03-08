@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "みんなのタイムテーブル" %></title>
+    <title><%= content_for?(:title) ? yield(:title) : "みんなのタイムテーブル | 音楽フェス向けタイムテーブル作成サービス" %></title>
+    <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "音楽フェスのWeb版タイムテーブルを簡単に作れるサービス。文字を入力するだけでタイムテーブルが出来上がる。スマホでもPCでも見やすい。" %>">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Minnanotimetable">
@@ -16,11 +17,15 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="みんなのタイムテーブル">
     <meta property="og:locale" content="ja_JP">
-    <meta property="og:url" content="<%= root_url %>">
+    <meta property="og:url" content="<%= request.original_url %>">
     <meta property="og:image" content="<%= image_url('ogp.png') %>">
+    <meta property="og:title" content="<%= content_for?(:title) ? yield(:title) : "みんなのタイムテーブル" %>">
+    <meta property="og:description" content="<%= content_for?(:description) ? yield(:description) : "" %>">
     <%# Twitter Card %>
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="<%= image_url('ogp.png') %>">
+    <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : "みんなのタイムテーブル" %>">
+    <meta name="twitter:description" content="<%= content_for?(:description) ? yield(:description) : "" %>">
     <%= yield :head %>
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>

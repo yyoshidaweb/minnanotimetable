@@ -1,3 +1,6 @@
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@page_title} | みんなのタイムテーブル" %>
+<% content_for :description, "#{@page_title}。" %>
 <div class="max-w-md mx-auto my-4 p-6 bg-white shadow-md rounded-lg">
   <%= form_with model: current_user, url: profile_path, method: :patch, class: "space-y-6" do |f| %>
     <%# エラーメッセージ %>
