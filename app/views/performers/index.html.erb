@@ -1,6 +1,6 @@
 <%# 検索結果などに表示されるタイトルと説明 %>
 <% content_for :title, "#{@event.display_name} #{@page_title} | みんなのタイムテーブル" %>
-<% content_for :description, "#{@event.display_name}の#{@page_title}。#{@event.description if @event.description.present?}" %>
+<% content_for :description, "#{@event.display_name}の#{@page_title}。" %>
 <% if user_signed_in? && current_user == @event.user %>
   <%= link_to new_event_performer_path(@event.event_key),
                 class: "mb-6 px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-900
