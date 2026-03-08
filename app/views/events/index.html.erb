@@ -1,3 +1,6 @@
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@page_title} | みんなのタイムテーブル" %>
+<% content_for :description, "#{@page_title}。" %>
 <% if @events.any? %>
   <%= link_to new_event_path,
                 class: "mb-6 px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-900

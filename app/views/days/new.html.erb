@@ -1,3 +1,6 @@
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@page_title} #{@event.display_name} | みんなのタイムテーブル" %>
+<% content_for :description, "#{@event.display_name}の#{@page_title}。" %>
 <% if turbo_frame_request? %>
   <%= render "modal_new", day: @day %>
 <% else %>

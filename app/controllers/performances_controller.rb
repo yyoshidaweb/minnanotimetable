@@ -54,6 +54,8 @@ class PerformancesController < ApplicationController
     @performance.start_time_minute = @performance.start_time&.min
     @performance.end_time_hour     = @performance.end_time&.hour
     @performance.end_time_minute   = @performance.end_time&.min
+    # 出演者詳細ページから遷移した場合は出演者をセットする
+    @performer = @performance.performer
   end
 
   def update
