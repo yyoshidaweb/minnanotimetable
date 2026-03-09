@@ -43,16 +43,18 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
-  <%# Google Analyticsを利用するために必要なコード %>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-X5QSF6431B"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+  <%# Google Analyticsを利用するために必要なコード（本番環境のみ実行される） %>
+  <% if Rails.env.production? && !preview_environment? %>
+    <%# Google tag (gtag.js) %>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-X5QSF6431B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    gtag('config', 'G-X5QSF6431B');
-  </script>
+      gtag('config', 'G-X5QSF6431B');
+    </script>
+  <% end %>
   <body class="min-h-svh flex flex-col">
     <%# メインヘッダー(@hidden_headerがtrueの場合は非表示) %>
     <%= render "layouts/header" %>
@@ -65,7 +67,7 @@
     <%# メイン要素（ヘルパーでクラスを生成） %>
     <main class="<%= main_element_class %>">
       <%= yield %>
-      <!-- モーダル用 -->
+      <%# モーダル用 %>
       <%= turbo_frame_tag "modal" %>
     </main>
     <%# フッター %>
