@@ -67,7 +67,7 @@
     <%# メイン要素（ヘルパーでクラスを生成） %>
     <main class="<%= main_element_class %>">
       <%= yield %>
-      <!-- モーダル用 -->
+      <%# モーダル用 %>
       <%= turbo_frame_tag "modal" %>
     </main>
     <%# フッター %>
