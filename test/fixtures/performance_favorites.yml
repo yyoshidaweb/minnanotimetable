@@ -1,9 +1,7 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
+user_one_to_performance_one:
   user: one
   performance: one
 
-two:
+user_two_to_performance_two:
   user: two
   performance: two
