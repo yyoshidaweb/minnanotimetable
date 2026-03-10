@@ -60,6 +60,11 @@ class User < ApplicationRecord
     provider.blank? && super
   end
 
+  # 出演者がお気に入りかどうかを判定するメソッド
+  def favorite_performance?(performance)
+    performance_favorites.exists?(performance_id: performance.id)
+  end
+
   private
 
   # ユーザー名を生成するメソッド
