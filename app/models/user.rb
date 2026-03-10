@@ -60,11 +60,6 @@ class User < ApplicationRecord
     provider.blank? && super
   end
 
-  # 出演者がお気に入りかどうかを判定するメソッド
-  def favorite_performance?(performance)
-    performance_favorites.exists?(performance_id: performance.id)
-  end
-
   # performerに紐づくお気に入りを Hash で取得
   def favorite_performance_map_for(performer)
     performance_favorites
