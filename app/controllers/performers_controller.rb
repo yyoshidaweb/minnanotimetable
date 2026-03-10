@@ -13,6 +13,11 @@ class PerformersController < ApplicationController
   end
 
   def show
+    # お気に入り登録している出演情報IDの配列を取得
+    if user_signed_in?
+      @favorite_performance_map =
+        current_user.favorite_performance_map_for(@performer)
+    end
   end
 
   def new

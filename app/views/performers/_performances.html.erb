@@ -33,31 +33,32 @@
         </div>
         <%# お気に入りボタンと編集ボタン %>
         <div class="flex items-center">
-          <% if user_signed_in? && current_user == @event.user %>
-            <%= link_to edit_event_performance_path(@event.event_key, performance),
-                              class: "mr-4 flex items-center text-sm text-gray-800" do %>
-              <span class="material-symbols-outlined">edit_calendar</span>
-            <% end %>
-          <% end %>
-          <%# お気に入りボタン %>
           <% if user_signed_in? %>
-            <%# お気に入りではない場合 %>
-            <% if !current_user.favorite_performance?(performance) %>
-              <%= button_to performance_favorites_path(performance_id: performance.id),
-                            method: :post,
-                            class: "flex items-center text-gray-800" do %>
-                <span class="material-symbols-outlined cursor-pointer">
+            <%# 編集ボタン（出演者の作成者のみ表示） %>
+            <% if current_user == @event.user %>
+              <%= link_to edit_event_performance_path(@event.event_key, performance),
+                              class: "mr-4 flex items-center text-sm text-gray-800" do %>
+                <span class="material-symbols-outlined">edit_calendar</span>
+              <% end %>
+            <% end %>
+            <%# お気に入りボタン %>
+            <%# performance_favoriteのidを取得 %>
+            <% favorite_id = @favorite_performance_map[performance.id] %>
+            <% if favorite_id %>
+              <%# お気に入り済みの場合 %>
+              <%= button_to performance_favorite_path(favorite_id),
+                                          method: :delete,
+                                          class: "flex items-center" do %>
+                <span class="material-symbols-outlined material-symbols-filled text-red-400 cursor-pointer">
                   favorite
                 </span>
               <% end %>
-            <% end %>
-            <%# お気に入り済みの場合 %>
-            <% if current_user.favorite_performance?(performance) %>
-              <% favorite = current_user.performance_favorites.find_by(performance_id: performance.id) %>
-              <%= button_to performance_favorite_path(favorite),
-                            method: :delete,
-                            class: "flex items-center" do %>
-                <span class="material-symbols-outlined material-symbols-filled text-red-400 cursor-pointer">
+            <% else %>
+              <%# お気に入りではない場合 %>
+              <%= button_to performance_favorites_path(performance_id: performance.id),
+                                          method: :post,
+                                          class: "flex items-center text-gray-800" do %>
+                <span class="material-symbols-outlined cursor-pointer">
                   favorite
                 </span>
               <% end %>

@@ -65,6 +65,15 @@ class User < ApplicationRecord
     performance_favorites.exists?(performance_id: performance.id)
   end
 
+  # performerに紐づくお気に入りを Hash で取得
+  def favorite_performance_map_for(performer)
+    performance_favorites
+      .joins(:performance) # performanceテーブル結合
+      .where(performances: { performer_id: performer.id })
+      .pluck(:performance_id, :id) # [performance_id, favorite_id]
+      .to_h # Hash化
+  end
+
   private
 
   # ユーザー名を生成するメソッド
