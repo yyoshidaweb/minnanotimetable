@@ -1,12 +1,36 @@
 <%# 検索結果などに表示されるタイトルと説明 %>
 <% content_for :title, "#{@event.display_name} #{@performer.display_name} | みんなのタイムテーブル" %>
 <% content_for :description, "#{@event.display_name}の出演者「#{@performer.display_name}」の出演情報。出演時間や出演ステージを確認できます。" %>
-<div class="relative max-w-md mx-auto p-4 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
+<div class="relative max-w-md mx-auto py-8 px-5 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
   <%# 編集ボタン（作成者本人のみ表示） %>
   <% if user_signed_in? && current_user == @event.user %>
     <%= link_to edit_event_performer_path(@event.event_key, @performer),
-                class: "absolute top-4 right-0 text-xs text-gray-800" do %>
+                class: "absolute top-8 right-0 text-xs text-gray-800" do %>
       <span class="material-symbols-outlined">edit</span>
+    <% end %>
+  <% end %>
+  <%# お気に入りボタン %>
+  <% if user_signed_in? %>
+    <%# お気に入りではない場合 %>
+    <% if !current_user.favorite_performer?(@performer) %>
+      <%= button_to performer_favorites_path(performer_id: @performer.id),
+                  method: :post,
+                  class: "absolute top-0 right-0 text-xs text-gray-800" do %>
+        <span class="material-symbols-outlined cursor-pointer">
+          favorite
+        </span>
+      <% end %>
+    <% end %>
+    <%# お気に入り済みの場合 %>
+    <% if current_user.favorite_performer?(@performer) %>
+      <% favorite = current_user.performer_favorites.find_by(performer_id: @performer.id) %>
+      <%= button_to performer_favorite_path(favorite),
+                  method: :delete,
+                  class: "absolute top-0 right-0 text-xs text-gray-800" do %>
+        <span class="material-symbols-outlined material-symbols-filled text-red-400 cursor-pointer">
+          favorite
+        </span>
+      <% end %>
     <% end %>
   <% end %>
   <%# 出演者名 %>
