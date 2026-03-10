@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_02_084144) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_10_093948) do
   create_table "days", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "date", null: false
@@ -49,6 +49,16 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_084144) do
     t.index ["event_name_tag_id"], name: "index_events_on_event_name_tag_id"
     t.index ["user_id", "event_name_tag_id"], name: "index_events_on_user_id_and_event_name_tag_id", unique: true
     t.index ["user_id"], name: "index_events_on_user_id"
+  end
+
+  create_table "performance_favorites", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "performance_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["performance_id"], name: "index_performance_favorites_on_performance_id"
+    t.index ["user_id", "performance_id"], name: "index_performance_favorites_on_user_id_and_performance_id", unique: true
+    t.index ["user_id"], name: "index_performance_favorites_on_user_id"
   end
 
   create_table "performances", force: :cascade do |t|
@@ -138,6 +148,8 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_02_084144) do
   add_foreign_key "event_favorites", "users"
   add_foreign_key "events", "event_name_tags"
   add_foreign_key "events", "users"
+  add_foreign_key "performance_favorites", "performances"
+  add_foreign_key "performance_favorites", "users"
   add_foreign_key "performances", "days"
   add_foreign_key "performances", "performers"
   add_foreign_key "performances", "stages"

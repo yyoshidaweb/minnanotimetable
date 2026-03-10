@@ -8,6 +8,9 @@ class User < ApplicationRecord
   # お気に入りの出演者
   has_many :performer_favorites, dependent: :destroy
   has_many :favorite_performers, through: :performer_favorites, source: :performer
+  # お気に入りの出演情報
+  has_many :performance_favorites, dependent: :destroy
+  has_many :favorite_performances, through: :performance_favorites, source: :performance
 
   # 予約語として使用禁止の username リスト
   MANUAL_RESERVED_USERNAMES = %w[

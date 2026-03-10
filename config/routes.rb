@@ -54,6 +54,8 @@ Rails.application.routes.draw do
     resources :performances, only: [ :new, :create, :edit, :update, :destroy ]
   end
 
+  resources :performance_favorites, only: [ :create, :destroy ]
+
   get "/share/:event_key", to: "share#show", as: :share_event
 
   # 利用規約・プライバシーポリシー

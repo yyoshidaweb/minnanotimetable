@@ -1,4 +1,9 @@
 class Performance < ApplicationRecord
+  # 出演情報を削除すると、紐づいているお気に入りも全て削除される
+  has_many :performance_favorites, dependent: :destroy
+  # 出演情報をお気に入り登録しているユーザーの一覧を取得したいときに使うエイリアス
+  has_many :favorited_users, through: :performance_favorites, source: :user
+
   before_save :calculate_duration
 
   belongs_to :performer
