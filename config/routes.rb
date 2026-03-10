@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # 出演者お気に入り機能
+  resources :performer_favorites, only: [ :create, :destroy ]
+
   # ユーザープロフィール用のルーティング
   resource :profile, only: [ :show, :edit, :update, :destroy ]
 
