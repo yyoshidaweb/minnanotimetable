@@ -20,10 +20,40 @@
         <%= link_to event_performer_path(@event.event_key, performer),
                       class: "block bg-white shadow-md rounded-lg pl-4 pr-10 py-4 border hover:bg-gray-50 transition" do %>
           <%# 名前 %>
-          <p class="text-lg font-semibold text-gray-800"><%= performer.performer_name_tag.name %></p>
-          <%# 説明文 %>
-          <% if performer.description.present? %>
-            <p class="text-gray-700 mt-2 line-clamp-2"><%= performer.description %></p>
+          <p class="mb-2 text-lg font-semibold text-gray-800 line-clamp-2"><%= performer.display_name %></p>
+          <%# 出演情報 %>
+          <% if performer.performances.exists? %>
+            <div class="gap-1 flex flex-col text-gray-500">
+              <div class="gap-1 flex items-baseline">
+                <% performance = performer.performances.first %>
+                <p class="text-sm">
+                  <% if performance.day.present? %>
+                    <%= performance.day.date.strftime("%-Y/%-m/%-d") %>
+                  <% else %>
+                    出演日：未定
+                  <% end %>
+                </p>
+                <p class="text-sm">
+                  <% if performance.start_time.present? && performance.end_time.present? %>
+                    <%= "#{performance.start_time.strftime("%H:%M")}~" %>
+                  <% else %>
+                    時刻：未定
+                  <% end %>
+                </p>
+                <p class="text-sm line-clamp-1">
+                  <% if performance.stage.present? %>
+                    <%= performance.stage.display_name %>
+                  <% else %>
+                    ステージ：未定
+                  <% end %>
+                </p>
+              </div>
+              <% if performer.performances.size >= 2 %>
+                <p class="text-xs"><%= "ほか#{performer.performances.size - 1}件" %></p>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-sm text-gray-500">出演情報がありません</p>
           <% end %>
         <% end %>
         <%# 出演情報が存在する場合のみ表示 %>
