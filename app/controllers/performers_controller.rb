@@ -10,6 +10,10 @@ class PerformersController < ApplicationController
 
   def index
     @performers = @event.performers
+    # お気に入り登録している出演者IDの配列を取得
+    if user_signed_in?
+      @favorite_performer_map = current_user.favorite_performer_map
+    end
   end
 
   def show

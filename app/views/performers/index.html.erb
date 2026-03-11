@@ -12,13 +12,36 @@
 <% if @performers.any? %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
     <% @performers.each do |performer| %>
-      <%= link_to event_performer_path(@event.event_key, performer),
-                    class: "bg-white shadow-md rounded-lg p-4 border hover:bg-gray-50 transition" do %>
-        <%# 名前 %>
-        <p class="text-lg font-semibold text-gray-800"><%= performer.performer_name_tag.name %></p>
-        <%# 説明文 %>
-        <p class="text-gray-700 mt-2 line-clamp-2"><%= performer.description %></p>
-      <% end %>
+      <%# お気に入り登録している出演者かどうかを判定 %>
+      <% favorite = @favorite_performer_map[performer.id] %>
+      <%# 出演者カード全体 %>
+      <div class="relative">
+        <%# 出演者詳細ページへのリンク %>
+        <%= link_to event_performer_path(@event.event_key, performer),
+                      class: "block bg-white shadow-md rounded-lg pl-4 pr-10 py-4 border hover:bg-gray-50 transition" do %>
+          <%# 名前 %>
+          <p class="text-lg font-semibold text-gray-800"><%= performer.performer_name_tag.name %></p>
+          <%# 説明文 %>
+          <% if performer.description.present? %>
+            <p class="text-gray-700 mt-2 line-clamp-2"><%= performer.description %></p>
+          <% end %>
+        <% end %>
+        <% if favorite %>
+          <%# お気に入り解除ボタン %>
+          <div class="absolute top-4 right-2">
+            <span class="material-symbols-outlined material-symbols-filled text-red-400">
+              favorite
+            </span>
+          </div>
+        <% else %>
+          <%# お気に入り登録ボタン%>
+          <div class="absolute top-4 right-2">
+            <span class="material-symbols-outlined">
+              favorite
+            </span>
+          </div>
+        <% end %>
+      </div>
     <% end %>
   </div>
 <% else %>

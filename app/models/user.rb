@@ -69,6 +69,16 @@ class User < ApplicationRecord
       .to_h # Hash化
   end
 
+  # performerごとに「お気に入りperformanceが存在するか」を取得
+  def favorite_performer_map
+    performance_favorites
+      .joins(:performance) # performancesと結合
+      .pluck("performances.performer_id", :performance_id)
+      .each_with_object({}) do |(performer_id, _), map|
+        map[performer_id] = true # performerに1件でもあればtrue
+      end
+  end
+
   private
 
   # ユーザー名を生成するメソッド
