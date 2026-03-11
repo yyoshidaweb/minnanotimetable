@@ -28,18 +28,22 @@
         <% end %>
         <% if favorite %>
           <%# お気に入り解除ボタン %>
-          <div class="absolute top-4 right-2">
+          <%= button_to performer_favorites_path(performer_id: performer.id),
+                        method: :delete,
+                        class: "absolute top-4 right-2 cursor-pointer" do %>
             <span class="material-symbols-outlined material-symbols-filled text-red-400">
               favorite
             </span>
-          </div>
+          <% end %>
         <% else %>
           <%# お気に入り登録ボタン%>
-          <div class="absolute top-4 right-2">
+          <%= button_to performer_favorites_path(performer_id: performer.id),
+                        method: :post,
+                        class: "absolute top-4 right-2 cursor-pointer" do %>
             <span class="material-symbols-outlined">
               favorite
             </span>
-          </div>
+          <% end %>
         <% end %>
       </div>
     <% end %>
