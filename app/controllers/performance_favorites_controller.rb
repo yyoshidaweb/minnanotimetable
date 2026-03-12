@@ -7,7 +7,7 @@ class PerformanceFavoritesController < ApplicationController
     performance = Performance.find(params[:performance_id])
     current_user.performance_favorites.create!(performance: performance)
     # 登録後は元のページにリダイレクトする（もし元のページが不明の場合はトップページにリダイレクトする）
-    redirect_back fallback_location: root_path, notice: "お気に入りに登録しました。"
+    redirect_back fallback_location: root_path
   end
 
   # 出演情報お気に入り登録解除実行
@@ -15,6 +15,6 @@ class PerformanceFavoritesController < ApplicationController
     favorite = current_user.performance_favorites.find(params[:id])
     favorite.destroy!
     # 解除後は元のページにリダイレクトする（もし元のページが不明の場合はトップページにリダイレクトする）
-    redirect_back fallback_location: root_path, notice: "お気に入りを解除しました。"
+    redirect_back fallback_location: root_path
   end
 end
