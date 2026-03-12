@@ -80,6 +80,7 @@ module TimetablesHelper
 
   # お気に入りの出演情報の出演者名にマーカーをつけるためのクラスを返す
   def favorite_marker(performance)
+    return unless user_signed_in?
     favorite_id = @favorite_performance_map[performance.id]
     if favorite_id
       # お気に入り済み
