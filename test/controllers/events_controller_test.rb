@@ -15,6 +15,13 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     @other_event = events(:four)
   end
 
+  # 未ログインでもイベント詳細も表示できる
+  test "should show event with logout" do
+    sign_out @user
+    get event_url(@other_event.event_key)
+    assert_response :success
+  end
+
   # 他者が作成したイベント詳細も表示できる
   test "should show event by other user" do
     get event_url(@other_event.event_key)
