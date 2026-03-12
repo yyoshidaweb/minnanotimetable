@@ -5,9 +5,6 @@ class User < ApplicationRecord
   # お気に入りのイベント
   has_many :event_favorites, dependent: :destroy
   has_many :favorite_events, through: :event_favorites, source: :event
-  # お気に入りの出演者
-  has_many :performer_favorites, dependent: :destroy
-  has_many :favorite_performers, through: :performer_favorites, source: :performer
   # お気に入りの出演情報
   has_many :performance_favorites, dependent: :destroy
   has_many :favorite_performances, through: :performance_favorites, source: :performance
