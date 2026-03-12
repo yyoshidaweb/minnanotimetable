@@ -14,4 +14,10 @@ module PerformersHelper
       ])
     end
   end
+
+  # お気に入り登録している出演者かどうかを判定する
+  def favorite_performer?(performer)
+    return unless user_signed_in?
+    @favorite_performer_map[performer.id]
+  end
 end

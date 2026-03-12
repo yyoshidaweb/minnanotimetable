@@ -12,8 +12,6 @@
 <% if @performers.any? %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
     <% @performers.each do |performer| %>
-      <%# お気に入り登録している出演者かどうかを判定 %>
-      <% favorite = @favorite_performer_map[performer.id] %>
       <%# 出演者カード全体 %>
       <div class="relative">
         <%# 出演者詳細ページへのリンク %>
@@ -58,7 +56,7 @@
         <% end %>
         <%# 出演情報が存在する場合のみ表示 %>
         <% if performer.performances.exists? %>
-          <% if favorite %>
+          <% if favorite_performer?(performer) %>
             <%# お気に入り解除ボタン %>
             <%= button_to performer_favorites_path(performer_id: performer.id),
                         method: :delete,
