@@ -7,7 +7,7 @@ class PerformerFavoritesController < ApplicationController
     performer.performances.find_each do |performance|
       current_user.performance_favorites.find_or_create_by!(performance: performance)
     end
-    redirect_back fallback_location: root_path, notice: "お気に入りに登録しました。"
+    redirect_back fallback_location: root_path
   end
 
   # performerに紐づく全performanceを解除
@@ -17,6 +17,6 @@ class PerformerFavoritesController < ApplicationController
     current_user.performance_favorites
                 .where(performance_id: performances)
                 .destroy_all
-    redirect_back fallback_location: root_path, notice: "お気に入りを解除しました。"
+    redirect_back fallback_location: root_path
   end
 end
