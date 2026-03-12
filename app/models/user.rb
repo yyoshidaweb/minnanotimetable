@@ -61,12 +61,20 @@ class User < ApplicationRecord
   end
 
   # performerに紐づくお気に入りを Hash で取得
-  def favorite_performance_map_for(performer)
+  def favorite_performance_map_by_performer(performer)
     performance_favorites
       .joins(:performance) # performanceテーブル結合
       .where(performances: { performer_id: performer.id })
       .pluck(:performance_id, :id) # [performance_id, favorite_id]
       .to_h # Hash化
+  end
+
+  # performancesの配列に紐づくお気に入りを Hash で取得
+  def favorite_performance_map_by_performances(performances)
+    performance_favorites
+      .where(performance_id: performances)
+      .pluck(:performance_id, :id)
+      .to_h
   end
 
   # performerごとに「お気に入りperformanceが存在するか」を取得

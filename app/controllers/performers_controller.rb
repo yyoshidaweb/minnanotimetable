@@ -20,7 +20,7 @@ class PerformersController < ApplicationController
     # お気に入り登録している出演情報IDの配列を取得
     if user_signed_in?
       @favorite_performance_map =
-        current_user.favorite_performance_map_for(@performer)
+        current_user.favorite_performance_map_by_performer(@performer)
     end
   end
 
