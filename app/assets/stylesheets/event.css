@@ -55,5 +55,6 @@
 /* お気に入りマーカー */
 .favorite-marker {
     background-image: linear-gradient(transparent 50%,
+            rgba(245, 73, 0, 0.2) 50%,
             oklch(64.6% 0.222 41.116 / 0.2) 50%);
 }
