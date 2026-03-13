@@ -18,6 +18,11 @@ class TimetablesController < ApplicationController
     @timetable_view = true
     # イベント用ヘッダー表示フラグ
     @show_event_header = true
+    # お気に入り登録している出演情報IDの配列を取得
+    if user_signed_in?
+      @favorite_performance_map =
+        current_user.favorite_performance_map_by_performances(@performances)
+    end
   end
 
   private

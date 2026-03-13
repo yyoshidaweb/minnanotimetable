@@ -77,4 +77,17 @@ module TimetablesHelper
   def translate_y_by_duration(duration)
     duration <= 5 ? "-translate-y-0.5" : ""
   end
+
+  # お気に入りの出演情報の出演者名にマーカーをつけるためのクラスを返す
+  def favorite_marker(performance)
+    return unless user_signed_in?
+    favorite_id = @favorite_performance_map[performance.id]
+    if favorite_id
+      # お気に入り済み
+      "favorite-marker"
+    else
+      # お気に入りなし
+      ""
+    end
+  end
 end

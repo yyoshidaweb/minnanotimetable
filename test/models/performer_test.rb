@@ -15,7 +15,7 @@ class PerformerTest < ActiveSupport::TestCase
     assert_equal performer.id, performance.performer_id
 
     assert_difference("Performer.count", -1) do
-      assert_difference("Performance.count", -1) do
+      assert_difference("Performance.count", -2) do
         performer.destroy
       end
     end

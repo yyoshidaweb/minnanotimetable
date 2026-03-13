@@ -54,6 +54,13 @@ Rails.application.routes.draw do
     resources :performances, only: [ :new, :create, :edit, :update, :destroy ]
   end
 
+  # 出演情報のお気に入り登録・解除のルーティング
+  resources :performance_favorites, only: [ :create, :destroy ]
+  # 出演者単位で出演情報を一括お気に入り登録する機能のルーティング
+  resources :performer_favorites, only: [ :create ]
+  # 出演者単位で出演情報を一括お気に入り解除する機能のルーティング
+  delete "/performer_favorites", to: "performer_favorites#destroy"
+
   get "/share/:event_key", to: "share#show", as: :share_event
 
   # 利用規約・プライバシーポリシー

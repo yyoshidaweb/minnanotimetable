@@ -20,6 +20,13 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     @performance4 = performances(:four)
   end
 
+  # 未ログインでもタイムテーブルページにアクセス可能
+  test "should get timetable with logout" do
+    sign_out @user
+    get show_timetable_path(@event.event_key)
+    assert_response :success
+  end
+
   # デフォルト（最古日付）での表示テスト
   test "should show event timetable by event_key" do
     get show_timetable_path(@event.event_key)

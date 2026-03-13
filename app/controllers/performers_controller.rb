@@ -9,10 +9,19 @@ class PerformersController < ApplicationController
   before_action :show_event_header, except: %i[ destroy ]
 
   def index
-    @performers = @event.performers
+    @performers = @event.performers.includes(:performances)
+    # お気に入り登録している出演者IDの配列を取得
+    if user_signed_in?
+      @favorite_performer_map = current_user.favorite_performer_map
+    end
   end
 
   def show
+    # お気に入り登録している出演情報IDの配列を取得
+    if user_signed_in?
+      @favorite_performance_map =
+        current_user.favorite_performance_map_by_performer(@performer)
+    end
   end
 
   def new

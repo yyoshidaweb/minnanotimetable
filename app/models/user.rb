@@ -5,9 +5,9 @@ class User < ApplicationRecord
   # お気に入りのイベント
   has_many :event_favorites, dependent: :destroy
   has_many :favorite_events, through: :event_favorites, source: :event
-  # お気に入りの出演者
-  has_many :performer_favorites, dependent: :destroy
-  has_many :favorite_performers, through: :performer_favorites, source: :performer
+  # お気に入りの出演情報
+  has_many :performance_favorites, dependent: :destroy
+  has_many :favorite_performances, through: :performance_favorites, source: :performance
 
   # 予約語として使用禁止の username リスト
   MANUAL_RESERVED_USERNAMES = %w[
@@ -55,6 +55,33 @@ class User < ApplicationRecord
   # Google アカウントの場合はパスワード不要
   def password_required?
     provider.blank? && super
+  end
+
+  # performerに紐づくお気に入りを Hash で取得
+  def favorite_performance_map_by_performer(performer)
+    performance_favorites
+      .joins(:performance) # performanceテーブル結合
+      .where(performances: { performer_id: performer.id })
+      .pluck(:performance_id, :id) # [performance_id, favorite_id]
+      .to_h # Hash化
+  end
+
+  # performancesの配列に紐づくお気に入りを Hash で取得
+  def favorite_performance_map_by_performances(performances)
+    performance_favorites
+      .where(performance_id: performances)
+      .pluck(:performance_id, :id)
+      .to_h
+  end
+
+  # performerごとに「お気に入りperformanceが存在するか」を取得
+  def favorite_performer_map
+    performance_favorites
+      .joins(:performance) # performancesと結合
+      .pluck("performances.performer_id", :performance_id)
+      .each_with_object({}) do |(performer_id, _), map|
+        map[performer_id] = true # performerに1件でもあればtrue
+      end
   end
 
   private

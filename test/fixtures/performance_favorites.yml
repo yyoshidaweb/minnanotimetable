@@ -1,0 +1,12 @@
+user_one_to_performance_one:
+  user: one
+  performance: one
+
+# ユーザー1の出演情報2回目の出演
+user_one_to_performance_one_second:
+  user: one
+  performance: one_second
+
+user_two_to_performance_two:
+  user: two
+  performance: two

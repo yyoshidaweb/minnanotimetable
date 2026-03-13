@@ -7,6 +7,15 @@ one:
   end_time: "13:00:00"
   duration: 60
 
+# 1日目ステージ1出演者1（60分）2回目の出演
+one_second:
+  day: one
+  performer: one
+  stage: one
+  start_time: "14:00:00"
+  end_time: "15:00:00"
+  duration: 60
+
 # 1日目ステージ2出演者2（30分）
 two:
   day: one
@@ -14,6 +23,15 @@ two:
   stage: two
   start_time: "13:30:00"
   end_time: "14:30:00"
+  duration: 30
+
+# 1日目ステージ2出演者2（30分）2回目の出演
+two_second:
+  day: one
+  performer: two
+  stage: two
+  start_time: "15:30:00"
+  end_time: "16:30:00"
   duration: 30
 
 # 2日目ステージ1出演者3（60分）
