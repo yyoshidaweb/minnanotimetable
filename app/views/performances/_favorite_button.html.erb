@@ -1,5 +1,5 @@
 <%# お気に入りボタン %>
-<%= turbo_frame_tag "favorite_performer_#{performance.id}" do %>
+<%= turbo_frame_tag "favorite_performance_#{performance.id}" do %>
   <%# performance_favoriteのidを取得 %>
   <% favorite_id = @favorite_performance_map[performance.id] %>
   <% if favorite_id %>
