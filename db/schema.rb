@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_12_112249) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_14_051917) do
   create_table "days", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "date", null: false
@@ -122,6 +122,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_112249) do
     t.string "name", limit: 50, default: "", null: false
     t.string "provider", limit: 50, default: "", null: false
     t.datetime "remember_created_at"
+    t.string "remember_token"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.string "uid", limit: 255, default: "", null: false
@@ -129,6 +130,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_112249) do
     t.string "username", limit: 50, default: "", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
+    t.index ["remember_token"], name: "index_users_on_remember_token", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
