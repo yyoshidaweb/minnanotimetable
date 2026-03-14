@@ -1,10 +1,14 @@
 class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
+  # Rememberableモジュールをインクルードして、remember_me メソッドを利用可能にする
+  include Devise::Controllers::Rememberable
   # Googleから返ってきた認証情報を処理する
   def google_oauth2
     # Googleから取得した認証情報をもとにユーザーを検索 or 作成
     @user = User.from_omniauth(request.env["omniauth.auth"])
 
     if @user.persisted?
+      # ログイン状態を保持するための remember_me クッキーを設定
+      remember_me(@user)
       # DBに保存済みユーザーならログイン処理を実行
       sign_in_and_redirect @user, event: :authentication
       # ログイン成功メッセージを表示（ブラウザアクセス時のみ）
