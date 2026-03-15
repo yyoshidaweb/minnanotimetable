@@ -15,6 +15,8 @@ class MyTimetablesController < ApplicationController
   before_action :filter_favorite_performances
   # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
   before_action :performances_by_stage
+  # 出演情報が存在するステージのみに絞り込む
+  before_action :filter_empty_stages
   # ビュー上でパフォーマンスを素早く検索できるようにHash化しておく
   before_action :set_performance_map
 
@@ -73,6 +75,12 @@ class MyTimetablesController < ApplicationController
     # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
     def performances_by_stage
       @performances_by_stage = @performances.group_by(&:stage_id)
+    end
+
+    # 出演情報が存在するステージのみに絞り込む
+    def filter_empty_stages
+      stage_ids = @performances_by_stage.keys
+      @stages = @stages.where(id: stage_ids)
     end
 
     # ビュー上でパフォーマンスを素早く検索できるようにHash化しておく
