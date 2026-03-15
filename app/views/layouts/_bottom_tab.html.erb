@@ -6,61 +6,70 @@
     ※みんなのタイムテーブルで作成された非公式タイムテーブルです。
     必ず公式情報をご確認の上、ご利用ください。
   </small>
-  <%# 下部タブメニュー（選択中のタブは自動で塗りつぶされる） %>
-  <nav class="flex h-full w-full items-center">
-    <ul class="flex w-full text-[0.625rem]">
-      <li class="flex-1">
-        <%= link_to show_timetable_path(@event.event_key),
-                class: "flex flex-col items-center gap-0.5" do %>
-          <span class="material-symbols-outlined
-                    <%= bottom_tab_filled_class(show_timetable_path(@event.event_key)) %>">
-            table
-          </span>
-          <span class="text-gray-500">タイムテーブル</span>
-        <% end %>
-      </li>
-      <% if user_signed_in? %>
+  <% if my_timetable_owner? %>
+    <%# 下部タブメニュー（選択中のタブは自動で塗りつぶされる） %>
+    <nav class="flex h-full w-full items-center">
+      <ul class="flex w-full text-[0.625rem]">
         <li class="flex-1">
-          <%= link_to show_my_timetable_path(event_key: @event.event_key, username: current_user.username),
-                class: "flex flex-col items-center gap-0.5" do %>
+          <%= link_to show_timetable_path(@event.event_key),
+                  class: "flex flex-col items-center gap-0.5" do %>
             <span class="material-symbols-outlined
-                    <%= bottom_tab_filled_class(show_my_timetable_path(event_key: @event.event_key, username: current_user.username)) %>">
-              favorite
+                      <%= bottom_tab_filled_class(show_timetable_path(@event.event_key)) %>">
+              table
             </span>
-            <span class="text-gray-500">マイタイテ</span>
+            <span class="text-gray-500">タイムテーブル</span>
           <% end %>
         </li>
+        <% if user_signed_in? %>
+          <li class="flex-1">
+            <%= link_to show_my_timetable_path(event_key: @event.event_key, username: current_user.username),
+                  class: "flex flex-col items-center gap-0.5" do %>
+              <span class="material-symbols-outlined
+                      <%= bottom_tab_filled_class(show_my_timetable_path(event_key: @event.event_key, username: current_user.username)) %>">
+                favorite
+              </span>
+              <span class="text-gray-500">マイタイテ</span>
+            <% end %>
+          </li>
+        <% end %>
+        <li class="flex-1">
+          <%= link_to event_performers_path(@event.event_key),
+                            class: "flex flex-col items-center gap-0.5" do %>
+            <span class="material-symbols-outlined
+                      <%= bottom_tab_filled_class(event_performers_path(@event.event_key)) %>">
+              artist
+            </span>
+            <span class="text-gray-500">出演者</span>
+          <% end %>
+        </li>
+        <li class="flex-1">
+          <%= link_to event_stages_path(@event.event_key),
+                                      class: "flex flex-col items-center gap-0.5" do %>
+            <span class="material-symbols-outlined
+                      <%= bottom_tab_filled_class(event_stages_path(@event.event_key)) %>">
+              map
+            </span>
+            <span class="text-gray-500">ステージ</span>
+          <% end %>
+        </li>
+        <li class="flex-1">
+          <%= link_to event_path(@event.event_key),
+                                                class: "flex flex-col items-center gap-0.5" do %>
+            <span class="material-symbols-outlined
+                      <%= bottom_tab_filled_class(event_path(@event.event_key)) %>">
+              info
+            </span>
+            <span class="text-gray-500">概要</span>
+          <% end %>
+        </li>
+      </ul>
+    </nav>
+  <% else %>
+    <div class="mt-1 w-full flex justify-center">
+      <%= link_to show_timetable_path(@event.event_key),
+                                      class: "text-sm text-blue-600 hover:underline" do %>
+        <span class="font-semibold">タイムテーブルを見る→</span>
       <% end %>
-      <li class="flex-1">
-        <%= link_to event_performers_path(@event.event_key),
-                          class: "flex flex-col items-center gap-0.5" do %>
-          <span class="material-symbols-outlined
-                    <%= bottom_tab_filled_class(event_performers_path(@event.event_key)) %>">
-            artist
-          </span>
-          <span class="text-gray-500">出演者</span>
-        <% end %>
-      </li>
-      <li class="flex-1">
-        <%= link_to event_stages_path(@event.event_key),
-                                    class: "flex flex-col items-center gap-0.5" do %>
-          <span class="material-symbols-outlined
-                    <%= bottom_tab_filled_class(event_stages_path(@event.event_key)) %>">
-            map
-          </span>
-          <span class="text-gray-500">ステージ</span>
-        <% end %>
-      </li>
-      <li class="flex-1">
-        <%= link_to event_path(@event.event_key),
-                                              class: "flex flex-col items-center gap-0.5" do %>
-          <span class="material-symbols-outlined
-                    <%= bottom_tab_filled_class(event_path(@event.event_key)) %>">
-            info
-          </span>
-          <span class="text-gray-500">概要</span>
-        <% end %>
-      </li>
-    </ul>
-  </nav>
+    </div>
+  <% end %>
 </div>

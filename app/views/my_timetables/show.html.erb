@@ -82,9 +82,7 @@
         </div>
       </div>
       <%# 下部タブメニュー %>
-      <% if my_timetable_owner? %>
-        <%= render "layouts/bottom_tab" %>
-      <% end %>
+      <%= render "layouts/bottom_tab" %>
     </div>
   </div>
 <% else %>
@@ -98,7 +96,5 @@
     <% end %>
   </div>
   <%# 下部タブメニュー %>
-  <% if my_timetable_owner? %>
-    <%= render "layouts/bottom_tab" %>
-  <% end %>
+  <%= render "layouts/bottom_tab" %>
 <% end %>
