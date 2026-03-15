@@ -11,6 +11,8 @@ class MyTimetablesController < ApplicationController
   before_action :set_selected_date
   # タイムテーブル描画に必要な情報がすべて揃った performance を取得
   before_action :set_timetable_ready_for_event_on_date
+  # お気に入り登録している出演情報のみに絞り込む
+  before_action :filter_favorite_performances
   # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
   before_action :performances_by_stage
   # ビュー上でパフォーマンスを素早く検索できるようにHash化しておく
@@ -20,8 +22,6 @@ class MyTimetablesController < ApplicationController
     @timetable_view = true
     # イベント用ヘッダー表示フラグ
     @show_event_header = true
-    # お気に入り登録している出演情報IDの配列を取得
-    @favorite_performance_map = @user.favorite_performance_map_by_performances(@performances)
   end
 
   private
@@ -61,6 +61,13 @@ class MyTimetablesController < ApplicationController
     # タイムテーブル描画に必要な情報がすべて揃った performance を取得
     def set_timetable_ready_for_event_on_date
       @performances = Performance.timetable_ready_for_event_on_date(@event, @selected_date)
+    end
+
+    # お気に入り登録している出演情報のみに絞り込む
+    def filter_favorite_performances
+      @favorite_performance_map = @user.favorite_performance_map_by_performances(@performances)
+      favorite_ids = @favorite_performance_map.keys
+      @performances = @performances.where(id: favorite_ids)
     end
 
     # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
