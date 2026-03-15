@@ -13,6 +13,8 @@ class MyTimetablesController < ApplicationController
   before_action :set_timetable_ready_for_event_on_date
   # お気に入り登録している出演情報のみに絞り込む
   before_action :filter_favorite_performances
+  # ログイン中ユーザーのお気に入り出演情報のIDをパフォーマンスIDをキーとするHashでセット
+  before_action :set_current_user_favorite_performance_map
   # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
   before_action :performances_by_stage
   # 出演情報が存在する開催日のみに絞り込む
@@ -71,9 +73,15 @@ class MyTimetablesController < ApplicationController
 
     # お気に入り登録している出演情報のみに絞り込む
     def filter_favorite_performances
-      @favorite_performance_map = @user.favorite_performance_map_by_performances(@performances)
-      favorite_ids = @favorite_performance_map.keys
+      @user_favorite_performance_map = @user.favorite_performance_map_by_performances(@performances)
+      favorite_ids = @user_favorite_performance_map.keys
       @performances = @performances.where(id: favorite_ids)
+    end
+
+    # ログイン中ユーザーのお気に入り出演情報のIDをパフォーマンスIDをキーとするHashでセット
+    def set_current_user_favorite_performance_map
+      return unless user_signed_in?
+      @favorite_performance_map = current_user.favorite_performance_map_by_performances(@performances)
     end
 
     # ステージと出演情報を事前にグループ化しておく（@performances_by_stage[stage.id]で取得可能）
