@@ -19,16 +19,18 @@
           <span class="text-gray-500">タイムテーブル</span>
         <% end %>
       </li>
-      <li class="flex-1">
-        <%= link_to show_my_timetable_path(event_key: @event.event_key, username: current_user.username),
+      <% if user_signed_in? %>
+        <li class="flex-1">
+          <%= link_to show_my_timetable_path(event_key: @event.event_key, username: current_user.username),
                 class: "flex flex-col items-center gap-0.5" do %>
-          <span class="material-symbols-outlined
+            <span class="material-symbols-outlined
                     <%= bottom_tab_filled_class(show_my_timetable_path(event_key: @event.event_key, username: current_user.username)) %>">
-            favorite
-          </span>
-          <span class="text-gray-500">マイタイテ</span>
-        <% end %>
-      </li>
+              favorite
+            </span>
+            <span class="text-gray-500">マイタイテ</span>
+          <% end %>
+        </li>
+      <% end %>
       <li class="flex-1">
         <%= link_to event_performers_path(@event.event_key),
                           class: "flex flex-col items-center gap-0.5" do %>
