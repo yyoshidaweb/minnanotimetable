@@ -1,6 +1,7 @@
 <%# イベント用ヘッダー (@show_event_headerがtrueの場合のみ表示) %>
 <% if @show_event_header %>
-  <header class="fixed top-8 z-160 left-0 w-full p-2 h-8 bg-gray-800 flex justify-center items-center">
+  <header class="fixed top-8 z-160 left-0 w-full p-2 h-8 flex justify-center items-center
+                <%= event_header_color %>">
     <div class="flex-1"></div>
     <h1 class="text-sm text-white truncate text-center flex-none max-w-[95%]">
       <%= @event.event_name_tag.name %>

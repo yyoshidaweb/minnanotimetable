@@ -21,6 +21,8 @@ class MyTimetablesController < ApplicationController
   before_action :set_performance_map
 
   def show
+    # マイタイムテーブル表示フラグ
+    @my_timetable_view = true
     @timetable_view = true
     # イベント用ヘッダー表示フラグ
     @show_event_header = true
