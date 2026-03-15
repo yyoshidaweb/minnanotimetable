@@ -1,0 +1,115 @@
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@user.name}の#{@event.display_name} マイタイムテーブル | みんなのタイムテーブル" %>
+<% content_for :description, "#{@user.name}の#{@event.display_name}のマイタイムテーブル。" %>
+<% if @performances.present? %>
+  <%# 日付選択タブ（イベントヘッダーの高さ分下げて配置する） %>
+  <nav class="flex h-8 fixed top-16 z-160 w-full justify-around overflow-x-auto bg-white border-t border-gray-200">
+    <% @days.each do |day| %>
+      <%# 日付を MM/DD 形式でラベルに整形 %>
+      <% label = day.date.strftime("%-m/%-d") %>
+      <%# 現在選択中の日付かどうか判定 %>
+      <% selected = (day.date == @selected_date) %>
+      <%# 日付タブリンク。選択中の場合は下線を表示し、横幅は均等に伸ばす %>
+      <%= link_to url_for(d: day.date),
+            class: "flex-1 px-2 py-2 text-xs text-gray-800 font-bold border-b-4 #{selected ? 'border-gray-800' : 'border-transparent'} hover:border-gray-300 transition-colors duration-150 text-center whitespace-nowrap" do %>
+        <%= label %>
+      <% end %>
+    <% end %>
+  </nav>
+  <% if user_signed_in? && current_user == @event.user %>
+    <%= link_to new_event_performance_path(@event.event_key),
+                  class: "fixed right-2 bottom-[calc(0.5rem+5.25rem+env(safe-area-inset-bottom))] z-160
+                    flex items-center justify-center p-2 bg-gray-800 text-white rounded-full shadow hover:bg-gray-900" do %>
+      <span class="material-symbols-outlined">calendar_add_on</span>
+    <% end %>
+  <% end %>
+  <%# タイムテーブル表示画面のメインコンテナ（画面全体の高さに設定する） %>
+  <div class="h-svh flex flex-col overflow-hidden pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
+    <%# スクロールコンテナ（ヘッダーと日付選択タブの高さ分下げた位置に配置する） %>
+    <div class="flex-1 pt-24 overflow-auto relative">
+      <%# 横幅確保 %>
+      <div class="min-w-max">
+        <%# ヘッダー行 %>
+        <div class="flex sticky top-0 z-110 bg-white">
+          <%# 左上空白 %>
+          <div class="sticky left-0 w-5 bg-white z-100"></div>
+          <%# ステージヘッダー %>
+          <% @stages.each do |stage| %>
+            <%= link_to event_stage_path(@event.event_key, stage),
+                class: "stage-header-col flex-1 flex justify-center items-center
+                        min-h-8 max-h-12 min-w-16 z-95 border-b text-xs font-bold text-center p-px" do %>
+              <span class="line-clamp-3"><%= stage.stage_name_tag.name %></span>
+            <% end %>
+          <% end %>
+        </div>
+        <%# ボディ %>
+        <div class="flex relative">
+          <%# 時刻列（sticky left） %>
+          <div class="w-5 sticky left-0 z-150 bg-white">
+            <% time_slots_for_timetable(@performances).each do |hour| %>
+              <p class="h-24 text-xs text-center pt-1 tabular-nums -translate-y-2.75">
+                <%= hour %>
+              </p>
+            <% end %>
+          </div>
+          <%# ステージを展開 %>
+          <% @stages.each do |stage| %>
+            <div class="timetable-body-col flex-1 min-w-16 relative"
+                style="height: <%= timetable_height_rem(@performances) %>rem;">
+              <%# 各ステージの出演情報を検索 %>
+              <% if @performances_by_stage[stage.id].present? %>
+                <% @performances_by_stage[stage.id].each do |performance| %>
+                  <%# 出演情報カード %>
+                  <%= link_to event_performer_path(@event.event_key, performance.performer),
+                      class: "absolute left-px right-px bg-white rounded shadow-xs p-px text-xs",
+                      style: "
+                        top: #{performance_top_rem(performance)}rem;
+                        height: #{performance_height_rem(performance)}rem;" do %>
+                    <% if performance.show_start_time? %>
+                      <div class="text-[10px] leading-none text-gray-500">
+                        <%= formatted_time(performance.start_time) %>
+                      </div>
+                    <% end %>
+                    <% duration = performance.duration %>
+                    <% line_clamp = line_clamp_class_by_duration(duration) %>
+                    <% font_size = font_size_class_by_duration(duration) %>
+                    <% translate_y = translate_y_by_duration(duration) %>
+                    <%# 出演者名 %>
+                    <p class="font-semibold leading-none wrap-break-word
+                              <%= font_size %> <%= line_clamp %> <%= translate_y %>">
+                      <span class="<%= favorite_marker(performance) %>">
+                        <%= performance.performer.display_name %>
+                      </span>
+                    </p>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <%# 下部タブメニュー %>
+      <% if my_timetable_owner? %>
+        <%= render "layouts/bottom_tab" %>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <%# ===== 情報が揃った出演情報が0件の場合 ===== %>
+  <div class="h-svh p-12 flex flex-col items-center justify-center pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
+    <% if user_signed_in? && current_user == @event.user %>
+      <p class="text-gray-800 mb-4">出演情報を追加して、<br>
+        タイムテーブルを完成させましょう！</p>
+    </p>
+    <%= link_to new_event_performance_path(@event.event_key),
+                class: "relative flex items-center justify-center p-3 bg-gray-800 text-white rounded-full shadow hover:bg-gray-900" do %>
+      <span class="material-symbols-outlined">calendar_add_on</span>
+      <small class="text-sm">出演情報を追加</small>
+    <% end %>
+  <% else %>
+    <p class="text-gray-800 mb-8">まだ、出演情報がありません</p>
+  <% end %>
+</div>
+<%# 下部タブメニュー %>
+<%= render "layouts/bottom_tab" %>
+<% end %>

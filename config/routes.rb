@@ -69,4 +69,7 @@ Rails.application.routes.draw do
 
   # イベント詳細ページ（/:event_key）
   get "/t/:event_key", to: "timetables#show", as: :show_timetable
+
+  # マイタイムテーブル詳細ページ
+  get "/t/:event_key/:username", to: "my_timetables#show", as: :show_my_timetable
 end
