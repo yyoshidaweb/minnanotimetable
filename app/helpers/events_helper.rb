@@ -12,4 +12,13 @@ module EventsHelper
       "#{@event.display_name} タイムテーブル"
     end
   end
+
+  # タイムテーブルとマイタイムテーブルで共有URLを分けるためのヘルパーメソッド
+  def share_path_for
+    if @my_timetable_view
+      share_path(type: "my-timetable", event_key: @event.event_key, username: @user.username)
+    else
+      share_path(type: "event", event_key: @event.event_key)
+    end
+  end
 end
