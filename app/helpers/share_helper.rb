@@ -28,4 +28,14 @@ module ShareHelper
       "#{share_title_for}\n\n#{share_url_for}\n\nみんなのタイムテーブルでマイタイムテーブルを作ろう！\n\n##{@event.display_name}\n#みんなのタイムテーブル"
     end
   end
+
+  # 共有モーダルのborderを返す
+  def share_modal_border
+    case params[:type]
+    when "event"
+      ""
+    when "my-timetable"
+      "ring-6 ring-orange-400"
+    end
+  end
 end

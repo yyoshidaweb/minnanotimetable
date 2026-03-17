@@ -4,7 +4,8 @@
         data-controller="modal clipboard"
         data-action="click->modal#close"
     data-clipboard-text-value="<%= share_url_for %>">
-    <div class="flex flex-col justify-center items-center relative max-h-[80svh] overflow-y-auto bg-white rounded-lg shadow-lg max-w-md w-full mx-4 p-6",
+    <div class="flex flex-col justify-center items-center relative max-h-[80svh] overflow-y-auto bg-white rounded-lg shadow-lg max-w-md w-full mx-4 p-6
+                <%= share_modal_border %>",
           data-action="click->modal#stop">
       <%# × ボタン %>
       <button type="button"
