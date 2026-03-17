@@ -82,7 +82,24 @@
         </div>
       </div>
       <%# 下部タブメニュー %>
-      <%= render "layouts/bottom_tab" %>
+      <% if my_timetable_owner? %>
+        <%= render "layouts/bottom_tab" %>
+      <% else %>
+        <div class="flex flex-col items-center fixed bottom-0 left-0 w-full h-21 p-1
+              bg-white border-t z-200
+                pb-[env(safe-area-inset-bottom)]">
+          <small class="mb-1 text-center text-xs text-gray-500 whitespace-normal md:whitespace-nowrap">
+            ※みんなのタイムテーブルで作成された非公式タイムテーブルです。
+            必ず公式情報をご確認の上、ご利用ください。
+          </small>
+          <div class="mt-1 w-full flex justify-center">
+            <%= link_to show_timetable_path(@event.event_key),
+                                                class: "text-sm text-blue-600 hover:underline" do %>
+              <span class="font-semibold">タイムテーブルを見る→</span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
   </div>
 <% else %>
@@ -96,5 +113,22 @@
     <% end %>
   </div>
   <%# 下部タブメニュー %>
-  <%= render "layouts/bottom_tab" %>
+  <% if my_timetable_owner? %>
+    <%= render "layouts/bottom_tab" %>
+  <% else %>
+    <div class="flex flex-col items-center fixed bottom-0 left-0 w-full h-21 p-1
+        bg-white border-t z-200
+          pb-[env(safe-area-inset-bottom)]">
+      <small class="mb-1 text-center text-xs text-gray-500 whitespace-normal md:whitespace-nowrap">
+        ※みんなのタイムテーブルで作成された非公式タイムテーブルです。
+        必ず公式情報をご確認の上、ご利用ください。
+      </small>
+      <div class="mt-1 w-full flex justify-center">
+        <%= link_to show_timetable_path(@event.event_key),
+                                          class: "text-sm text-blue-600 hover:underline" do %>
+          <span class="font-semibold">タイムテーブルを見る→</span>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 <% end %>
