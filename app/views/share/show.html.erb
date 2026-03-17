@@ -13,9 +13,16 @@
               data-action="click->modal#close">
         <span class="material-symbols-outlined">close</span>
       </button>
+      <%# ページタイトル %>
+      <div>
+        <h1 class="text-gray-800 mb-4 text-2xl font-bold text-center line-clamp-6
+                  <%= share_page_title_marker %>">
+          <%= share_page_title_for %>
+        </h1>
+      </div>
       <%# タイトル %>
       <div>
-        <h1 class="mb-6 text-xl font-bold text-center line-clamp-6">
+        <h1 class="text-gray-800 mb-6 text-xl font-bold text-center line-clamp-6">
           <%= share_title_for %>
         </h1>
       </div>

@@ -58,3 +58,10 @@
             rgba(245, 73, 0, 0.2) 50%,
             oklch(64.6% 0.222 41.116 / 0.2) 50%);
 }
+
+/* タイムテーブル共有モーダル用マーカー */
+.share-timetable-marker {
+    background-image: linear-gradient(transparent 50%,
+            rgba(31, 41, 55, 0.2) 50%,
+            oklch(27.8% 0.033 256.848 / 0.2) 50%);
+}

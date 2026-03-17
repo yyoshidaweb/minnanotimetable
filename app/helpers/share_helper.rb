@@ -9,6 +9,26 @@ module ShareHelper
     end
   end
 
+  # 共有用のページタイトルを返す
+  def share_page_title_for
+    case params[:type]
+    when "event"
+      "タイムテーブルを共有"
+    when "my-timetable"
+      "マイタイムテーブルを共有"
+    end
+  end
+
+  # ページタイトルのマーカーを返す
+  def share_page_title_marker
+    case params[:type]
+    when "event"
+      "share-timetable-marker"
+    when "my-timetable"
+      "favorite-marker"
+    end
+  end
+
   # 共有用のタイトルを返す
   def share_title_for
     case params[:type]
