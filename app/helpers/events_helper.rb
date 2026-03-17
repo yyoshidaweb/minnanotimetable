@@ -9,7 +9,7 @@ module EventsHelper
     if @my_timetable_view
       "#{@user.name}の#{@event.display_name} マイタイムテーブル"
     else
-      "#{@event.display_name} タイムテーブル"
+      "#{@event.display_name}"
     end
   end
 
