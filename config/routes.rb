@@ -61,7 +61,7 @@ Rails.application.routes.draw do
   # 出演者単位で出演情報を一括お気に入り解除する機能のルーティング
   delete "/performer_favorites", to: "performer_favorites#destroy"
 
-  get "/share/:event_key", to: "share#show", as: :share_event
+  get "/share", to: "share#show", as: :share
 
   # 利用規約・プライバシーポリシー
   get "/terms", to: "static_pages#terms"
@@ -69,4 +69,7 @@ Rails.application.routes.draw do
 
   # イベント詳細ページ（/:event_key）
   get "/t/:event_key", to: "timetables#show", as: :show_timetable
+
+  # マイタイムテーブル詳細ページ
+  get "/t/:event_key/:username", to: "my_timetables#show", as: :show_my_timetable
 end

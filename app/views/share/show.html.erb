@@ -3,8 +3,9 @@
   <div class="fixed inset-0 z-300 flex items-center justify-center bg-black/40",
         data-controller="modal clipboard"
         data-action="click->modal#close"
-    data-clipboard-text-value="<%= share_event_url %>">
-    <div class="flex flex-col justify-center items-center relative max-h-[80svh] overflow-y-auto bg-white rounded-lg shadow-lg max-w-md w-full mx-4 p-6",
+    data-clipboard-text-value="<%= share_url_for %>">
+    <div class="flex flex-col justify-center items-center relative max-h-[80svh] overflow-y-auto bg-white rounded-lg shadow-lg max-w-md w-full mx-4 p-6
+                <%= share_modal_border %>",
           data-action="click->modal#stop">
       <%# × ボタン %>
       <button type="button"
@@ -15,18 +16,18 @@
       <%# タイトル %>
       <div>
         <h1 class="mb-6 text-xl font-bold text-center line-clamp-6">
-          <%= @event.display_name %>
+          <%= share_title_for %>
         </h1>
       </div>
       <%# QRコード %>
       <% require 'rqrcode' %>
-      <% qrcode = RQRCode::QRCode.new(share_event_url) %>
+      <% qrcode = RQRCode::QRCode.new(share_url_for) %>
       <div class="flex justify-center mb-2">
         <%= raw qrcode.as_svg(module_size: 6, standalone: true) %>
       </div>
       <%# URLとコピーボタン %>
       <div class="text-gray-500 flex items-center mb-6">
-        <span class="text-xs mr-1.5"><%= share_event_url %></span>
+        <span class="text-xs mr-1.5"><%= share_url_for %></span>
         <button data-action="click->clipboard#copy"
           data-action="click->clipboard#copy"
           class="flex items-center cursor-pointer hover:text-gray-700">
@@ -38,7 +39,7 @@
         </button>
       </div>
       <%# X共有 %>
-      <%= link_to "https://x.com/intent/post?text=#{CGI.escape(@event.display_name + "のタイムテーブル" + "\n\n" + share_event_url + "\n\n" + '#みんなのタイムテーブル｜音楽フェスのタイムテーブルを作ろう！')}",
+      <%= link_to "https://x.com/intent/post?text=#{CGI.escape(share_text_for)}",
                         target: "_blank",
                         rel: "noopener noreferrer",
                         class: "flex items-center justify-center w-full text-center bg-black text-white py-2 rounded-full mb-2" do %>
