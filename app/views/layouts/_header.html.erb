@@ -25,13 +25,17 @@
         <span class="material-symbols-outlined">person</span>
       <% end %>
     <% else %>
-      <%# ログインアイコン（未ログイン時かつ、トップページ以外で表示） %>
-      <% unless current_page?(root_path) %>
-        <%= link_to root_path,
-                        class: "flex justify-center items-center text-gray-800" do %>
-          <span class="material-symbols-outlined">login</span>
-        <% end %>
-      <% end %>
+      <%# ログインアイコン %>
+      <button
+                data-controller="modal"
+                data-action="click->modal#open"
+        data-url="<%= new_session_path %>"
+        class="flex justify-center items-center text-gray-800">
+        <span class="material-symbols-outlined"
+                    style="font-size: 1.25rem;">
+          login
+        </span>
+      </button>
     <% end %>
   </div>
 </header>

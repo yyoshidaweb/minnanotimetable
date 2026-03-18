@@ -1,0 +1,35 @@
+<%# モーダル %>
+<%= turbo_frame_tag "modal" do %>
+  <div class="fixed inset-0 z-300 flex items-center justify-center bg-black/40",
+        data-controller="modal"
+        data-action="click->modal#close">
+    <div class="relative max-h-[80svh] overflow-y-auto bg-white rounded-lg shadow-lg max-w-md w-full mx-4",
+          data-action="click->modal#stop">
+      <%# × ボタン %>
+      <button type="button"
+              class="absolute top-2 right-2 text-gray-400 hover:text-gray-700 cursor-pointer"
+              data-action="click->modal#close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <div class="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
+        <h1 class="text-gray-800 mb-4 text-2xl font-bold text-center">ログイン
+          <span class="text-xl">または</span>
+          新規登録
+        </h1>
+        <p class="text-gray-500 text-sm mb-8">
+          ログインすると、マイタイムテーブルを保存できます。さらに、音楽フェスのタイムテーブル作成も可能です。
+        </p>
+        <div class="w-full">
+          <%# Googleログインボタン %>
+          <%= render "layouts/google_login_button" %>
+          <small class="mt-4 text-xs text-gray-500">
+            Googleでログインすることで、
+            <%= link_to "利用規約", terms_path, class: "underline" %> および
+            <%= link_to "プライバシーポリシー", privacy_path, class: "underline" %>
+            に同意したものとみなされます。
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
