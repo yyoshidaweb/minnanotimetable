@@ -17,9 +17,9 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # ログイン後の遷移先をタイムテーブル一覧ページに固定
+  # ログイン後のリダイレクト先の指定をオーバーライド
   def after_sign_in_path_for(resource)
-    events_path
+    stored_location_for(resource) || root_path
   end
 
   # プレビュー環境かどうかを判定するヘルパーメソッド
