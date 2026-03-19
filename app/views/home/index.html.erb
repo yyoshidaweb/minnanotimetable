@@ -58,16 +58,13 @@
           </div>
         <% end %>
       <% else %>
-        <div class="w-full">
-          <%# Googleログインボタン %>
-          <%= render "layouts/google_login_button" %>
-          <small class="mt-4 text-xs text-gray-500">
-            Googleでログインすることで、
-            <%= link_to "利用規約", terms_path, class: "underline" %> および
-            <%= link_to "プライバシーポリシー", privacy_path, class: "underline" %>
-            に同意したものとみなされます。
-          </small>
-        </div>
+        <button data-controller="modal"
+                  data-action="click->modal#open"
+          data-url="<%= new_session_path %>"
+          class="mb-6 px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-900
+          flex justify-center items-center w-full cursor-pointer" >
+          <span>無料ではじめる→</span>
+        </button>
         <%# プレビュー環境でのみ表示 %>
         <% if preview_environment? %>
           <div class="mt-4">
