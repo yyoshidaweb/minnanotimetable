@@ -30,6 +30,18 @@
             <span class="text-gray-500">マイタイテ</span>
           <% end %>
         </li>
+      <% else %>
+        <li class="flex-1">
+          <button data-controller="modal"
+                  data-action="click->modal#open"
+            data-url="<%= new_session_path %>"
+            class="flex flex-col items-center gap-0.5 cursor-pointer w-full h-full" >
+            <span class="material-symbols-outlined">
+              favorite
+            </span>
+            <span class="text-gray-500">マイタイテ</span>
+          </button>
+        </li>
       <% end %>
       <li class="flex-1">
         <%= link_to event_performers_path(@event.event_key),
