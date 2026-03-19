@@ -1,24 +1,35 @@
-<%# お気に入りボタン %>
-<%= turbo_frame_tag "favorite_performance_#{performance.id}" do %>
-  <%# performance_favoriteのidを取得 %>
-  <% favorite_id = @favorite_performance_map[performance.id] %>
-  <% if favorite_id %>
-    <%# お気に入り済みの場合 %>
-    <%= button_to performance_favorite_path(favorite_id),
+<% if user_signed_in? %>
+  <%# お気に入りボタン %>
+  <%= turbo_frame_tag "favorite_performance_#{performance.id}" do %>
+    <%# performance_favoriteのidを取得 %>
+    <% favorite_id = @favorite_performance_map[performance.id] %>
+    <% if favorite_id %>
+      <%# お気に入り済みの場合 %>
+      <%= button_to performance_favorite_path(favorite_id),
                                             method: :delete,
-                                            class: "flex items-center" do %>
-      <span class="material-symbols-outlined material-symbols-filled text-orange-600 cursor-pointer">
-        favorite
-      </span>
-    <% end %>
-  <% else %>
-    <%# お気に入りではない場合 %>
-    <%= button_to performance_favorites_path(performance_id: performance.id),
+                                            class: "flex items-center cursor-pointer" do %>
+        <span class="material-symbols-outlined material-symbols-filled text-orange-600">
+          favorite
+        </span>
+      <% end %>
+    <% else %>
+      <%# お気に入りではない場合 %>
+      <%= button_to performance_favorites_path(performance_id: performance.id),
                                             method: :post,
-                                            class: "flex items-center text-gray-800" do %>
-      <span class="material-symbols-outlined cursor-pointer">
-        favorite
-      </span>
+                                            class: "flex items-center text-gray-800 cursor-pointer" do %>
+        <span class="material-symbols-outlined">
+          favorite
+        </span>
+      <% end %>
     <% end %>
   <% end %>
+<% else %>
+  <button data-controller="modal"
+          data-action="click->modal#open"
+    data-url="<%= new_session_path %>"
+    class="flex items-center text-gray-800 cursor-pointer" >
+    <span class="material-symbols-outlined">
+      favorite
+    </span>
+  </button>
 <% end %>

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  # ログイン用のルーティング
+  resources :sessions, only: [ :new ]
   # ユーザープロフィール用のルーティング
   resource :profile, only: [ :show, :edit, :update, :destroy ]
 

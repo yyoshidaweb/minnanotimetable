@@ -1,25 +1,36 @@
 <%# お気に入りボタン %>
-<%= turbo_frame_tag "favorite_performer_#{performer.id}" do %>
-  <%# 出演情報が存在する場合のみ表示 %>
-  <% if performer.performances.exists? %>
-    <% if favorite_performer?(performer) %>
-      <%# お気に入り解除ボタン %>
-      <%= button_to performer_favorites_path(performer_id: performer.id),
+<% if user_signed_in? %>
+  <%= turbo_frame_tag "favorite_performer_#{performer.id}" do %>
+    <%# 出演情報が存在する場合のみ表示 %>
+    <% if performer.performances.exists? %>
+      <% if favorite_performer?(performer) %>
+        <%# お気に入り解除ボタン %>
+        <%= button_to performer_favorites_path(performer_id: performer.id),
                             method: :delete,
                             class: "absolute top-4 right-2 cursor-pointer" do %>
-        <span class="material-symbols-outlined material-symbols-filled text-orange-600">
-          favorite
-        </span>
-      <% end %>
-    <% else %>
-      <%# お気に入り登録ボタン%>
-      <%= button_to performer_favorites_path(performer_id: performer.id),
+          <span class="material-symbols-outlined material-symbols-filled text-orange-600">
+            favorite
+          </span>
+        <% end %>
+      <% else %>
+        <%# お気に入り登録ボタン%>
+        <%= button_to performer_favorites_path(performer_id: performer.id),
                             method: :post,
                             class: "absolute top-4 right-2 cursor-pointer" do %>
-        <span class="material-symbols-outlined">
-          favorite
-        </span>
+          <span class="material-symbols-outlined">
+            favorite
+          </span>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>
+<% else %>
+  <button data-controller="modal"
+          data-action="click->modal#open"
+    data-url="<%= new_session_path %>"
+    class="absolute top-4 right-2 cursor-pointer" >
+    <span class="material-symbols-outlined">
+      favorite
+    </span>
+  </button>
 <% end %>
