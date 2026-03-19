@@ -26,15 +26,15 @@
       <% end %>
     <% else %>
       <%# ログインアイコン %>
-      <button
-                data-controller="modal"
-                data-action="click->modal#open"
+      <button data-controller="modal"
+              data-action="click->modal#open"
         data-url="<%= new_session_path %>"
-        class="flex justify-center items-center text-gray-800">
+        class="flex justify-center items-center text-gray-800 cursor-pointer">
         <span class="material-symbols-outlined"
                     style="font-size: 1.25rem;">
           login
         </span>
+        <span class="text-xs translate-y-px">ログイン</span>
       </button>
     <% end %>
   </div>
