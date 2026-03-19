@@ -30,7 +30,7 @@
           </small>
         </div>
         <%# プレビュー環境でのみ表示 %>
-        <% if !preview_environment? %>
+        <% if preview_environment? %>
           <div class="mt-4">
             <%= button_to preview_login_path,
                         method: :post,
