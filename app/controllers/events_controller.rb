@@ -103,7 +103,7 @@ class EventsController < ApplicationController
   # 削除処理
   def destroy
     @event.destroy!
-    redirect_to events_path, notice: "タイムテーブルを削除しました"
+    redirect_to events_path(filter: "created"), notice: "タイムテーブルを削除しました"
   end
 
   private
