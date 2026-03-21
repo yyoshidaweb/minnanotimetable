@@ -20,7 +20,7 @@ class EventsController < ApplicationController
       @events = current_user.favorite_events.order(created_at: :desc)
       @page_title = "お気に入りのタイムテーブル一覧"
     when "created"
-      @events = current_user.events.order(created_at: :desc)
+      @events = Event.recent_created_by(current_user)
       @page_title = "作成したタイムテーブル一覧"
     else
       @events = Event.popular_for_all

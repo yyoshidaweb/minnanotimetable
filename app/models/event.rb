@@ -46,6 +46,13 @@ class Event < ApplicationRecord
       .limit(100)
   }
 
+  # 作成したタイムテーブル
+  scope :recent_created_by, ->(user) {
+    where(user: user)
+      .includes(:user, :days)
+      .order(created_at: :desc)
+  }
+
   # フォームや一覧表示用の名前
   def display_name
     event_name_tag.name
