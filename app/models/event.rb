@@ -53,6 +53,14 @@ class Event < ApplicationRecord
       .order(created_at: :desc)
   }
 
+  # お気に入りタイムテーブル（最後にお気に入りした順）
+  scope :recent_favorite_by, ->(user) {
+    joins(:event_favorites)
+      .where(event_favorites: { user_id: user.id })
+      .includes(:user, :days)
+      .order("event_favorites.created_at DESC")
+  }
+
   # フォームや一覧表示用の名前
   def display_name
     event_name_tag.name

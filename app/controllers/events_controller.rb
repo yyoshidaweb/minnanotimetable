@@ -17,7 +17,7 @@ class EventsController < ApplicationController
     # パラメータによって取得するイベントを分岐
     case params[:filter]
     when "favorites"
-      @events = current_user.favorite_events.order(created_at: :desc)
+      @events = Event.recent_favorite_by(current_user)
       @page_title = "お気に入りのタイムテーブル一覧"
     when "created"
       @events = Event.recent_created_by(current_user)
