@@ -1,0 +1,40 @@
+<% unless @my_timetable_view %>
+  <% if user_signed_in? %>
+    <%# お気に入りボタン %>
+    <%= turbo_frame_tag "favorite_event_#{event.id}" do %>
+      <% if event_favorite_id(event) %>
+        <%# お気に入り済みの場合 %>
+        <%= button_to event_favorite_path(event_favorite_id(event)),
+                                            method: :delete,
+                                            class: "flex items-center cursor-pointer",
+                                            data: { turbo_frame: "_top" } do %>
+          <span class="material-symbols-outlined material-symbols-filled text-orange-600"
+                style="font-size: 1.25rem;">
+            favorite
+          </span>
+        <% end %>
+      <% else %>
+        <%# お気に入りではない場合 %>
+        <%= button_to event_favorites_path(event_id: event.id),
+                                            method: :post,
+                                            class: "flex items-center text-white cursor-pointer",
+                                            data: { turbo_frame: "_top" } do %>
+          <span class="material-symbols-outlined"
+                style="font-size: 1.25rem;">
+            favorite
+          </span>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <button data-controller="modal"
+          data-action="click->modal#open"
+      data-url="<%= new_session_path %>"
+      class="flex items-center text-white cursor-pointer" >
+      <span class="material-symbols-outlined"
+            style="font-size: 1.25rem;">
+        favorite
+      </span>
+    </button>
+  <% end %>
+<% end %>

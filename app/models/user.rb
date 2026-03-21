@@ -57,6 +57,11 @@ class User < ApplicationRecord
     provider.blank? && super
   end
 
+  # お気に入りタイムテーブル（event）idを取得する
+  def favorite_event_id(event)
+    event_favorites.find_by(event_id: event.id)&.id
+  end
+
   # performerに紐づくお気に入りを Hash で取得
   def favorite_performance_map_by_performer(performer)
     performance_favorites

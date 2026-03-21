@@ -13,8 +13,18 @@ class EventsController < ApplicationController
 
   # 作成したイベント一覧
   def index
-    # 自分が作成したイベントのみ取得（最新順）
-    @events = current_user.events.order(created_at: :desc)
+    # パラメータによって取得するイベントを分岐
+    case params[:filter]
+    when "favorites"
+      @events = current_user.favorite_events.order(created_at: :desc)
+      @page_title = "お気に入りのタイムテーブル一覧"
+    when "created"
+      @events = current_user.events.order(created_at: :desc)
+      @page_title = "作成したタイムテーブル一覧"
+    else
+      @events = Event.order(created_at: :desc).limit(100)
+      @page_title = "タイムテーブル一覧"
+    end
   end
 
   # 未ログインでも閲覧可能
@@ -117,8 +127,6 @@ class EventsController < ApplicationController
   def set_page_title
     @page_title =
       case action_name
-      when "index"
-        "作成したタイムテーブル一覧"
       when "new", "create"
         "タイムテーブルを作成"
       when "show"

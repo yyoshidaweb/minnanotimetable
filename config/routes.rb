@@ -56,6 +56,9 @@ Rails.application.routes.draw do
     resources :performances, only: [ :new, :create, :edit, :update, :destroy ]
   end
 
+  # タイムテーブルお気に入り登録・解除のルーティング
+  resources :event_favorites, only: [ :create, :destroy ]
+
   # 出演情報のお気に入り登録・解除のルーティング
   resources :performance_favorites, only: [ :create, :destroy ]
   # 出演者単位で出演情報を一括お気に入り登録する機能のルーティング
