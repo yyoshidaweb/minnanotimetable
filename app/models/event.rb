@@ -26,8 +26,13 @@ class Event < ApplicationRecord
   # 1ユーザー内のイベント名はユニーク
   validates :event_name_tag, presence: true, uniqueness: { scope: :user_id }
 
-  # トップページ用に新しい順で最大3件取得するスコープ
-  scope :recent_for_home, -> { order(created_at: :desc).limit(3) }
+  # トップページ用に人気順で最大20件取得するスコープ
+  scope :popular_for_home, -> {
+    left_joins(:event_favorites)
+      .group(:id)
+      .order(Arel.sql("COUNT(event_favorites.id) DESC"), created_at: :desc)
+      .limit(20)
+  }
 
   # フォームや一覧表示用の名前
   def display_name

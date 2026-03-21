@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
   # ログイン必須（show以外）
-  before_action :authenticate_user!, only: [ :index, :new, :create, :update ]
+  before_action :authenticate_user!, only: [ :new, :create, :update ]
+  before_action :authenticate_user!, only: [ :index ], if: -> { params[:filter] == "created" || params[:filter] == "favorites" }
 
   # イベントを取得する
   before_action :set_event, only: [ :show, :edit, :update, :destroy ]
@@ -23,7 +24,7 @@ class EventsController < ApplicationController
       @page_title = "作成したタイムテーブル一覧"
     else
       @events = Event.order(created_at: :desc).limit(100)
-      @page_title = "タイムテーブル一覧"
+      @page_title = "みんなが作ったタイムテーブル"
     end
   end
 
