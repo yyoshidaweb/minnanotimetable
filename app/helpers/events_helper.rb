@@ -21,4 +21,14 @@ module EventsHelper
       share_path(type: "event", event_key: @event.event_key)
     end
   end
+
+  # 作成したタイムテーブル一覧かどうか判定する
+  def created?
+    params[:filter] == "created"
+  end
+
+  # お気に入りのタイムテーブル一覧かどうか判定する
+  def favorites?
+    params[:filter] == "favorites"
+  end
 end

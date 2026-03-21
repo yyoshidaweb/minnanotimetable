@@ -2,11 +2,13 @@
 <% content_for :title, "#{@page_title} | みんなのタイムテーブル" %>
 <% content_for :description, "#{@page_title}。" %>
 <% if @events.any? %>
-  <%= link_to new_event_path,
+  <% if created? %>
+    <%= link_to new_event_path,
                 class: "mb-6 px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-900
                         inline-flex justify-center items-center" do %>
-    <span class="material-symbols-outlined mr-1">add</span>
-    <span class="font-semibold">タイムテーブルを作る</span>
+      <span class="material-symbols-outlined mr-1">add</span>
+      <span class="font-semibold">タイムテーブルを作る</span>
+    <% end %>
   <% end %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     <% @events.each do |event| %>
@@ -28,22 +30,34 @@
     <% end %>
   </div>
 <% else %>
-  <div class="min-h-[calc(100svh-21rem)] flex flex-col justify-center items-center">
-    <div class="w-full max-w-md">
-      <div class="flex flex-col justify-center items-center">
-        <p class="mb-6 text-gray-500 text-lg">
-          <% if current_user.name.present? %>
-            <%= current_user.name %>さん、<br>
-          <% end %>
-          タイムテーブルを作ってみましょう！
-        </p>
-        <%= link_to new_event_path,
+  <% if created? %>
+    <div class="min-h-[calc(100svh-21rem)] flex flex-col justify-center items-center">
+      <div class="w-full max-w-md">
+        <div class="flex flex-col justify-center items-center">
+          <p class="mb-6 text-gray-500 text-lg">
+            <% if current_user.name.present? %>
+              <%= current_user.name %>さん、<br>
+            <% end %>
+            タイムテーブルを作ってみましょう！
+          </p>
+          <%= link_to new_event_path,
                               class: "flex justify-center items-center w-full px-4 py-2 bg-gray-800 text-white
                                       rounded-full hover:bg-gray-900 mb-8" do %>
-          <span class="material-symbols-outlined mr-1">add</span>
-          <span class="font-semibold">タイムテーブルを作る</span>
-        <% end %>
+            <span class="material-symbols-outlined mr-1">add</span>
+            <span class="font-semibold">タイムテーブルを作る</span>
+          <% end %>
+        </div>
       </div>
     </div>
-  </div>
+  <% elsif favorites? %>
+    <div class="min-h-[calc(100svh-21rem)] flex flex-col justify-center items-center">
+      <div class="w-full max-w-md">
+        <div class="flex flex-col justify-center items-center">
+          <p class="mb-6 text-gray-500 text-lg">
+            タイムテーブルをお気に入り登録すると、ここに表示されます！
+          </p>
+        </div>
+      </div>
+    </div>
+  <% end %>
 <% end %>
