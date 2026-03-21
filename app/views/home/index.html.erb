@@ -23,11 +23,17 @@
     </div>
     <div class="min-w-xs max-w-xs">
       <% if user_signed_in? %>
-        <%= link_to events_path,
+        <%= link_to events_path(filter: "created"),
                         class: "flex justify-center items-center w-full px-4 py-2 bg-gray-800 text-white
                                 rounded-full hover:bg-gray-900 mb-8" do %>
-          <span class="material-symbols-outlined mr-1">list</span>
-          <span class="font-semibold">作成したタイムテーブル一覧 →</span>
+          <span class="material-symbols-outlined mr-1">edit</span>
+          <span class="font-semibold">作成したタイムテーブル →</span>
+        <% end %>
+        <%= link_to events_path(filter: "favorites"),
+                        class: "flex justify-center items-center w-full px-4 py-2 bg-gray-800 text-white
+                                rounded-full hover:bg-gray-900 mb-8" do %>
+          <span class="material-symbols-outlined material-symbols-filled text-orange-600 mr-1">favorite</span>
+          <span class="font-semibold">お気に入りタイムテーブル →</span>
         <% end %>
       <% else %>
         <button data-controller="modal"
