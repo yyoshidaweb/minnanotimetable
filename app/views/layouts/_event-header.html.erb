@@ -2,7 +2,9 @@
 <% if @show_event_header %>
   <header class="fixed top-8 z-160 left-0 w-full p-2 h-8 flex justify-center items-center
                 <%= event_header_color %>">
-    <div class="flex-1"></div>
+    <div class="flex-1">
+      <%= render "events/favorite_button", event: @event %>
+    </div>
     <h1 class="text-sm text-white truncate text-center flex-none max-w-[95%]">
       <%= event_header_title %>
     </h1>
