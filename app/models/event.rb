@@ -36,6 +36,16 @@ class Event < ApplicationRecord
       .limit(20)
   }
 
+  # みんなが作ったタイムテーブルを取得
+  scope :popular_for_all, -> {
+    left_joins(:event_favorites)
+      .includes(:user, :days)
+      .group(:id)
+      .order(
+        Arel.sql("COUNT(event_favorites.id) DESC"), created_at: :desc)
+      .limit(100)
+  }
+
   # フォームや一覧表示用の名前
   def display_name
     event_name_tag.name

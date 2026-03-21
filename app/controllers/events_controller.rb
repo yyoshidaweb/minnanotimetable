@@ -23,7 +23,7 @@ class EventsController < ApplicationController
       @events = current_user.events.order(created_at: :desc)
       @page_title = "作成したタイムテーブル一覧"
     else
-      @events = Event.order(created_at: :desc).limit(100)
+      @events = Event.popular_for_all
       @page_title = "みんなが作ったタイムテーブル"
     end
   end
