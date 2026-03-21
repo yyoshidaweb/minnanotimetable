@@ -1,4 +1,7 @@
-<div class="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@user.name} #{@page_title} | みんなのタイムテーブル" %>
+<% content_for :description, "#{@user.name}の#{@page_title}。#{@user.description if @user.description.present?}" %>
+<div class="max-w-md mx-auto p-6">
   <%# 名前 %>
   <div class="">
     <p class="text-gray-800"><%= @user.name %></p>

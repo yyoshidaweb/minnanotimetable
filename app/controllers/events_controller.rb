@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
   # ログイン必須（show以外）
-  before_action :authenticate_user!, only: [ :index, :new, :create, :update ]
+  before_action :authenticate_user!, only: [ :new, :create, :update ]
+  before_action :authenticate_user!, only: [ :index ], if: -> { params[:filter] == "created" || params[:filter] == "favorites" }
 
   # イベントを取得する
   before_action :set_event, only: [ :show, :edit, :update, :destroy ]
@@ -16,14 +17,14 @@ class EventsController < ApplicationController
     # パラメータによって取得するイベントを分岐
     case params[:filter]
     when "favorites"
-      @events = current_user.favorite_events.order(created_at: :desc)
+      @events = Event.recent_favorite_by(current_user)
       @page_title = "お気に入りのタイムテーブル一覧"
     when "created"
-      @events = current_user.events.order(created_at: :desc)
+      @events = Event.recent_created_by(current_user)
       @page_title = "作成したタイムテーブル一覧"
     else
-      @events = Event.order(created_at: :desc).limit(100)
-      @page_title = "タイムテーブル一覧"
+      @events = Event.popular_for_all
+      @page_title = "みんなが作ったタイムテーブル"
     end
   end
 

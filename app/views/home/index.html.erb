@@ -9,17 +9,18 @@
         <span class="text-md text-gray-500">（β）</span>
       </h1>
       <%# ヒーローイメージ %>
-      <%= image_tag "hero.png", class: "mb-4" %>
-      <p class="mb-1 w-full min-w-xs max-w-xs text-lg text-gray-500 leading-relaxed">
-        文字だけでタイムテーブルができる。<br>
-        スマホでもPCでも、誰でも使える。
-      </p>
-      <div class="w-full flex justify-center">
-        <%= link_to "https://minnanotimetable.com/t/VZAIkCmjJ2I",
+      <% unless user_signed_in? %>
+        <%= image_tag "hero.png", class: "mb-4" %>
+        <p class="w-full min-w-xs max-w-xs text-lg text-gray-500 leading-relaxed">
+          文字だけでタイムテーブルができる。<br>
+          スマホでもPCでも、誰でも使える。
+        </p>
+        <div class="w-full flex justify-center">
+          <%= link_to "https://minnanotimetable.com/t/VZAIkCmjJ2I",
                                   class: "text-sm text-blue-600 hover:underline" do %>
-          <span class="font-semibold">サンプルを見てみる→</span>
-        <% end %>
-      </div>
+          <% end %>
+        </div>
+      <% end %>
     </div>
     <div class="min-w-xs max-w-xs">
       <% if user_signed_in? %>
@@ -45,5 +46,51 @@
         </button>
       <% end %>
     </div>
+    <% if @events.any? %>
+      <div class="mb-6 w-full flex flex-col space-y-4">
+        <h2 class="font-semibold text-xl text-gray-800 mb-2">みんなが作ったタイムテーブル</h2>
+        <% @events.each do |event| %>
+          <%= link_to show_timetable_path(event.event_key),
+                        class: "block bg-white shadow-md rounded-lg p-4 border hover:shadow-xl hover:bg-gray-50 transition" do %>
+            <%# タイトル %>
+            <p class="text-lg font-semibold text-gray-800 line-clamp-1">
+              <%= event.display_name %>
+            </p>
+            <%# 開催日 %>
+            <p class="text-sm text-gray-500">
+              開催日：
+              <% if event.days.size >= 2 %>
+                <%= event.days.first.date.strftime("%-Y/%-m/%-d") %>
+                <span class="text-xs"><%= "ほか#{event.days.size - 1}日" %></span>
+              <% elsif event.days.any? %>
+                <%= event.days.first.date.strftime("%-Y/%-m/%-d") %>
+              <% else %>
+                未定
+              <% end %>
+            </p>
+            <div class="flex items-center text-gray-500">
+              <%# 作成者 %>
+              <p class="mr-1 text-sm">
+                @<%= event.user.username %>
+              </p>
+              <%# お気に入り数 %>
+              <p class="text-sm flex justify-center items-center">
+                <span class="material-symbols-outlined"
+                      style="font-size: 1rem;">
+                  favorite
+                </span>
+                <%= event.event_favorites.size %>
+              </p>
+            </div>
+          <% end %>
+        <% end %>
+        <div class="flex justify-center">
+          <%= link_to events_path,
+                                class: "text-sm text-blue-600 hover:underline" do %>
+            <span class="font-semibold">タイムテーブルをもっと見る→</span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>
