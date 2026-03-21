@@ -29,8 +29,10 @@ class Event < ApplicationRecord
   # トップページ用に人気順で最大20件取得するスコープ
   scope :popular_for_home, -> {
     left_joins(:event_favorites)
+      .includes(:user, :days)
       .group(:id)
-      .order(Arel.sql("COUNT(event_favorites.id) DESC"), created_at: :desc)
+      .order(
+        Arel.sql("COUNT(event_favorites.id) DESC"), created_at: :desc)
       .limit(20)
   }
 
