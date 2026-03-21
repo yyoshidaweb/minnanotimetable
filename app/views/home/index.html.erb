@@ -56,7 +56,7 @@
               <%= event.display_name %>
             </p>
             <%# 開催日 %>
-            <p class="text-sm">
+            <p class="text-sm text-gray-500">
               開催日：
               <% if event.days.size >= 2 %>
                 <%= event.days.first.date.strftime("%-Y/%-m/%-d") %>
@@ -67,7 +67,7 @@
                 未定
               <% end %>
             </p>
-            <div class="flex items-center">
+            <div class="flex items-center text-gray-500">
               <%# 作成者 %>
               <p class="mr-1 text-sm">
                 @<%= event.user.username %>
