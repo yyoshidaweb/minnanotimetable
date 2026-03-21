@@ -157,7 +157,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_difference("Event.count", -1) do
       delete event_url(@event.event_key)
     end
-    assert_redirected_to events_path
+    assert_redirected_to events_path(filter: "created")
   end
 
   # 他人のイベント削除は失敗し、Event.count は変化しない
