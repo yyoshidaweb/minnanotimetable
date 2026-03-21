@@ -67,6 +67,20 @@
                 未定
               <% end %>
             </p>
+            <div class="flex items-center">
+              <%# 作成者 %>
+              <p class="mr-1 text-sm">
+                @<%= event.user.username %>
+              </p>
+              <%# お気に入り数 %>
+              <p class="text-sm flex justify-center items-center">
+                <span class="material-symbols-outlined"
+                      style="font-size: 1rem;">
+                  favorite
+                </span>
+                <%= event.event_favorites.size %>
+              </p>
+            </div>
           <% end %>
         <% end %>
         <div class="flex justify-center">
