@@ -40,6 +40,13 @@
         <p>開催日は未定です</p>
       <% end %>
     </div>
+    <%# 作成日時 %>
+    <p class="text-xs text-gray-500 mt-4">
+      作成者：
+      <%= link_to show_user_path(@event.user.username), class: "underline" do %>
+        @<%= @event.user.username %>
+      <% end %>
+    </p>
     <!-- 作成日時 -->
     <div class="text-xs text-gray-500 mt-4">
       作成日: <%= l(@event.created_at.to_date, format: :default) %>
