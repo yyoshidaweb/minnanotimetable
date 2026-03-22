@@ -10,11 +10,19 @@
         <span class="material-symbols-outlined">edit</span>
       <% end %>
     <% end %>
-    <!-- タイトル -->
+    <%# タイトル %>
     <h1 class="text-xl font-bold text-gray-800 mb-2">
       <%= @event.event_name_tag.name %>
     </h1>
-    <!-- 説明欄 -->
+    <%# お気に入り数 %>
+    <p class="mb-2 text-sm flex justify-start items-center">
+      <span class="material-symbols-outlined"
+            style="font-size: 1rem;">
+        favorite
+      </span>
+      <%= @event.event_favorites.size %>
+    </p>
+    <%# 説明欄 %>
     <div class="mb-6">
       <p class="text-gray-800 whitespace-pre-line"><%= @event.description %></p>
     </div>
@@ -40,7 +48,14 @@
         <p>開催日は未定です</p>
       <% end %>
     </div>
-    <!-- 作成日時 -->
+    <%# 作成日時 %>
+    <p class="text-xs text-gray-500 mt-4">
+      作成者：
+      <%= link_to show_user_path(@event.user.username), class: "underline" do %>
+        @<%= @event.user.username %>
+      <% end %>
+    </p>
+    <%# 作成日時 %>
     <div class="text-xs text-gray-500 mt-4">
       作成日: <%= l(@event.created_at.to_date, format: :default) %>
     </div>
