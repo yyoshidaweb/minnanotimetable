@@ -20,17 +20,18 @@
     </p>
     <div class="flex items-center text-gray-500">
       <%# 作成者 %>
-      <p class="mr-1 text-sm">
+      <p class="mr-1 text-sm line-clamp-1">
+        作成者：
         @<%= event.user.username %>
       </p>
-      <%# お気に入り数 %>
-      <p class="text-sm flex justify-center items-center">
-        <span class="material-symbols-outlined"
-                        style="font-size: 1rem;">
-          favorite
-        </span>
-        <%= event.event_favorites.size %>
-      </p>
     </div>
+    <%# お気に入り数 %>
+    <p class="text-sm flex items-center text-gray-500">
+      <span class="material-symbols-outlined"
+                        style="font-size: 1rem;">
+        favorite
+      </span>
+      <%= event.event_favorites.size %>
+    </p>
   <% end %>
 <% end %>
