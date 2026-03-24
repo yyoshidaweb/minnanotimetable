@@ -53,12 +53,29 @@ class Event < ApplicationRecord
       .order(created_at: :desc)
   }
 
+  # トップページ用に作成したタイムテーブルを取得
+  scope :recent_created_for_home, ->(user) {
+    where(user: user)
+      .includes(:user, :days)
+      .order(created_at: :desc)
+      .limit(3)
+  }
+
   # お気に入りタイムテーブル（最後にお気に入りした順）
   scope :recent_favorite_by, ->(user) {
     joins(:event_favorites)
       .where(event_favorites: { user_id: user.id })
       .includes(:user, :days)
       .order("event_favorites.created_at DESC")
+  }
+
+  # トップページ用にお気に入りタイムテーブルを取得
+  scope :recent_favorite_for_home, ->(user) {
+    joins(:event_favorites)
+      .where(event_favorites: { user_id: user.id })
+      .includes(:user, :days)
+      .order("event_favorites.created_at DESC")
+      .limit(3)
   }
 
   # フォームや一覧表示用の名前

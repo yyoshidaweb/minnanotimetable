@@ -24,28 +24,48 @@
     </div>
     <div class="min-w-xs max-w-xs">
       <% if user_signed_in? %>
-        <%= link_to events_path(filter: "created"),
+        <%= link_to new_event_path,
                         class: "flex justify-center items-center w-full px-4 py-2 bg-gray-800 text-white
                                 rounded-full hover:bg-gray-900 mb-8" do %>
           <span class="material-symbols-outlined mr-1">edit</span>
-          <span class="font-semibold">作成したタイムテーブル →</span>
+          <span class="font-semibold">タイムテーブルを作る →</span>
         <% end %>
-        <%= link_to events_path(filter: "favorites"),
-                        class: "flex justify-center items-center w-full px-4 py-2 bg-gray-800 text-white
-                                rounded-full hover:bg-gray-900 mb-8" do %>
-          <span class="material-symbols-outlined material-symbols-filled text-orange-600 mr-1">favorite</span>
-          <span class="font-semibold">お気に入りタイムテーブル →</span>
-        <% end %>
-      <% else %>
-        <button data-controller="modal"
-                  data-action="click->modal#open"
-          data-url="<%= new_session_path %>"
-          class="mb-6 px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-900
-          flex justify-center items-center w-full cursor-pointer" >
-          <span>無料ではじめる→</span>
-        </button>
       <% end %>
     </div>
+    <% if user_signed_in? %>
+      <% if @created_events.any? %>
+        <div class="mb-6 w-full flex flex-col space-y-4">
+          <h2 class="font-semibold text-xl text-gray-800 mb-2">最近作成したタイムテーブル</h2>
+          <%= render "events/events", events: @created_events %>
+          <div class="flex justify-center">
+            <%= link_to events_path(filter: "created"),
+                                        class: "text-sm text-blue-600 hover:underline" do %>
+              <span class="font-semibold">もっと見る→</span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+      <% if @favorite_events.any? %>
+        <div class="mb-6 w-full flex flex-col space-y-4">
+          <h2 class="font-semibold text-xl text-gray-800 mb-2">お気に入りタイムテーブル</h2>
+          <%= render "events/events", events: @favorite_events %>
+          <div class="flex justify-center">
+            <%= link_to events_path(filter: "favorites"),
+                                              class: "text-sm text-blue-600 hover:underline" do %>
+              <span class="font-semibold">もっと見る→</span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <button data-controller="modal"
+                  data-action="click->modal#open"
+        data-url="<%= new_session_path %>"
+        class="mb-6 px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-900
+        flex justify-center items-center w-full cursor-pointer" >
+        <span>無料ではじめる→</span>
+      </button>
+    <% end %>
     <% if @events.any? %>
       <div class="mb-6 w-full flex flex-col space-y-4">
         <h2 class="font-semibold text-xl text-gray-800 mb-2">みんなが作ったタイムテーブル</h2>
