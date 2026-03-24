@@ -26,24 +26,23 @@ class Event < ApplicationRecord
   # 1ユーザー内のイベント名はユニーク
   validates :event_name_tag, presence: true, uniqueness: { scope: :user_id }
 
-  # トップページ用に人気順で最大20件取得するスコープ
-  scope :popular_for_home, -> {
-    left_joins(:event_favorites)
-      .includes(:user, :days)
-      .group(:id)
-      .order(
-        Arel.sql("COUNT(event_favorites.id) DESC"), created_at: :desc)
-      .limit(20)
-  }
-
   # みんなが作ったタイムテーブルを取得
   scope :popular_for_all, -> {
     left_joins(:event_favorites)
+      .left_joins(performers: :performances)
       .includes(:user, :days)
       .group(:id)
       .order(
-        Arel.sql("COUNT(event_favorites.id) DESC"), created_at: :desc)
+        Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"),
+        Arel.sql("COUNT(DISTINCT performances.id) DESC"),
+        created_at: :desc
+      )
       .limit(100)
+  }
+
+  # トップページ用にみんなが作ったタイムテーブルを取得
+  scope :popular_for_home, -> {
+    popular_for_all.limit(20)
   }
 
   # 作成したタイムテーブル
