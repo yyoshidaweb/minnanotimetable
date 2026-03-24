@@ -26,24 +26,23 @@ class Event < ApplicationRecord
   # 1ユーザー内のイベント名はユニーク
   validates :event_name_tag, presence: true, uniqueness: { scope: :user_id }
 
-  # トップページ用に人気順で最大20件取得するスコープ
-  scope :popular_for_home, -> {
-    left_joins(:event_favorites)
-      .includes(:user, :days)
-      .group(:id)
-      .order(
-        Arel.sql("COUNT(event_favorites.id) DESC"), created_at: :desc)
-      .limit(20)
-  }
-
   # みんなが作ったタイムテーブルを取得
   scope :popular_for_all, -> {
     left_joins(:event_favorites)
+      .left_joins(performers: :performances)
       .includes(:user, :days)
       .group(:id)
       .order(
-        Arel.sql("COUNT(event_favorites.id) DESC"), created_at: :desc)
+        Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"),
+        Arel.sql("COUNT(DISTINCT performances.id) DESC"),
+        created_at: :desc
+      )
       .limit(100)
+  }
+
+  # トップページ用にみんなが作ったタイムテーブルを取得
+  scope :popular_for_home, -> {
+    popular_for_all.limit(20)
   }
 
   # 作成したタイムテーブル
@@ -53,12 +52,22 @@ class Event < ApplicationRecord
       .order(created_at: :desc)
   }
 
+  # トップページ用に作成したタイムテーブルを取得
+  scope :recent_created_for_home, ->(user) {
+    recent_created_by(user).limit(3)
+  }
+
   # お気に入りタイムテーブル（最後にお気に入りした順）
   scope :recent_favorite_by, ->(user) {
     joins(:event_favorites)
       .where(event_favorites: { user_id: user.id })
       .includes(:user, :days)
       .order("event_favorites.created_at DESC")
+  }
+
+  # トップページ用にお気に入りタイムテーブルを取得
+  scope :recent_favorite_for_home, ->(user) {
+    recent_favorite_by(user).limit(3)
   }
 
   # フォームや一覧表示用の名前
