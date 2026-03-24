@@ -33,12 +33,17 @@
       <% end %>
     </div>
     <% if user_signed_in? %>
-      <% if @created_events.any? %>
-        <div class="mb-12 w-full flex flex-col space-y-4">
-          <h2 class="flex justify-center items-center font-semibold text-xl text-center text-gray-800 mb-2">
+      <div class="mb-12 w-full flex flex-col space-y-4">
+        <h2 class="flex items-center font-semibold text-xl text-center text-gray-800 mb-2">
+          <%= link_to events_path(filter: "created"),
+                    class: "inline-flex items-center hover:text-gray-900 transition" do %>
             <span class="material-symbols-outlined mr-1">edit</span>
-            最近作成したタイムテーブル
-          </h2>
+            作成したタイムテーブル
+            <span class="material-symbols-outlined"
+                style="font-size: 1.25rem;">arrow_forward_ios</span>
+          <% end %>
+        </h2>
+        <% if @created_events.any? %>
           <%= render "events/events", events: @created_events %>
           <div class="flex justify-center">
             <%= link_to events_path(filter: "created"),
@@ -46,14 +51,19 @@
               <span class="font-semibold">作成したタイムテーブルをもっと見る→</span>
             <% end %>
           </div>
-        </div>
-      <% end %>
-      <% if @favorite_events.any? %>
-        <div class="mb-12 w-full flex flex-col space-y-4">
-          <h2 class="flex justify-center items-center font-semibold text-xl text-center text-gray-800 mb-2">
+        <% end %>
+      </div>
+      <div class="mb-12 w-full flex flex-col space-y-4">
+        <h2 class="flex items-center font-semibold text-xl text-center text-gray-800 mb-2">
+          <%= link_to events_path(filter: "favorites"),
+                          class: "inline-flex items-center hover:text-gray-900 transition" do %>
             <span class="material-symbols-outlined material-symbols-filled text-orange-600 mr-1">favorite</span>
             お気に入りのタイムテーブル
-          </h2>
+            <span class="material-symbols-outlined"
+                      style="font-size: 1.25rem;">arrow_forward_ios</span>
+          <% end %>
+        </h2>
+        <% if @favorite_events.any? %>
           <%= render "events/events", events: @favorite_events %>
           <div class="flex justify-center">
             <%= link_to events_path(filter: "favorites"),
@@ -61,8 +71,8 @@
               <span class="font-semibold">お気に入りのタイムテーブルをもっと見る→</span>
             <% end %>
           </div>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     <% else %>
       <button data-controller="modal"
                   data-action="click->modal#open"
@@ -74,9 +84,14 @@
     <% end %>
     <% if @events.any? %>
       <div class="mb-12 w-full flex flex-col space-y-4">
-        <h2 class="flex justify-center items-center font-semibold text-xl text-center text-gray-800 mb-2">
-          <span class="material-symbols-outlined mr-1">music_note_2</span>
-          みんなが作ったタイムテーブル
+        <h2 class="flex items-center font-semibold text-xl text-center text-gray-800 mb-2">
+          <%= link_to events_path,
+                            class: "inline-flex items-center hover:text-gray-900 transition" do %>
+            <span class="material-symbols-outlined mr-1">music_note_2</span>
+            みんなが作ったタイムテーブル
+            <span class="material-symbols-outlined"
+                        style="font-size: 1.25rem;">arrow_forward_ios</span>
+          <% end %>
         </h2>
         <%= render "events/events", events: @events %>
         <div class="flex justify-center">
