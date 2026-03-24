@@ -8,30 +8,28 @@
     </p>
     <%# 開催日 %>
     <p class="text-sm text-gray-500">
-      開催日：
       <% if event.days.size >= 2 %>
-        <%= event.days.first.date.strftime("%-Y/%-m/%-d") %>
+        開催日：<%= event.days.first.date.strftime("%-Y/%-m/%-d") %>
         <span class="text-xs"><%= "ほか#{event.days.size - 1}日" %></span>
       <% elsif event.days.any? %>
-        <%= event.days.first.date.strftime("%-Y/%-m/%-d") %>
+        開催日：<%= event.days.first.date.strftime("%-Y/%-m/%-d") %>
       <% else %>
-        未定
+        開催日：未定
       <% end %>
     </p>
     <div class="flex items-center text-gray-500">
       <%# 作成者 %>
-      <p class="mr-1 text-sm line-clamp-1">
-        作成者：
-        @<%= event.user.username %>
+      <p class="mr-2 text-xs">
+        作成者：@<%= event.user.username %>
+      </p>
+      <%# お気に入り数 %>
+      <p class="text-sm flex justify-center items-center">
+        <span class="material-symbols-outlined"
+                        style="font-size: 1rem;">
+          favorite
+        </span>
+        <%= event.event_favorites.size %>
       </p>
     </div>
-    <%# お気に入り数 %>
-    <p class="text-sm flex items-center text-gray-500">
-      <span class="material-symbols-outlined"
-                        style="font-size: 1rem;">
-        favorite
-      </span>
-      <%= event.event_favorites.size %>
-    </p>
   <% end %>
 <% end %>
