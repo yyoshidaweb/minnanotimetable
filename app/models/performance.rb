@@ -4,20 +4,23 @@ class Performance < ApplicationRecord
   # 出演情報をお気に入り登録しているユーザーの一覧を取得したいときに使うエイリアス
   has_many :favorited_users, through: :performance_favorites, source: :user
 
-  before_save :calculate_duration
+  before_validation :calculate_end_time
 
   belongs_to :performer
   belongs_to :day, optional: true
   belongs_to :stage, optional: true
 
-  validate :end_time_after_start_time, if: -> { start_time && end_time }
+  validate :duration_more_five, if: -> { start_time && duration }
 
   # 5分刻みであることをチェック
   validate :time_must_be_5min_step
 
   # hour/minute フォームの入力に基づくバリデーション
   validate :start_time_complete, if: -> { start_time_hour_or_minute_present? }
-  validate :end_time_complete, if: -> { end_time_hour_or_minute_present? }
+  validate :duration_present_if_start_time_present
+  validate :start_time_present_if_duration_present
+  # 出演時間重複防止
+  validate :time_range_must_not_overlap
 
   # イベントに紐づく出演者を取得し、出演者ごとにまとめて出演情報を取得するスコープ
   scope :for_event, ->(event) {
@@ -87,20 +90,24 @@ class Performance < ApplicationRecord
 
   # ==== フォーム入力用補助属性 ====
 
-  attr_accessor :start_time_hour, :start_time_minute, :end_time_hour, :end_time_minute
+  attr_accessor :start_time_hour, :start_time_minute
 
   private
 
-  # durationを計算して保存する
-  def calculate_duration
-    # start / end がどちらか欠けていれば何もしない
-    return unless start_time && end_time
-    self.duration = ((end_time - start_time) / 60).to_i # 分単位
+  # start_time + duration から end_time を計算
+  def calculate_end_time
+    # start_time またはdurationが未入力ならend_timeもnilにする
+    if start_time.blank? || duration.blank?
+      self.end_time = nil
+      return
+    end
+    minutes = duration.to_i
+    self.end_time = start_time + minutes.minutes
   end
 
-  # 出演終了時刻が正しいことをチェック
-  def end_time_after_start_time
-    errors.add(:end_time, "は開始時刻より後にしてください") if end_time <= start_time
+  # durationが5以上かチェック
+  def duration_more_five
+    errors.add(:duration, "は5以上で入力してください") if duration < 5
   end
 
   # 5分刻みであることをチェック
@@ -117,19 +124,43 @@ class Performance < ApplicationRecord
     start_time_hour.present? || start_time_minute.present?
   end
 
-  def end_time_hour_or_minute_present?
-    end_time_hour.present? || end_time_minute.present?
-  end
-
   def start_time_complete
     if start_time_hour.blank? || start_time_minute.blank?
       errors.add(:start_time, "を正しく指定するか、未定のままにしてください")
     end
   end
 
-  def end_time_complete
-    if end_time_hour.blank? || end_time_minute.blank?
-      errors.add(:end_time, "を正しく指定するか、未定のままにしてください")
+  # start_timeがある場合はduration必須
+  def duration_present_if_start_time_present
+    if start_time.present? && duration.blank?
+      errors.add(:duration, "を入力してください")
+    end
+  end
+
+  # durationがある場合はstart_time必須
+  def start_time_present_if_duration_present
+    if duration.present? && start_time.blank?
+      errors.add(:start_time, "を入力してください")
+    end
+  end
+
+  # 同じイベント・同じ日・同じステージで時間が重複していないかチェック
+  def time_range_must_not_overlap
+    return if start_time.blank? || end_time.blank?
+    return if day.blank? || stage.blank?
+    overlapping = Performance
+      .joins(:performer)
+      .where(performers: { event_id: performer.event_id })
+      .where(day_id: day_id, stage_id: stage_id)
+      .where.not(id: id)
+      .where(
+        "start_time < ? AND end_time > ?",
+        end_time,
+        start_time
+      )
+
+    if overlapping.exists?
+      errors.add(:base, "同じ時間帯に他の出演情報が存在します")
     end
   end
 end

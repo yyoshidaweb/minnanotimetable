@@ -41,8 +41,7 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
           stage_id: @event.stages.first.id,
           start_time_hour: "10",
           start_time_minute: "00",
-          end_time_hour: "10",
-          end_time_minute: "30"
+          duration: 30
         }
       }
     end
@@ -61,7 +60,7 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to show_timetable_path(@event.event_key)
   end
 
-  # 出演情報が空文字の場合は作成できない
+  # 出演者名が空文字の場合は作成できない
   test "should not create blank performance" do
     assert_no_difference("Performance.for_event(@event).count") do
       post event_performances_path(@event.event_key), params: {
@@ -83,8 +82,7 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
           stage_id: @event.stages.first.id,
           start_time_hour: "10",
           start_time_minute: "",
-          end_time_hour: "10",
-          end_time_minute: "30"
+          duration: "30"
         }
       }
     end
@@ -111,8 +109,7 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
         stage_id: @event.stages.second.id,
         start_time_hour: "11",
         start_time_minute: "10",
-        end_time_hour: "11",
-        end_time_minute: "25"
+        duration: 15
       }
     }
     @performance.reload
@@ -121,8 +118,10 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     assert_equal @event.stages.second.id,     @performance.stage_id
     assert_equal 11, @performance.start_time.hour
     assert_equal 10, @performance.start_time.min
-    assert_equal 11, @performance.end_time.hour
-    assert_equal 25, @performance.end_time.min
+    # 期待値
+    expected = Time.zone.parse("11:25")
+    assert_equal expected.hour, @performance.end_time.hour
+    assert_equal expected.min, @performance.end_time.min
   end
 
   # 出演情報編集時にperformer_idを送信しても変更されない
@@ -130,7 +129,12 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     original_performer_id = @performance.performer_id
     patch event_performance_path(@event.event_key, @performance), params: {
       performance: {
-        performer_id: @event.performers.second.id
+        performer_id: @event.performers.second.id,
+        day_id: @event.days.second.id,
+        stage_id: @event.stages.second.id,
+        start_time_hour: "11",
+        start_time_minute: "10",
+        duration: 15
       }
     }
     assert_redirected_to event_performer_url(@event.event_key, @performance.performer)
@@ -148,26 +152,10 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
         stage_id: @event.stages.first.id,
         start_time_hour: "10",
         start_time_minute: "",
-        end_time_hour: "10",
-        end_time_minute: "30"
+        duration: 30
       }
     }
     assert_response :unprocessable_entity
-  end
-
-  # 出演情報編集時にdurationが正しく更新される
-  test "should update duration on performance update" do
-    assert_not_equal 15, @performance.duration
-    patch event_performance_path(@event.event_key, @performance), params: {
-        performance: {
-        start_time_hour: "11",
-        start_time_minute: "10",
-        end_time_hour: "11",
-        end_time_minute: "25"
-      }
-    }
-    @performance.reload
-    assert_equal 15, @performance.duration
   end
 
   # 出演情報削除

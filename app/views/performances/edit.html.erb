@@ -2,11 +2,11 @@
 <% content_for :title, "#{@page_title} #{@event.display_name} #{@performer.display_name} | みんなのタイムテーブル" %>
 <% content_for :description, "#{@event.display_name}の#{@page_title}「#{@performer.display_name}」。" %>
 <div class="pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
-  <div class="max-w-md mx-auto my-4 p-6 bg-white shadow-md rounded-lg">
+  <div class="max-w-md mx-auto p-4 bg-white shadow-md rounded-lg">
     <%= form_with model: @performance,
                   url: event_performance_path(@event.event_key, @performance),
                   method: :patch,
-                  class: "space-y-6" do |f| %>
+                  class: "space-y-4" do |f| %>
       <%# エラーメッセージ %>
       <%= render "devise/shared/error_messages", resource: @performance %>
       <h3 class="text-xl font-bold text-gray-900">
@@ -52,32 +52,28 @@
       <div>
         <%= f.label :start_time, "開始時刻",
                       class: "block text-sm font-semibold text-gray-800 mb-1" %>
-        <div class="flex items-center space-x-2 text-gray-800">
+        <div class="flex justify-center items-center space-x-4 text-gray-800">
           <%= f.select :start_time_hour,
                 time_select_options[:hours],
                 { include_blank: "未定" },
-                class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
-          <span>:</span>
+                class: "w-full border border-gray-300 rounded-md px-3 py-2 cursor-pointer" %>
+          <span class="text-2xl text-gray-500">:</span>
           <%= f.select :start_time_minute,
                 time_select_options[:minutes],
                 { include_blank: "未定" },
-                class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
+                class: "w-full border border-gray-300 rounded-md px-3 py-2 cursor-pointer" %>
         </div>
       </div>
-      <%# 終了時刻（任意） %>
+      <%# 出演時間（duration） %>
       <div>
-        <%= f.label :end_time, "終了時刻",
+        <%= f.label :duration, "出演時間",
                       class: "block text-sm font-semibold text-gray-800 mb-1" %>
         <div class="flex items-center space-x-2 text-gray-800">
-          <%= f.select :end_time_hour,
-                time_select_options[:hours],
+          <%= f.select :duration,
+                duration_select_options,
                 { include_blank: "未定" },
-                class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
-          <span>:</span>
-          <%= f.select :end_time_minute,
-                time_select_options[:minutes],
-                { include_blank: "未定" },
-                class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
+                class: "w-full border border-gray-300 rounded-md px-3 py-2 cursor-pointer" %>
+          <span class="text-sm text-gray-500">分</span>
         </div>
       </div>
       <%# 更新ボタン %>
