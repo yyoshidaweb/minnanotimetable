@@ -93,9 +93,8 @@ class Performance < ApplicationRecord
 
   # start_time + duration から end_time を計算
   def calculate_end_time
-    return if start_time.blank?
-    # durationが未入力ならend_timeもnilにする
-    if duration.blank?
+    # start_time またはdurationが未入力ならend_timeもnilにする
+    if start_time.blank? || duration.blank?
       self.end_time = nil
       return
     end
