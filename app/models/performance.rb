@@ -18,6 +18,7 @@ class Performance < ApplicationRecord
   # hour/minute フォームの入力に基づくバリデーション
   validate :start_time_complete, if: -> { start_time_hour_or_minute_present? }
   validate :duration_present_if_start_time_present
+  validate :start_time_present_if_duration_present
 
   # イベントに紐づく出演者を取得し、出演者ごとにまとめて出演情報を取得するスコープ
   scope :for_event, ->(event) {
@@ -131,6 +132,13 @@ class Performance < ApplicationRecord
   def duration_present_if_start_time_present
     if start_time.present? && duration.blank?
       errors.add(:duration, "を入力してください")
+    end
+  end
+
+  # durationがある場合はstart_time必須
+  def start_time_present_if_duration_present
+    if duration.present? && start_time.blank?
+      errors.add(:start_time, "を入力してください")
     end
   end
 end

@@ -54,8 +54,6 @@ class PerformancesController < ApplicationController
     @performer = @performance.performer
     @performance.start_time_hour   = @performance.start_time&.hour
     @performance.start_time_minute = @performance.start_time&.min
-    @performance.end_time_hour     = @performance.end_time&.hour
-    @performance.end_time_minute   = @performance.end_time&.min
   end
 
   def update

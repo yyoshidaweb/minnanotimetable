@@ -33,11 +33,34 @@ class PerformanceTest < ActiveSupport::TestCase
     assert_equal expected.min, performance.end_time.min
   end
 
+  # 出演者必須
   test "is invalid without performer" do
     performance = Performance.new
 
     assert_not performance.valid?
     assert_includes performance.errors[:performer], "を入力してください"
+  end
+
+  # durationがある場合はstart_time必須
+  test "is invalid when duration is present but start_time is missing" do
+    performance = Performance.new(
+      performer: @performer,
+      duration: 30
+    )
+
+    assert_not performance.valid?
+    assert_includes performance.errors[:start_time], "を入力してください"
+  end
+
+  # start_timeがある場合はduration必須
+  test "is invalid when start_time is present but duration is missing" do
+    performance = Performance.new(
+      performer: @performer,
+      start_time: Time.zone.parse("12:00")
+    )
+
+    assert_not performance.valid?
+    assert_includes performance.errors[:duration], "を入力してください"
   end
 
   # 終了時刻が開始時刻より早い場合はエラー
@@ -50,16 +73,5 @@ class PerformanceTest < ActiveSupport::TestCase
 
     assert_not performance.valid?
     assert_includes performance.errors[:end_time], "は開始時刻より後にしてください"
-  end
-
-  # 開始時刻が未設定の場合はdurationを計算しない
-  test "does not calculate duration if start_time is missing" do
-    performance = Performance.new(
-      performer: @performer,
-      end_time: Time.zone.parse("12:00")
-    )
-    performance.save!
-
-    assert_nil performance.duration
   end
 end
