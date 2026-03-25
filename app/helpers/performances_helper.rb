@@ -6,4 +6,9 @@ module PerformancesHelper
       minutes: (0...60).step(minute_step).map { |m| [ format("%02d", m), m ] }
     }
   end
+
+  # durationスロットを生成
+  def duration_select_options(step: 5, min: 5, max: 120)
+    (min..max).step(step)
+  end
 end
