@@ -63,15 +63,15 @@ class PerformanceTest < ActiveSupport::TestCase
     assert_includes performance.errors[:duration], "を入力してください"
   end
 
-  # 終了時刻が開始時刻より早い場合はエラー
-  test "is invalid when end_time is before start_time" do
+  # durationが5以下の場合はエラー
+  test "is invalid when duration is less than five" do
     performance = Performance.new(
       performer: @performer,
       start_time: Time.zone.parse("12:00"),
-      end_time: Time.zone.parse("11:00")
+      duration: 0
     )
 
     assert_not performance.valid?
-    assert_includes performance.errors[:end_time], "は開始時刻より後にしてください"
+    assert_includes performance.errors[:duration], "は5以上で入力してください"
   end
 end

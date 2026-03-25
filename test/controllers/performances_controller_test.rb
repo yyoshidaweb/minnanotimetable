@@ -152,8 +152,7 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
         stage_id: @event.stages.first.id,
         start_time_hour: "10",
         start_time_minute: "",
-        end_time_hour: "10",
-        end_time_minute: "30"
+        duration: 30
       }
     }
     assert_response :unprocessable_entity

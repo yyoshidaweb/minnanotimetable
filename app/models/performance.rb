@@ -10,7 +10,7 @@ class Performance < ApplicationRecord
   belongs_to :day, optional: true
   belongs_to :stage, optional: true
 
-  validate :end_time_after_start_time, if: -> { start_time && end_time }
+  validate :duration_more_five, if: -> { start_time && duration }
 
   # 5分刻みであることをチェック
   validate :time_must_be_5min_step
@@ -103,9 +103,9 @@ class Performance < ApplicationRecord
     self.end_time = start_time + minutes.minutes
   end
 
-  # 出演終了時刻が正しいことをチェック
-  def end_time_after_start_time
-    errors.add(:end_time, "は開始時刻より後にしてください") if end_time <= start_time
+  # durationが5以上かチェック
+  def duration_more_five
+    errors.add(:duration, "は5以上で入力してください") if duration < 5
   end
 
   # 5分刻みであることをチェック
