@@ -60,7 +60,7 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to show_timetable_path(@event.event_key)
   end
 
-  # 出演情報が空文字の場合は作成できない
+  # 出演者名が空文字の場合は作成できない
   test "should not create blank performance" do
     assert_no_difference("Performance.for_event(@event).count") do
       post event_performances_path(@event.event_key), params: {
@@ -129,7 +129,12 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     original_performer_id = @performance.performer_id
     patch event_performance_path(@event.event_key, @performance), params: {
       performance: {
-        performer_id: @event.performers.second.id
+        performer_id: @event.performers.second.id,
+        day_id: @event.days.second.id,
+        stage_id: @event.stages.second.id,
+        start_time_hour: "11",
+        start_time_minute: "10",
+        duration: 15
       }
     }
     assert_redirected_to event_performer_url(@event.event_key, @performance.performer)
