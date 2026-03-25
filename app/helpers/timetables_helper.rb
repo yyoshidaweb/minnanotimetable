@@ -27,7 +27,8 @@ module TimetablesHelper
   diff_min  = start_min - timetable_start_min
   rem_per_hour = 6.0
   rem_per_min  = rem_per_hour / 60.0
-  diff_min * rem_per_min
+  instead_of_margin = 0.05 # マージンの代わり
+  diff_min * rem_per_min + instead_of_margin
   end
 
   # タイムテーブル用の時刻スロット配列を生成
@@ -50,7 +51,8 @@ module TimetablesHelper
     rem_per_hour = 6.0
     rem_per_min  = rem_per_hour / 60.0
     duration_min = performance.duration
-    duration_min * rem_per_min
+    instead_of_margin = 0.05 # マージンの代わり
+    duration_min * rem_per_min - instead_of_margin
   end
 
   # 出演時間に応じた line-clamp クラスを返す
