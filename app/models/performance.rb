@@ -4,7 +4,7 @@ class Performance < ApplicationRecord
   # 出演情報をお気に入り登録しているユーザーの一覧を取得したいときに使うエイリアス
   has_many :favorited_users, through: :performance_favorites, source: :user
 
-  before_save :calculate_duration
+  before_save :calculate_end_time
 
   belongs_to :performer
   belongs_to :day, optional: true
@@ -17,7 +17,7 @@ class Performance < ApplicationRecord
 
   # hour/minute フォームの入力に基づくバリデーション
   validate :start_time_complete, if: -> { start_time_hour_or_minute_present? }
-  validate :end_time_complete, if: -> { end_time_hour_or_minute_present? }
+  validate :duration_present_if_start_time_present
 
   # イベントに紐づく出演者を取得し、出演者ごとにまとめて出演情報を取得するスコープ
   scope :for_event, ->(event) {
@@ -87,15 +87,20 @@ class Performance < ApplicationRecord
 
   # ==== フォーム入力用補助属性 ====
 
-  attr_accessor :start_time_hour, :start_time_minute, :end_time_hour, :end_time_minute
+  attr_accessor :start_time_hour, :start_time_minute
 
   private
 
-  # durationを計算して保存する
-  def calculate_duration
-    # start / end がどちらか欠けていれば何もしない
-    return unless start_time && end_time
-    self.duration = ((end_time - start_time) / 60).to_i # 分単位
+  # start_time + duration から end_time を計算
+  def calculate_end_time
+    return if start_time.blank?
+    # durationが未入力ならend_timeもnilにする
+    if duration.blank?
+      self.end_time = nil
+      return
+    end
+    minutes = duration.to_i
+    self.end_time = start_time + minutes.minutes
   end
 
   # 出演終了時刻が正しいことをチェック
@@ -117,19 +122,16 @@ class Performance < ApplicationRecord
     start_time_hour.present? || start_time_minute.present?
   end
 
-  def end_time_hour_or_minute_present?
-    end_time_hour.present? || end_time_minute.present?
-  end
-
   def start_time_complete
     if start_time_hour.blank? || start_time_minute.blank?
       errors.add(:start_time, "を正しく指定するか、未定のままにしてください")
     end
   end
 
-  def end_time_complete
-    if end_time_hour.blank? || end_time_minute.blank?
-      errors.add(:end_time, "を正しく指定するか、未定のままにしてください")
+  # start_timeがある場合はduration必須
+  def duration_present_if_start_time_present
+    if start_time.present? && duration.blank?
+      errors.add(:duration, "を入力してください")
     end
   end
 end

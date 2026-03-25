@@ -132,17 +132,12 @@ class PerformancesController < ApplicationController
         :stage_id,
         :start_time_hour,
         :start_time_minute,
-        :end_time_hour,
-        :end_time_minute
+        :duration
       ).tap do |p|
         # hour / minute から Time を組み立てる
         p[:start_time] = parse_time_from_hour_minute(
           p[:start_time_hour],
           p[:start_time_minute]
-        )
-        p[:end_time] = parse_time_from_hour_minute(
-          p[:end_time_hour],
-          p[:end_time_minute]
         )
       end
     end
@@ -154,17 +149,12 @@ class PerformancesController < ApplicationController
         :stage_id,
         :start_time_hour,
         :start_time_minute,
-        :end_time_hour,
-        :end_time_minute
+        :duration
       ).tap do |p|
         # hour / minute から Time を組み立てる
         p[:start_time] = parse_time_from_hour_minute(
           p[:start_time_hour],
           p[:start_time_minute]
-        )
-        p[:end_time] = parse_time_from_hour_minute(
-          p[:end_time_hour],
-          p[:end_time_minute]
         )
       end
     end
@@ -179,7 +169,6 @@ class PerformancesController < ApplicationController
       return unless params[:performance]
       @performance.start_time_hour   = params[:performance][:start_time_hour]
       @performance.start_time_minute = params[:performance][:start_time_minute]
-      @performance.end_time_hour     = params[:performance][:end_time_hour]
-      @performance.end_time_minute   = params[:performance][:end_time_minute]
+      @performance.duration          = params[:performance][:duration]
     end
 end

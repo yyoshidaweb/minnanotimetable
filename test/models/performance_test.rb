@@ -19,18 +19,19 @@ class PerformanceTest < ActiveSupport::TestCase
     assert_nil performance.duration
   end
 
-  # durationの計算
-  test "calculates duration when start_time and end_time are set" do
+  # start_time + duration で end_time が自動生成される
+  test "calculates end_time from start_time and duration" do
     performance = Performance.new(
       performer: @performer,
       start_time: Time.zone.parse("10:00"),
-      end_time: Time.zone.parse("10:30")
+      duration: 30
     )
     performance.save!
-
-    assert_equal 30, performance.duration
+    # 期待値
+    expected = Time.zone.parse("10:30")
+    assert_equal expected.hour, performance.end_time.hour
+    assert_equal expected.min, performance.end_time.min
   end
-
 
   test "is invalid without performer" do
     performance = Performance.new
@@ -56,17 +57,6 @@ class PerformanceTest < ActiveSupport::TestCase
     performance = Performance.new(
       performer: @performer,
       end_time: Time.zone.parse("12:00")
-    )
-    performance.save!
-
-    assert_nil performance.duration
-  end
-
-  # 終了時刻が未設定の場合はdurationを計算しない
-  test "does not calculate duration if end_time is missing" do
-    performance = Performance.new(
-      performer: @performer,
-      start_time: Time.zone.parse("12:00")
     )
     performance.save!
 
