@@ -79,13 +79,13 @@
         <div class="flex justify-center items-center space-x-4 text-gray-800">
           <%= f.select :start_time_hour,
                       time_select_options[:hours],
-                      { include_blank: "未定" },
+                      { include_blank: "未定", selected: f.object.start_time_hour || 12 },
                       class: "w-full border border-gray-300 rounded-md px-3 py-2 cursor-pointer" %>
           <span class="text-2xl text-gray-500">:</span>
           <%= f.select :start_time_minute,
                       time_select_options[:minutes],
-                      { include_blank: "未定" },
-                      class: "w-full border border-gray-300 rounded-md px-3 py-2 cursor-pointer" %>
+                      { include_blank: "未定", selected: f.object.start_time_minute || 00 },
+                      { class: "w-full border border-gray-300 rounded-md px-3 py-2 cursor-pointer" } %>
         </div>
       </div>
       <%# 出演時間（duration） %>
