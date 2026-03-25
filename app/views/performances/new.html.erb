@@ -75,33 +75,29 @@
       <%# 開始時刻（任意） %>
       <div>
         <%= f.label :start_time, "開始時刻",
-                      class: "block text-sm font-semibold text-gray-800 mb-1" %>
-        <div class="flex items-center space-x-2 text-gray-800">
+                            class: "block text-sm font-semibold text-gray-800 mb-1" %>
+        <div class="flex justify-center items-center space-x-4 text-gray-800">
           <%= f.select :start_time_hour,
-                time_select_options[:hours],
-                { include_blank: "未定" },
-                class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
-          <span>:</span>
+                      time_select_options[:hours],
+                      { include_blank: "未定" },
+                      class: "w-full border border-gray-300 rounded-md px-3 py-2 cursor-pointer" %>
+          <span class="text-2xl text-gray-500">:</span>
           <%= f.select :start_time_minute,
-                time_select_options[:minutes],
-                { include_blank: "未定" },
-                class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
+                      time_select_options[:minutes],
+                      { include_blank: "未定" },
+                      class: "w-full border border-gray-300 rounded-md px-3 py-2 cursor-pointer" %>
         </div>
       </div>
-      <%# 終了時刻（任意） %>
+      <%# 出演時間（duration） %>
       <div>
-        <%= f.label :end_time, "終了時刻",
-                      class: "block text-sm font-semibold text-gray-800 mb-1" %>
+        <%= f.label :duration, "出演時間",
+                            class: "block text-sm font-semibold text-gray-800 mb-1" %>
         <div class="flex items-center space-x-2 text-gray-800">
-          <%= f.select :end_time_hour,
-                time_select_options[:hours],
-                { include_blank: "未定" },
-                class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
-          <span>:</span>
-          <%= f.select :end_time_minute,
-                time_select_options[:minutes],
-                { include_blank: "未定" },
-                class: "w-full border border-gray-300 rounded-md px-3 py-2" %>
+          <%= f.select :duration,
+                      duration_select_options,
+                      { include_blank: "未定", selected: f.object.duration || 30 },
+                      { class: "w-full border border-gray-300 rounded-md px-3 py-2 cursor-pointer" } %>
+          <span class="text-sm text-gray-500">分</span>
         </div>
       </div>
       <%# 作成ボタン %>
