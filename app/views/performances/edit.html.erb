@@ -2,7 +2,7 @@
 <% content_for :title, "#{@page_title} #{@event.display_name} #{@performer.display_name} | みんなのタイムテーブル" %>
 <% content_for :description, "#{@event.display_name}の#{@page_title}「#{@performer.display_name}」。" %>
 <div class="pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
-  <div class="max-w-md mx-auto my-4 p-6 bg-white shadow-md rounded-lg">
+  <div class="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
     <%= form_with model: @performance,
                   url: event_performance_path(@event.event_key, @performance),
                   method: :patch,
