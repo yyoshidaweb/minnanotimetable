@@ -4,7 +4,7 @@ class Performance < ApplicationRecord
   # 出演情報をお気に入り登録しているユーザーの一覧を取得したいときに使うエイリアス
   has_many :favorited_users, through: :performance_favorites, source: :user
 
-  before_save :calculate_end_time
+  before_validation :calculate_end_time
 
   belongs_to :performer
   belongs_to :day, optional: true
@@ -19,6 +19,8 @@ class Performance < ApplicationRecord
   validate :start_time_complete, if: -> { start_time_hour_or_minute_present? }
   validate :duration_present_if_start_time_present
   validate :start_time_present_if_duration_present
+  # 出演時間重複防止
+  validate :time_range_must_not_overlap
 
   # イベントに紐づく出演者を取得し、出演者ごとにまとめて出演情報を取得するスコープ
   scope :for_event, ->(event) {
@@ -139,6 +141,26 @@ class Performance < ApplicationRecord
   def start_time_present_if_duration_present
     if duration.present? && start_time.blank?
       errors.add(:start_time, "を入力してください")
+    end
+  end
+
+  # 同じイベント・同じ日・同じステージで時間が重複していないかチェック
+  def time_range_must_not_overlap
+    return if start_time.blank? || end_time.blank?
+    return if day.blank? || stage.blank?
+    overlapping = Performance
+      .joins(:performer)
+      .where(performers: { event_id: performer.event_id })
+      .where(day_id: day_id, stage_id: stage_id)
+      .where.not(id: id)
+      .where(
+        "start_time < ? AND end_time > ?",
+        end_time,
+        start_time
+      )
+
+    if overlapping.exists?
+      errors.add(:base, "同じ時間帯に他の出演情報が存在します")
     end
   end
 end

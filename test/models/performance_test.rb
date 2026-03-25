@@ -4,7 +4,9 @@ class PerformanceTest < ActiveSupport::TestCase
   def setup
     @performer = performers(:one)
     @stage = stages(:one)
+    @another_stage = stages(:two)
     @day = days(:one)
+    @performance_for_overlaps = performances(:one)
   end
 
   # 出演者以外は全てnilで保存可能
@@ -73,5 +75,69 @@ class PerformanceTest < ActiveSupport::TestCase
 
     assert_not performance.valid?
     assert_includes performance.errors[:duration], "は5以上で入力してください"
+  end
+
+  # 同じ日・同じステージで時間が重複する出演情報は作成できない
+  test "is invalid when time overlaps on same day and stage" do
+    performance = Performance.new(
+      performer: @performer,
+      day: @day,
+      stage: @stage,
+      start_time: @performance_for_overlaps.start_time + 10.minutes,
+      duration: 30
+    )
+
+    assert_not performance.valid?
+    assert_includes performance.errors[:base], "同じ時間帯に他の出演情報が存在します"
+  end
+
+
+  # 同じ日・同じステージでも時間が重複しなければ作成できる
+  test "is valid when time does not overlap on same day and stage" do
+    performance = Performance.new(
+      performer: @performer,
+      day: @day,
+      stage: @stage,
+      start_time: @performance_for_overlaps.end_time,
+      duration: 30
+    )
+
+    assert performance.valid?
+  end
+
+
+  # ステージが違えば同じ時間でも作成できる
+  test "is valid when stage is different" do
+    performance = Performance.new(
+      performer: @performer,
+      day: @day,
+      stage: @another_stage,
+      start_time: @performance_for_overlaps.start_time,
+      duration: 30
+    )
+
+    assert performance.valid?
+  end
+
+
+  # 未定（start_timeなし）の場合は重複チェックしない
+  test "is valid when start_time is nil" do
+    performance = Performance.new(
+      performer: @performer,
+      day: @day,
+      stage: @stage,
+      start_time: nil,
+      duration: nil
+    )
+
+    assert performance.valid?
+  end
+
+
+  # 更新時は自分自身を重複として判定しない
+  test "does not detect overlap with itself on update" do
+    @performance_for_overlaps.duration = 30
+
+    assert @performance_for_overlaps.valid?
   end
 end
