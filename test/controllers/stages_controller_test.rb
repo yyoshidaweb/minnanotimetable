@@ -152,6 +152,17 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to event_stages_path(@event_two.event_key)
   end
 
+  # タグ名が100文字以上なら作成できない
+  test "should not create when tag name is over 100 characters" do
+    long_name = "a" * 101
+    post event_stages_path(@event.event_key), params: {
+      stage: {
+        stage_name_tag_attributes: { name: long_name }
+      }
+    }
+    assert_response :unprocessable_entity
+  end
+
   # ステージ編集ページ
   test "should get edit stage" do
     stage = @event.stages.first
@@ -213,6 +224,18 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :not_found
+  end
+
+  # タグ名が100文字以上なら編集できない
+  test "should not update when tag name is over 100 characters" do
+    stage = @event.stages.first
+    long_name = "a" * 101
+    patch event_stage_url(@event.event_key, stage), params: {
+      stage: {
+        stage_name_tag_attributes: { name: long_name }
+      }
+    }
+    assert_response :unprocessable_entity
   end
 
   # ステージ削除

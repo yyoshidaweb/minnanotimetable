@@ -59,7 +59,15 @@ class EventsController < ApplicationController
     end
 
     # 既存のタグがあれば使い、なければ作成（ユニーク制約はunique index により DB レベルで防ぐ）
-    event_name_tag = EventNameTag.find_or_create_by!(name: tag_name)
+    event_name_tag = EventNameTag.find_or_initialize_by(name: tag_name)
+
+    # タグのバリデーションチェック
+    unless event_name_tag.save
+      @event.build_event_name_tag(name: tag_name)
+      @event.event_name_tag.errors.copy!(event_name_tag.errors) # 子モデルのエラーをコピー
+      @event.errors.add(:base, event_name_tag.errors.full_messages.first)
+      return render :new, status: :unprocessable_entity
+    end
 
     # Event に紐付け
     @event.event_name_tag = event_name_tag
@@ -90,8 +98,22 @@ class EventsController < ApplicationController
       return render :edit, status: :unprocessable_entity
     end
 
-    # 既存のタグは更新せず、新しいタグに置き換える
-    @event.event_name_tag = EventNameTag.find_or_create_by!(name: tag_name)
+    # 既存タグを探す or 新規作成
+    event_name_tag = EventNameTag.find_or_initialize_by(name: tag_name)
+
+    # タグのバリデーションチェック
+    unless event_name_tag.valid?
+      # 入力値をフォームに残す
+      @event.event_name_tag = event_name_tag
+      @event.event_name_tag.errors.copy!(event_name_tag.errors)
+      @event.errors.add(:base, event_name_tag.errors.full_messages.first)
+      return render :edit, status: :unprocessable_entity
+    end
+
+    event_name_tag.save if event_name_tag.new_record?
+
+    # Event に新しいタグを紐付け
+    @event.event_name_tag = event_name_tag
 
     # Event 本体を更新（description など）
     if @event.update(event_params.except(:event_name_tag_attributes))

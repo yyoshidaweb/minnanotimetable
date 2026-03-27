@@ -41,7 +41,15 @@ class StagesController < ApplicationController
       return render :new, status: :unprocessable_entity
     end
     # 既存のタグがあれば使い、なければ作成（ユニーク制約はunique index により DB レベルで防ぐ）
-    stage_name_tag = StageNameTag.find_or_create_by!(name: tag_name)
+    stage_name_tag = StageNameTag.find_or_initialize_by(name: tag_name)
+
+    # タグのバリデーションチェック
+    unless stage_name_tag.save
+      @stage.build_stage_name_tag(name: tag_name)
+      @stage.stage_name_tag.errors.copy!(stage_name_tag.errors) # 子モデルのエラーをコピー
+      @stage.errors.add(:base, stage_name_tag.errors.full_messages.first)
+      return render :new, status: :unprocessable_entity
+    end
 
     # Stage に紐付け
     @stage.stage_name_tag = stage_name_tag
@@ -76,8 +84,22 @@ class StagesController < ApplicationController
       return render :edit, status: :unprocessable_entity
     end
 
-    # 既存のタグは更新せず、新しいタグに置き換える
-    @stage.stage_name_tag = StageNameTag.find_or_create_by!(name: tag_name)
+    # 既存タグを探す or 新規作成
+    stage_name_tag = StageNameTag.find_or_initialize_by(name: tag_name)
+
+    # タグのバリデーションチェック
+    unless stage_name_tag.valid?
+      # 入力値をフォームに残す
+      @stage.stage_name_tag = stage_name_tag
+      @stage.stage_name_tag.errors.copy!(stage_name_tag.errors)
+      @stage.errors.add(:base, stage_name_tag.errors.full_messages.first)
+      return render :edit, status: :unprocessable_entity
+    end
+
+    stage_name_tag.save if stage_name_tag.new_record?
+
+    # Stage に新しいタグを紐付け
+    @stage.stage_name_tag = stage_name_tag
 
     # Stage本体を更新（ネストされたフィールドを除く）
     if @stage.update(stage_params.except(:stage_name_tag_attributes))

@@ -120,6 +120,17 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
+  # タグ名が100文字以上なら作成できない
+  test "should not create when tag name is over 100 characters" do
+    long_name = "a" * 101
+    post event_performers_path(@event.event_key), params: {
+      performer: {
+        performer_name_tag_attributes: { name: long_name }
+      }
+    }
+    assert_response :unprocessable_entity
+  end
+
   # website_urlがURL形式ではない場合は追加できない
   test "should not create performer if website_url is not url format" do
     performer_name = "タグ未存在の名前"
@@ -229,6 +240,18 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :not_found
+  end
+
+  # タグ名が100文字以上なら編集できない
+  test "should not update when tag name is over 100 characters" do
+    performer = @event.performers.first
+    long_name = "a" * 101
+    patch event_performer_url(@event.event_key, performer), params: {
+      performer: {
+        performer_name_tag_attributes: { name: long_name }
+      }
+    }
+    assert_response :unprocessable_entity
   end
 
   # 出演者削除
