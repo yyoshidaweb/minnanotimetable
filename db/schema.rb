@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_14_051917) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_27_075203) do
   create_table "days", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "date", null: false
@@ -32,7 +32,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_051917) do
 
   create_table "event_name_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "name", limit: 50, null: false
+    t.string "name", limit: 100, null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_event_name_tags_on_name", unique: true
   end
@@ -77,7 +77,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_051917) do
 
   create_table "performer_name_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "name", limit: 50, null: false
+    t.string "name", limit: 100, null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_performer_name_tags_on_name", unique: true
   end
@@ -96,7 +96,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_14_051917) do
 
   create_table "stage_name_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "name", limit: 50, null: false
+    t.string "name", limit: 100, null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_stage_name_tags_on_name", unique: true
   end
