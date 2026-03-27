@@ -95,6 +95,17 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  # タグ名が100文字以上なら作成できない
+  test "should not create when tag name is over 100 characters" do
+    long_name = "a" * 101
+    post events_url, params: {
+      event: {
+        event_name_tag_attributes: { name: long_name }
+      }
+    }
+    assert_response :unprocessable_entity
+  end
+
   # 編集フォームを表示
   test "should get edit" do
     get edit_event_url(@event.event_key)
@@ -150,6 +161,17 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
       }
     }
     assert_response :not_found
+  end
+
+  # タグ名が100文字以上なら編集できない
+  test "should not update when tag name is over 100 characters" do
+    long_name = "a" * 101
+    patch event_url(@event.event_key), params: {
+      event: {
+        event_name_tag_attributes: { name: long_name }
+      }
+    }
+    assert_response :unprocessable_entity
   end
 
   # イベント削除処理
