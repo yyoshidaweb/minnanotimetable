@@ -47,7 +47,15 @@ class PerformersController < ApplicationController
       return render :new, status: :unprocessable_entity
     end
     # 既存のタグがあれば使い、なければ作成（ユニーク制約はunique index により DB レベルで防ぐ）
-    performer_name_tag = PerformerNameTag.find_or_create_by!(name: tag_name)
+    performer_name_tag = PerformerNameTag.find_or_initialize_by(name: tag_name)
+
+    # タグのバリデーションチェック
+    unless performer_name_tag.save
+      @performer.build_performer_name_tag(name: tag_name)
+      @performer.performer_name_tag.errors.copy!(performer_name_tag.errors) # 子モデルのエラーをコピー
+      @performer.errors.add(:base, performer_name_tag.errors.full_messages.first)
+      return render :new, status: :unprocessable_entity
+    end
 
     # Performer に紐付け
     @performer.performer_name_tag = performer_name_tag
@@ -80,8 +88,22 @@ class PerformersController < ApplicationController
       return render :edit, status: :unprocessable_entity
     end
 
-    # 既存のタグは更新せず、新しいタグに置き換える
-    @performer.performer_name_tag = PerformerNameTag.find_or_create_by!(name: tag_name)
+    # 既存タグを探す or 新規作成
+    performer_name_tag = PerformerNameTag.find_or_initialize_by(name: tag_name)
+
+    # タグのバリデーションチェック
+    unless performer_name_tag.valid?
+      # 入力値をフォームに残す
+      @performer.performer_name_tag = performer_name_tag
+      @performer.performer_name_tag.errors.copy!(performer_name_tag.errors)
+      @performer.errors.add(:base, performer_name_tag.errors.full_messages.first)
+      return render :edit, status: :unprocessable_entity
+    end
+
+    performer_name_tag.save if performer_name_tag.new_record?
+
+    # Performer に新しいタグを紐付け
+    @performer.performer_name_tag = performer_name_tag
 
     # Performer本体を更新（ネストされたフィールドを除く）
     if @performer.update(performer_params.except(:performer_name_tag_attributes))
