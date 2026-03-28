@@ -39,9 +39,12 @@ class PerformancesController < ApplicationController
     if @performance.save
       # 出演者IDのセッションをクリア
       session.delete(:fixed_performer_id)
-      redirect_to(session.delete(:performances_return_to) ||
-                  show_timetable_path(@event.event_key),
-                  notice: "出演情報を作成しました。")
+      # 出演者詳細から作成した場合は出演者ページへ戻る
+      return redirect_to(
+              session.delete(:performances_return_to), notice: "出演情報を作成しました。"
+      ) if session[:performances_return_to].present?
+      # 通常作成時は開催日を見てタイムテーブルへ戻る
+      redirect_to show_timetable_path(@event.event_key, d: @performance.day&.date), notice: "出演情報を作成しました。"
     else
       # エラー時に select の選択値を保持する
       restore_time_virtual_attributes
