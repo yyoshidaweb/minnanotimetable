@@ -31,13 +31,14 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
-  # 出演情報を作成
+  # 出演情報を作成し、作成後は保存した日付のdパラメータ付きでリダイレクトされる
   test "should create performance" do
+    day = @event.days.first
     assert_difference("Performance.for_event(@event).count") do
       post event_performances_path(@event.event_key), params: {
         performance: {
           performer_id: @event.performers.first.id,
-          day_id: @event.days.first.id,
+          day_id: day.id,
           stage_id: @event.stages.first.id,
           start_time_hour: "10",
           start_time_minute: "00",
@@ -45,10 +46,10 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
         }
       }
     end
-    assert_redirected_to show_timetable_path(@event.event_key)
+    assert_redirected_to show_timetable_path(@event.event_key, d: day.date)
   end
 
-  # 出演者名だけで出演情報を作成できる
+  # 出演者名だけで出演情報を作成でき、日付を指定していないためdパラメータ無しでリダイレクトされる
   test "should create performance only with performer" do
     assert_difference("Performance.for_event(@event).count") do
       post event_performances_path(@event.event_key), params: {
