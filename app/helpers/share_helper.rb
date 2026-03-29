@@ -41,12 +41,7 @@ module ShareHelper
 
   # X共有用のテキストを返す
   def share_text_for
-    case params[:type]
-    when "event"
-      "#{share_title_for}\n\n#{share_url_for}\n\nみんなのタイムテーブルで音楽フェスのタイムテーブルを作ろう！\n\n##{@event.display_name}\n#みんなのタイムテーブル"
-    when "my-timetable"
-      "#{share_title_for}\n\n#{share_url_for}\n\nみんなのタイムテーブルでマイタイムテーブルを作ろう！\n\n##{@event.display_name}\n#みんなのタイムテーブル"
-    end
+    "#{share_title_for}\n\n#{share_url_for}\n\n#みんなのタイムテーブル | 音楽フェスのタイムテーブルを作ろう！"
   end
 
   # 共有モーダルのborderを返す
