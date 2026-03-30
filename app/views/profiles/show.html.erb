@@ -15,7 +15,7 @@
   </div>
   <%# 説明欄 %>
   <div class="mb-6">
-    <p class="text-gray-800 whitespace-pre-wrap"><%= current_user.description %></p>
+    <%= auto_link_text(current_user.description) %>
   </div>
   <%# ユーザー名 %>
   <div class="mb-6">
