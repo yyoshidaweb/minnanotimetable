@@ -24,7 +24,7 @@
     </p>
     <%# 説明欄 %>
     <div class="mb-6">
-      <p class="text-gray-800 whitespace-pre-line"><%= @event.description %></p>
+      <%= auto_link_text(@event.description) %>
     </div>
     <%# 開催日 %>
     <div class="text-gray-800 mb-2">

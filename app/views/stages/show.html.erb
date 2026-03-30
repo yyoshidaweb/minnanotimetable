@@ -16,7 +16,7 @@
   <%# 説明 %>
   <% if @stage.description.present? %>
     <div class="mb-6">
-      <p class="text-gray-800 whitespace-pre-line"><%= @stage.description %></p>
+      <%= auto_link_text(@stage.description) %>
     </div>
   <% end %>
   <%# 住所 %>

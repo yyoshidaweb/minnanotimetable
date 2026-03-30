@@ -67,6 +67,8 @@ gem "openssl"
 gem "rqrcode"
 # PostgreSQL データベースを使用するための gem
 gem "pg"
+# テキスト内のリンクを自動でリンク化するgem
+gem "rinku"
 
 
 group :development, :test do

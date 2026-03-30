@@ -19,7 +19,7 @@
   <%# 説明 %>
   <% if @performer.description.present? %>
     <div class="mb-6">
-      <p class="text-gray-800 whitespace-pre-line"><%= @performer.description %></p>
+      <%= auto_link_text(@performer.description) %>
     </div>
   <% end %>
   <%# Official website %>
