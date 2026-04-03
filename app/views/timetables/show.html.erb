@@ -1,8 +1,8 @@
 <%# 検索結果などに表示されるタイトルと説明 %>
 <% content_for :title, "#{@event.display_name} タイムテーブル | みんなのタイムテーブル" %>
 <% content_for :description, "#{@event.display_name}のタイムテーブル。#{@event.description if @event.description.present?}" %>
-<% if @performances.present? %>
-  <%# 日付選択タブ（イベントヘッダーの高さ分下げて配置する） %>
+<%# 日付選択タブ（イベントヘッダーの高さ分下げて配置する） %>
+<% if @days.any?%>
   <nav class="flex h-8 fixed top-16 z-160 w-full justify-around overflow-x-auto bg-white border-t border-gray-200">
     <% @days.each do |day| %>
       <%# 日付を MM/DD 形式でラベルに整形 %>
@@ -16,6 +16,8 @@
       <% end %>
     <% end %>
   </nav>
+<% end %>
+<% if @performances.present? %>
   <% if user_signed_in? && current_user == @event.user %>
     <%= link_to new_event_performance_path(@event.event_key),
                   class: "fixed right-2 bottom-[calc(0.5rem+5.25rem+env(safe-area-inset-bottom))] z-160
