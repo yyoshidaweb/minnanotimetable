@@ -70,6 +70,9 @@ gem "pg"
 # テキスト内のリンクを自動でリンク化するgem
 gem "rinku"
 
+# OpenAI APIを使用するためのgem
+gem "openai"
+
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
