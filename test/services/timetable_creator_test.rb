@@ -14,6 +14,7 @@ class TimetableCreatorTest < ActionDispatch::IntegrationTest
     @no_performance_event = events(:no_performance_event)
     @day1 = days(:one)
     @day2 = days(:two)
+    @no_performance_event_day = days(:no_performance_event_day)
   end
 
   # タイムテーブルJSONからStage、Performer、Performanceを作成できる
@@ -26,7 +27,7 @@ class TimetableCreatorTest < ActionDispatch::IntegrationTest
           TimetableCreator.create_from_json(
             json: json,
             event: @no_performance_event,
-            day: @day1
+            day: @no_performance_event_day
           )
         end
       end

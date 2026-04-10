@@ -14,10 +14,12 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     @no_performance_event = events(:no_performance_event)
     @day1 = days(:one)
     @day2 = days(:two)
+    @no_performance_event_day = days(:no_performance_event_day)
     @performance1 = performances(:one)
     @performance2 = performances(:two)
     @performance3 = performances(:three)
     @performance4 = performances(:four)
+    @json = JSON.parse(file_fixture("timetable_json.json").read)
   end
 
   # 未ログインでもタイムテーブルページにアクセス可能
@@ -58,5 +60,27 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
   test "should show event timetable by event_key when no performances" do
     get show_timetable_path(@no_performance_event.event_key)
     assert_response :success
+  end
+
+  # AIタイムテーブル作成が成功する
+  test "should create timetable with AI" do
+    sign_out @user
+    sign_in @user_two
+    # TimetableExtractorをモック（APIは利用せず、常に固定JSONを返す）
+    TimetableExtractor.stub :extract, { success: true, data: @json } do
+      # ダミーファイル（テストでは解析されないが、画像選択は必須のため使用）
+      dummy_file = fixture_file_upload("public/icon.png")
+      assert_difference "Stage.count", +2 do
+        assert_difference "Performer.count", +3 do
+          assert_difference "Performance.count", +3 do
+            post event_timetables_path(@no_performance_event.event_key), params: {
+              day_id: @no_performance_event_day.id,
+              image: dummy_file
+            }
+          end
+        end
+      end
+      assert_redirected_to show_timetable_path(@no_performance_event.event_key)
+    end
   end
 end

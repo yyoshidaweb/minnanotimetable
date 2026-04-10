@@ -9,3 +9,7 @@ two:
 three:
   event: four
   date: <%= Date.current + 2.day %>
+
+no_performance_event_day:
+  event: no_performance_event
+  date: <%= Date.current %>
