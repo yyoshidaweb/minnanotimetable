@@ -20,6 +20,8 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     @performance3 = performances(:three)
     @performance4 = performances(:four)
     @json = JSON.parse(file_fixture("timetable_json.json").read)
+    # ダミーファイル（テストでは解析されないが、画像選択は必須のため使用）
+    @dummy_file = fixture_file_upload("public/icon.png")
   end
 
   # 未ログインでもタイムテーブルページにアクセス可能
@@ -68,19 +70,87 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     sign_in @user_two
     # TimetableExtractorをモック（APIは利用せず、常に固定JSONを返す）
     TimetableExtractor.stub :extract, { success: true, data: @json } do
-      # ダミーファイル（テストでは解析されないが、画像選択は必須のため使用）
-      dummy_file = fixture_file_upload("public/icon.png")
       assert_difference "Stage.count", +2 do
         assert_difference "Performer.count", +3 do
           assert_difference "Performance.count", +3 do
             post event_timetables_path(@no_performance_event.event_key), params: {
               day_id: @no_performance_event_day.id,
-              image: dummy_file
+              image: @dummy_file
             }
           end
         end
       end
       assert_redirected_to show_timetable_path(@no_performance_event.event_key)
     end
+  end
+
+  # AIタイムテーブル作成時にJSONパースエラーが発生した場合は作成できない
+  test "should not create timetable with AI if JSON parse error occurs" do
+    sign_out @user
+    sign_in @user_two
+    # TimetableExtractorをモック（APIは利用せず、常に失敗した結果だけを返す）
+    TimetableExtractor.stub :extract, { success: false, error: "画像解析結果の読み込みに失敗しました" } do
+      assert_no_difference "Stage.count" do
+        assert_no_difference "Performer.count" do
+          assert_no_difference "Performance.count" do
+            post event_timetables_path(@no_performance_event.event_key), params: {
+              day_id: @no_performance_event_day.id,
+              image: @dummy_file
+            }
+          end
+        end
+      end
+      assert_response :unprocessable_entity
+      assert_match "画像解析結果の読み込みに失敗しました", response.body
+    end
+  end
+
+  # AIタイムテーブル作成時に画像解析が失敗した場合は作成できない
+  test "should not create timetable with AI if image parsing fails" do
+    sign_out @user
+    sign_in @user_two
+    # TimetableExtractorをモック（APIは利用せず、常に失敗した結果だけを返す）
+    TimetableExtractor.stub :extract, { success: false, error: "画像解析に失敗しました" } do
+      post event_timetables_path(@no_performance_event.event_key), params: {
+        day_id: @no_performance_event_day.id,
+        image: @dummy_file
+      }
+      assert_response :unprocessable_entity
+      assert_match "画像解析に失敗しました", response.body
+    end
+  end
+
+  # AIタイムテーブル作成時に画像が選択されていない場合は作成できない
+  test "should not create timetable with AI if no image is selected" do
+    sign_out @user
+    sign_in @user_two
+    assert_no_difference "Stage.count" do
+      assert_no_difference "Performer.count" do
+        assert_no_difference "Performance.count" do
+          post event_timetables_path(@no_performance_event.event_key), params: {
+            day_id: @no_performance_event_day.id
+          }
+        end
+      end
+    end
+    assert_response :unprocessable_entity
+    assert_match "画像を選択してください", response.body
+  end
+
+  # AIタイムテーブル作成時に開催日が選択されていない場合は作成できない
+  test "should not create timetable with AI if no day is selected" do
+    sign_out @user
+    sign_in @user_two
+    assert_no_difference "Stage.count" do
+      assert_no_difference "Performer.count" do
+        assert_no_difference "Performance.count" do
+          post event_timetables_path(@no_performance_event.event_key), params: {
+            image: @dummy_file
+          }
+        end
+      end
+    end
+    assert_response :unprocessable_entity
+    assert_match "開催日を選択してください", response.body
   end
 end
