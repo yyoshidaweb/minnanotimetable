@@ -1,0 +1,26 @@
+<%# 検索結果などに表示されるタイトルと説明 %>
+<% content_for :title, "#{@page_title} #{@event.display_name} | みんなのタイムテーブル" %>
+<% content_for :description, "#{@event.display_name}の#{@page_title}。" %>
+<%= form_with model: @event,
+              url: event_timetables_path(@event.event_key),
+              method: :post,
+              local: true,
+              multipart: true do |f| %>
+  <%# エラーメッセージ %>
+  <%= render "devise/shared/error_messages", resource: @event %>
+  <div>
+    <label>日付</label>
+    <%= select_tag :day_id,
+      options_from_collection_for_select(@event.days, :id, :date),
+      required: true %>
+  </div>
+  <div>
+    <label>タイムテーブル画像</label>
+    <%= file_field_tag :image, required: true %>
+  </div>
+  <div>
+    <%= submit_tag "AIで作成" %>
+  </div>
+<% end %>
+<%# 下部タブメニュー %>
+<%= render "layouts/bottom_tab" %>

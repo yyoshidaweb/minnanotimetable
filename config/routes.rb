@@ -54,6 +54,8 @@ Rails.application.routes.draw do
     end
     resources :performers, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
     resources :performances, only: [ :new, :create, :edit, :update, :destroy ]
+    # AIタイムテーブル作成
+    resources :timetables, only: [ :new, :create ]
   end
 
   # タイムテーブルお気に入り登録・解除のルーティング

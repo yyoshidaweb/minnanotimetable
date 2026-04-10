@@ -1,6 +1,8 @@
 class TimetablesController < ApplicationController
   # イベントをセット
-  before_action :set_event
+  before_action :set_event, only: %i[ show new create ]
+  # イベントの所有者本人のみアクセス可能
+  before_action :authorize_event!, only: %i[ new create ]
   # === 出演者、開催日、ステージをセット ===
   before_action :set_performers, only: %i[ show ]
   before_action :set_days, only: %i[ show ]
@@ -13,6 +15,13 @@ class TimetablesController < ApplicationController
   before_action :performances_by_stage, only: %i[ show ]
   # ビュー上でパフォーマンスを素早く検索できるようにHash化しておく
   before_action :set_performance_map, only: %i[ show ]
+  # ページタイトルを設定
+  before_action :set_page_title
+  # イベントヘッダー表示フラグ
+  before_action :show_event_header
+
+  def new
+  end
 
   def show
     @timetable_view = true
@@ -25,10 +34,47 @@ class TimetablesController < ApplicationController
     end
   end
 
+  # 画像からタイムテーブルを作成
+  def create
+    if params[:image].blank?
+      @event.errors.add(:base, "画像を選択してください")
+      render :new, status: :unprocessable_entity
+      return
+    end
+    day = @event.days.find_by(id: params[:day_id])
+    unless day
+      @event.errors.add(:base, "開催日を選択してください")
+      render :new, status: :unprocessable_entity
+      return
+    end
+    file = params[:image]
+    # AIでJSON抽出
+    extract_result = TimetableExtractor.extract(file.tempfile)
+    unless extract_result[:success]
+      @event.errors.add(:base, extract_result[:error])
+      render :new, status: :unprocessable_entity
+      return
+    end
+    # タイムテーブル作成
+    create_result = TimetableCreator.create_from_json(json: extract_result[:data], event: @event, day: day)
+    unless create_result[:success]
+      @event.errors.add(:base, create_result[:error])
+      render :new, status: :unprocessable_entity
+      return
+    end
+    redirect_to show_timetable_path(@event.event_key), notice: "タイムテーブルを作成しました"
+  end
+
   private
     # イベントを取得
     def set_event
-      @event = Event.includes(:event_name_tag).find_by!(event_key: params[:event_key])
+      event_key_param =
+        if action_name == "show"
+          params[:event_key]
+        else
+          params[:event_event_key]
+        end
+      @event = Event.includes(:event_name_tag).find_by!(event_key: event_key_param)
     end
 
     # イベントの所有者かどうかチェック（異なる場合は404エラーを発生させる）
@@ -75,5 +121,20 @@ class TimetablesController < ApplicationController
       @performances_by_stage.each do |stage_id, performances|
         @performance_map[stage_id] = performances.index_by(&:start_key)
       end
+    end
+
+    # イベントヘッダー表示フラグ
+    def show_event_header
+      # イベント用ヘッダー表示フラグ
+      @show_event_header = true
+    end
+
+    # ページタイトルを設定
+    def set_page_title
+      @page_title =
+        case action_name
+        when "new", "create"
+          "画像からタイムテーブルを作成"
+        end
     end
 end
