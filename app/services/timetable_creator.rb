@@ -13,8 +13,13 @@ class TimetableCreator
 
   # タイムテーブル作成処理
   def create
+    stages = @json["stages"]
+    # stagesが空の場合はエラーを返す
+    return timetable_not_recognized_response if stages.blank?
+    # performanceが空の場合はエラーを返す
+    return timetable_not_recognized_response unless has_performance?(stages)
     ActiveRecord::Base.transaction do
-      @json["stages"].each_with_index do |stage_data, index|
+      stages.each_with_index do |stage_data, index|
         stage = find_or_create_stage(stage_data, index)
         performances = build_performances(stage, stage_data)
         calculate_durations(performances)
@@ -87,5 +92,17 @@ class TimetableCreator
     duration = (duration / 5) * 5
     duration = duration.clamp(5, 60)
     duration
+  end
+
+  # タイムテーブルを認識できないエラー時のレスポンス
+  def timetable_not_recognized_response
+    { success: false, error: "タイムテーブルを認識できませんでした" }
+  end
+
+  # stageにperformanceが存在するかを返す
+  def has_performance?(stages)
+    stages.any? do |stage|
+      stage["performances"].present?
+    end
   end
 end
