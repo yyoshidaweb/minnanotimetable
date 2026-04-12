@@ -19,11 +19,15 @@
 <% end %>
 <% if @performances.present? %>
   <% if user_signed_in? && current_user == @event.user %>
-    <%= link_to new_event_performance_path(@event.event_key),
-                  class: "fixed right-2 bottom-[calc(0.5rem+5.25rem+env(safe-area-inset-bottom))] z-160
-                    flex items-center justify-center p-2 bg-gray-800 text-white rounded-full shadow hover:bg-gray-900" do %>
-      <span class="material-symbols-outlined">calendar_add_on</span>
-    <% end %>
+    <%# FAB %>
+    <button
+          data-controller="fab"
+          data-action="click->fab#open"
+      data-url="<%= fab_path(event_key: @event.event_key) %>"
+      class="fixed right-2 bottom-[calc(0.5rem+5.25rem+env(safe-area-inset-bottom))] z-160
+      flex items-center justify-center p-2 bg-gray-800 text-white rounded-full shadow hover:bg-gray-900 cursor-pointer">
+      <span class="material-symbols-outlined">add</span>
+    </button>
   <% end %>
   <%# タイムテーブル表示画面のメインコンテナ（画面全体の高さに設定する） %>
   <div class="h-svh flex flex-col overflow-hidden pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
