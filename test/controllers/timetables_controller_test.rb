@@ -96,6 +96,18 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  # 他人のAIタイムテーブル作成はできない
+  test "should not create timetable with AI for other users" do
+    # TimetableExtractorをモック（APIは利用せず、常に固定JSONを返す）
+    TimetableExtractor.stub :extract, { success: true, data: @json } do
+      post event_timetables_path(@no_performance_event.event_key), params: {
+        day_id: @no_performance_event_day.id,
+        image: @dummy_file
+      }
+      assert_response :not_found
+    end
+  end
+
   # AIタイムテーブル作成時にJSONパースエラーが発生した場合は作成できない
   test "should not create timetable with AI if JSON parse error occurs" do
     sign_out @user
