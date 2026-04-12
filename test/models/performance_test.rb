@@ -43,6 +43,19 @@ class PerformanceTest < ActiveSupport::TestCase
     assert_includes performance.errors[:performer], "を入力してください"
   end
 
+  # 出演者必須（出演者以外の項目を全て選択済みの場合）
+  test "is invalid without performer when other fields are present" do
+    performance = Performance.new(
+      day: @day,
+      stage: @stage,
+      start_time: @performance_for_overlaps.end_time,
+      duration: 30
+    )
+
+    assert_not performance.valid?
+    assert_includes performance.errors[:performer], "を入力してください"
+  end
+
   # durationがある場合はstart_time必須
   test "is invalid when duration is present but start_time is missing" do
     performance = Performance.new(

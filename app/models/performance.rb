@@ -146,6 +146,7 @@ class Performance < ApplicationRecord
 
   # 同じイベント・同じ日・同じステージで時間が重複していないかチェック
   def time_range_must_not_overlap
+    return unless performer.present?
     return if start_time.blank? || end_time.blank?
     return if day.blank? || stage.blank?
     overlapping = Performance
