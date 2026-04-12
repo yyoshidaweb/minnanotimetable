@@ -98,18 +98,27 @@
   <%# ===== 情報が揃った出演情報が0件の場合 ===== %>
   <div class="h-svh p-12 flex flex-col items-center justify-center pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
     <% if user_signed_in? && current_user == @event.user %>
-      <p class="text-gray-800 mb-4">出演情報を追加して、<br>
-        タイムテーブルを完成させましょう！</p>
-    </p>
-    <%= link_to new_event_performance_path(@event.event_key),
-                class: "relative flex items-center justify-center p-3 bg-gray-800 text-white rounded-full shadow hover:bg-gray-900" do %>
-      <span class="material-symbols-outlined">calendar_add_on</span>
-      <small class="text-sm">出演情報を追加</small>
-    <% end %>
-  <% else %>
-    <p class="text-gray-800 mb-8">まだ、出演情報がありません</p>
-  <% end %>
-</div>
-<%# 下部タブメニュー %>
-<%= render "layouts/bottom_tab" %>
+      <div class="max-w-md flex flex-col justify-center items-center">
+        <p class="text-gray-500 mb-4">タイムテーブルを完成させましょう！</p>
+        <%= link_to new_event_timetable_path(@event.event_key),
+                      class: "w-full relative flex items-center justify-center p-3 bg-gray-800 text-white rounded-full shadow hover:bg-gray-900" do %>
+          <span class="material-symbols-outlined">wand_stars</span>
+          <small class="text-sm">画像から作成する</small>
+        <% end %>
+        <small class="mt-1 text-center text-xs text-gray-500 whitespace-normal md:whitespace-nowrap">
+          AIが画像を解析してタイムテーブルを作成します。
+        </small>
+        <p class="text-gray-500 my-4">または</p>
+        <%= link_to new_event_performance_path(@event.event_key),
+                      class: "w-full relative flex items-center justify-center p-3 bg-gray-800 text-white rounded-full shadow hover:bg-gray-900" do %>
+          <span class="material-symbols-outlined">calendar_add_on</span>
+          <small class="text-sm">出演情報を追加</small>
+        <% end %>
+      <% else %>
+        <p class="text-gray-500 mb-8">まだ、出演情報がありません</p>
+      <% end %>
+    </div>
+  </div>
+  <%# 下部タブメニュー %>
+  <%= render "layouts/bottom_tab" %>
 <% end %>
