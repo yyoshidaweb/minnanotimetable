@@ -64,6 +64,18 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # AIタイムテーブル作成ページにアクセスできる
+  test "should get new timetable page" do
+    get new_event_timetable_path(@event.event_key)
+    assert_response :success
+  end
+
+  # 他人のAIタイムテーブル作成ページにはアクセスできない
+  test "should not get new timetable page for other users" do
+    get new_event_timetable_path(@no_performance_event.event_key)
+    assert_response :not_found
+  end
+
   # AIタイムテーブル作成が成功する
   test "should create timetable with AI" do
     sign_out @user
