@@ -1,4 +1,4 @@
-<%= select_tag "performance[day_id]",
+<%= select_tag day_select_name(form_type),
     options_from_collection_for_select(
         days,
         :id,
