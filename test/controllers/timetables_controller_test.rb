@@ -92,7 +92,7 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
           end
         end
       end
-      assert_redirected_to show_timetable_path(@no_performance_event.event_key)
+      assert_redirected_to show_timetable_path(@no_performance_event.event_key, d: @no_performance_event_day.date)
     end
   end
 

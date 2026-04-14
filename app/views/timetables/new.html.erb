@@ -9,18 +9,29 @@
   <%# エラーメッセージ %>
   <%= render "devise/shared/error_messages", resource: @event %>
   <div>
-    <label>日付</label>
-    <%= select_tag :day_id,
-      options_from_collection_for_select(@event.days, :id, :date),
-      required: true %>
-  </div>
-  <div>
-    <label>タイムテーブル画像</label>
-    <%= file_field_tag :image, required: true %>
-  </div>
-  <div>
-    <%= submit_tag "AIで作成" %>
-  </div>
-<% end %>
-<%# 下部タブメニュー %>
-<%= render "layouts/bottom_tab" %>
+    <%= f.label :day_id, "開催日",
+                class: "block text-sm font-semibold text-gray-800 mb-1" %>
+    <%# 作成モーダルに対応するためにパーシャルとして表示する %>
+    <div id="day_select">
+      <%= render "shared/day_select",
+                          days: @days,
+                          selected_day: @selected_day_id,
+                          form_type: @form_type %>
+    </div>
+    <div class="flex justify-end">
+      <span class="text-xs text-gray-500">または、</span>
+      <%= link_to "開催日を追加",
+                          new_event_day_path(form_type: @form_type),
+                          data: { turbo_frame: "modal" },
+                          class: "text-xs text-blue-800 underline" %>
+    </div>
+    <div>
+      <label>タイムテーブル画像</label>
+      <%= file_field_tag :image %>
+    </div>
+    <div>
+      <%= submit_tag "AIで作成" %>
+    </div>
+  <% end %>
+  <%# 下部タブメニュー %>
+  <%= render "layouts/bottom_tab" %>

@@ -5,7 +5,7 @@ class TimetablesController < ApplicationController
   before_action :authorize_event!, only: %i[ new create ]
   # === 出演者、開催日、ステージをセット ===
   before_action :set_performers, only: %i[ show ]
-  before_action :set_days, only: %i[ show ]
+  before_action :set_days
   before_action :set_stages, only: %i[ show ]
   # 選択された開催日をセット
   before_action :set_selected_date, only: %i[ show ]
@@ -19,6 +19,8 @@ class TimetablesController < ApplicationController
   before_action :set_page_title
   # イベントヘッダー表示フラグ
   before_action :show_event_header
+  before_action :set_form_type, only: %i[ new create ]
+  before_action :set_selected_date_for_form, only: %i[ create ]
 
   def new
   end
@@ -62,7 +64,7 @@ class TimetablesController < ApplicationController
       render :new, status: :unprocessable_entity
       return
     end
-    redirect_to show_timetable_path(@event.event_key), notice: "タイムテーブルを作成しました"
+    redirect_to show_timetable_path(@event.event_key, d: day.date), notice: "タイムテーブルを作成しました"
   end
 
   private
@@ -136,5 +138,16 @@ class TimetablesController < ApplicationController
         when "new", "create"
           "画像からタイムテーブルを作成"
         end
+    end
+
+    # form_typeをセットする
+    def set_form_type
+      @form_type = "timetable"
+    end
+
+    # フォームで選択されている開催日をセットする
+    def set_selected_date_for_form
+      return unless params[:day_id].present?
+      @selected_day_id = params[:day_id]
     end
 end
