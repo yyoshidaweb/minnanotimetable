@@ -26,7 +26,10 @@ export default class extends Controller {
   drop(event) {
     event.preventDefault()
     const file = event.dataTransfer.files[0]
-    if (!file) return
+    if (!file || !file.type.startsWith("image/")) {
+      alert("画像ファイルのみドロップできます")
+      return
+    }
     const input = this.element.querySelector("input[type='file']")
     // フォーム送信のためにinputにドロップしたファイルをセット
     input.files = event.dataTransfer.files
@@ -38,7 +41,10 @@ export default class extends Controller {
   // プレビュー共通処理
   showPreview(file) {
     // 画像以外は無視
-    if (!file.type.startsWith("image/")) return
+    if (!file.type.startsWith("image/")) {
+      alert("画像ファイルのみ選択できます") // 不正ファイル防止
+      return
+    }
     const reader = new FileReader()
     reader.onload = (e) => {
       this.previewTarget.src = e.target.result
