@@ -22,11 +22,12 @@
                   border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
                 data-image-preview-target="dropzone">
           <span data-image-preview-target="label"
-                  class="text-gray-500 text-sm">
+                  class="mb-px text-gray-500 text-sm">
             画像を選択 または ドラッグ＆ドロップ
           </span>
+          <span class="text-xs text-gray-500">※jpeg, png形式のみ選択できます。</span>
           <%= file_field_tag :image,
-                              accept: "image/*",
+                              accept: "image/png,image/jpeg",
                               class: "hidden",
                               data: { action: "change->image-preview#preview" } %>
         </label>

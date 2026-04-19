@@ -26,7 +26,8 @@ export default class extends Controller {
   drop(event) {
     event.preventDefault()
     const file = event.dataTransfer.files[0]
-    if (!file || !file.type.startsWith("image/")) {
+    const allowedTypes = ["image/png", "image/jpeg"]
+    if (!file || !allowedTypes.includes(file.type)) {
       alert("画像ファイルのみドロップできます")
       return
     }
@@ -40,9 +41,10 @@ export default class extends Controller {
 
   // プレビュー共通処理
   showPreview(file) {
+    const allowedTypes = ["image/png", "image/jpeg"]
     // 画像以外は無視
-    if (!file.type.startsWith("image/")) {
-      alert("画像ファイルのみ選択できます") // 不正ファイル防止
+    if (!allowedTypes.includes(file.type)) {
+      alert("画像ファイルのみ選択できます")
       return
     }
     const reader = new FileReader()
