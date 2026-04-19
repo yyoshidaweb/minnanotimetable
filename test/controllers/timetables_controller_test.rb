@@ -177,4 +177,23 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_match "開催日を選択してください", response.body
   end
+
+  # AIタイムテーブル作成時にJPEG, PNG以外のファイルが選択された場合は作成できない
+  test "should not create timetable with AI if non-image file is selected" do
+    sign_out @user
+    sign_in @user_two
+    non_image_file = fixture_file_upload("sample.txt")
+    assert_no_difference "Stage.count" do
+      assert_no_difference "Performer.count" do
+        assert_no_difference "Performance.count" do
+          post event_timetables_path(@no_performance_event.event_key), params: {
+            day_id: @no_performance_event_day.id,
+            image: non_image_file
+          }
+        end
+      end
+    end
+    assert_response :unprocessable_entity
+    assert_match "JPEG, PNG形式のみアップロード可能です", response.body
+  end
 end
