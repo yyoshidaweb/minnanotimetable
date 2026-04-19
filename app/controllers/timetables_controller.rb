@@ -50,6 +50,16 @@ class TimetablesController < ApplicationController
       return
     end
     file = params[:image]
+    # ファイルのMIMEタイプを取得
+    mime_type = Marcel::MimeType.for(file.tempfile)
+    # 許可するファイルタイプ
+    allowed_types = [ "image/png", "image/jpeg" ]
+    # 許可されたタイプであることを確認
+    unless allowed_types.include?(mime_type)
+      @event.errors.add(:base, "JPEG, PNG形式のみアップロード可能です")
+      render :new, status: :unprocessable_entity
+      return
+    end
     # AIでJSON抽出
     extract_result = TimetableExtractor.extract(file.tempfile)
     unless extract_result[:success]
