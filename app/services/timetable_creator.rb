@@ -19,6 +19,9 @@ class TimetableCreator
     # performanceが空の場合はエラーを返す
     return timetable_not_recognized_response unless has_performance?(stages)
     ActiveRecord::Base.transaction do
+      # 選択された開催日の既存のperformanceを削除
+      existing_performances = Performance.where(day: @day)
+      existing_performances.destroy_all
       stages.each_with_index do |stage_data, index|
         stage = find_or_create_stage(stage_data, index)
         performances = build_performances(stage, stage_data)

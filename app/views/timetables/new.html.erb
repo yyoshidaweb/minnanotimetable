@@ -54,7 +54,10 @@
         </div>
       </div>
       <%# 作成ボタン %>
-      <div>
+      <div class="space-y-1">
+        <p class="text-red-600 text-sm">
+          ※この日の既存の出演情報がある場合はすべて削除後、新しいタイムテーブルが作成されます。
+        </p>
         <%= f.submit "作成",
                 class: "w-full py-2 rounded-md bg-gray-800 text-white hover:bg-gray-900 transition cursor-pointer" %>
       </div>

@@ -196,4 +196,36 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_match "JPEG, PNG形式のみアップロード可能です", response.body
   end
+
+  # Aiタイムテーブル作成時に既存の出演情報が存在する場合はそれらが削除される
+  test "should delete existing performances when creating timetable with AI" do
+    # 既存のperformanceが存在することを確認
+    assert Performance.where(day: @event).exists?
+    # 選択された開催日の既存のperformanceの数を確認
+    performance_count = Performance.where(day: @day1).count
+    TimetableExtractor.stub :extract, { success: true, data: @json } do
+      # AIタイムテーブル作成後に既存のperformanceが削除され、新しいperformanceが作成されることを確認
+      assert_difference "Performance.count", -performance_count + 3 do
+        post event_timetables_path(@event.event_key), params: {
+          day_id: @day1.id,
+          image: @dummy_file
+        }
+      end
+    end
+  end
+
+  # AIタイムテーブル作成失敗時に既存の出演情報が削除されない
+  test "should not delete existing performances if creating timetable with AI fails" do
+    # 既存のperformanceが存在することを確認
+    assert Performance.where(day: @event).exists?
+    TimetableExtractor.stub :extract, { success: false, error: "画像解析に失敗しました" } do
+      # AIタイムテーブル作成が失敗しても既存のperformanceが削除されないことを確認
+      assert_no_difference "Performance.count" do
+        post event_timetables_path(@event.event_key), params: {
+          day_id: @day1.id,
+          image: @dummy_file
+        }
+      end
+    end
+  end
 end
