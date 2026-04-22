@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_22_014534) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_22_021648) do
   create_table "days", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "date", null: false
@@ -115,6 +115,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_22_014534) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.integer "ai_timetable_count", default: 0, null: false
+    t.date "ai_timetable_reset_at"
     t.datetime "created_at", null: false
     t.text "description"
     t.string "email", default: "", null: false
