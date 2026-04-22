@@ -9,6 +9,12 @@ class User < ApplicationRecord
   has_many :performance_favorites, dependent: :destroy
   has_many :favorite_performances, through: :performance_favorites, source: :performance
 
+  # ユーザーロールの定義
+  enum :role, {
+    free: 0, # 無料ユーザー
+    developer: 1 # 開発者
+  }
+
   # 予約語として使用禁止の username リスト
   MANUAL_RESERVED_USERNAMES = %w[
     sign_in
