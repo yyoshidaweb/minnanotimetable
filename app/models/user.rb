@@ -95,6 +95,24 @@ class User < ApplicationRecord
       end
   end
 
+  # AIタイムテーブル機能の上限回数を取得
+  def ai_timetable_monthly_limit
+    Rails.application.credentials.dig(:ai_timetable_monthly_limit, role.to_sym)
+  end
+
+  # AIタイムテーブル機能の利用可能か判定
+  def ai_timetable_available?
+    reset_if_needed
+    return true if ai_timetable_monthly_limit.nil? # 上限が読み込めない場合は常に利用可能
+    ai_timetable_count < ai_timetable_monthly_limit
+  end
+
+  # カウント増加
+  def increment_ai_timetable_count!
+    reset_if_needed
+    increment!(:ai_timetable_count)
+  end
+
   private
 
   # ユーザー名を生成するメソッド
@@ -113,5 +131,15 @@ class User < ApplicationRecord
     if MANUAL_RESERVED_USERNAMES.include?(username)
       errors.add(:username, "は使用できません。別のIDを登録してください。")
     end
+  end
+
+  # 月が変わったらAIタイムテーブル機能のカウントをリセット
+  def reset_if_needed
+    return if ai_timetable_reset_at&.month == Date.current.month &&
+              ai_timetable_reset_at&.year == Date.current.year
+    update!(
+      ai_timetable_count: 0,
+      ai_timetable_reset_at: Date.current
+    )
   end
 end
