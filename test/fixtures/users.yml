@@ -20,7 +20,7 @@ two:
   uid: "google-uid-67890"
   username: "two"
 
-# AI利用回数0のユーザー
+# AI利用上限に達したユーザー
 no_ai_usage:
   name: No AI Usage
   email: no.ai.usage@example.com
