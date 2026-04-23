@@ -105,7 +105,6 @@ class User < ApplicationRecord
   # AIタイムテーブル機能の利用可能か判定
   def ai_timetable_available?
     reset_if_needed
-    return true if ai_timetable_monthly_limit.nil? # 上限が読み込めない場合は常に利用可能
     ai_timetable_count < ai_timetable_monthly_limit
   end
 
