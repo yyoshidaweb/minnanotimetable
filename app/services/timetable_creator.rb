@@ -27,6 +27,8 @@ class TimetableCreator
         performances = build_performances(stage, stage_data)
         calculate_durations(performances)
       end
+      # AI機能の利用回数を増加
+      @event.user.increment_ai_timetable_count!
     end
     { success: true }
   rescue StandardError => e
