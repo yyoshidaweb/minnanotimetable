@@ -11,10 +11,14 @@
                 class: "space-y-6" do |f| %>
       <%# エラーメッセージ %>
       <%= render "devise/shared/error_messages", resource: @event %>
-      <p class="text-sm text-gray-600">
+      <p class="text-sm text-gray-500">
         今月の使用回数：
-        <%= current_user.ai_timetable_count %> / <%= current_user.ai_timetable_monthly_limit %>回<br>
-        残り<%= current_user.remaining_ai_timetable_count %>回使用できます。
+        <%= @ai_timetable_count %> / <%= @ai_timetable_monthly_limit %>回<br>
+        残り<%= @remaining_ai_timetable_count %>回使用できます。
+      </p>
+      <p class="text-xs text-gray-500">
+        AIが画像を解析してタイムテーブルを作成します。<br>
+        解析には30秒〜1分程度かかる場合があります。
       </p>
       <%# 画像アップロードエリア %>
       <div data-controller="image-preview"

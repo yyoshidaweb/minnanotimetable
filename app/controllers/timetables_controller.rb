@@ -23,6 +23,9 @@ class TimetablesController < ApplicationController
   before_action :set_selected_date_for_form, only: %i[ create ]
 
   def new
+    @remaining_ai_timetable_count = current_user.remaining_ai_timetable_count # 内部でreset_if_neededが呼ばれる
+    @ai_timetable_count = current_user.ai_timetable_count
+    @ai_timetable_monthly_limit = current_user.ai_timetable_monthly_limit
   end
 
   def show
