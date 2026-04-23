@@ -32,3 +32,10 @@ no_performance_event:
   event_key: "no_performance_event"
   description: "出演情報がないテスト用フェスイベント"
   is_published: true
+
+no_ai_usage_event:
+  user: no_ai_usage
+  event_name_tag: no_ai_usage_event
+  event_key: "no_ai_usage_event"
+  description: "AI利用回数0のユーザーのテスト用フェスイベント"
+  is_published: true

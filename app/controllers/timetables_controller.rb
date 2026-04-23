@@ -38,6 +38,12 @@ class TimetablesController < ApplicationController
 
   # 画像からタイムテーブルを作成
   def create
+    # AIタイムテーブル機能の利用可能か判定
+    unless current_user.ai_timetable_available?
+      @event.errors.add(:base, "今月の使用回数の上限に達しました")
+      render :new, status: :unprocessable_entity
+      return
+    end
     if params[:image].blank?
       @event.errors.add(:base, "画像を選択してください")
       render :new, status: :unprocessable_entity

@@ -8,12 +8,15 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     # Google 認証のテスト用ユーザーを作成
     @user = users(:one)
     @user_two = users(:two)
+    @no_ai_usage_user = users(:no_ai_usage)
     # テスト用のログイン状態を再現
     sign_in @user
     @event = events(:one)
+    @no_ai_usage_event = events(:no_ai_usage_event)
     @no_performance_event = events(:no_performance_event)
     @day1 = days(:one)
     @day2 = days(:two)
+    @no_ai_usage_event_day = days(:no_ai_usage_event_day)
     @no_performance_event_day = days(:no_performance_event_day)
     @performance1 = performances(:one)
     @performance2 = performances(:two)
@@ -227,5 +230,23 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
         }
       end
     end
+  end
+
+  # AI利用上限に達している場合はAIタイムテーブルが作成できない
+  test "should not create timetable with AI if AI usage limit is reached" do
+    sign_out @user
+    sign_in @no_ai_usage_user
+    assert_no_difference "Stage.count" do
+      assert_no_difference "Performer.count" do
+        assert_no_difference "Performance.count" do
+          post event_timetables_path(@no_ai_usage_event.event_key), params: {
+            day_id: @no_ai_usage_event_day.id,
+            image: @dummy_file
+          }
+        end
+      end
+    end
+    assert_response :unprocessable_entity
+    assert_match "今月の使用回数の上限に達しました", response.body
   end
 end

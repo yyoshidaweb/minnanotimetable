@@ -19,3 +19,13 @@ two:
   provider: google_oauth2
   uid: "google-uid-67890"
   username: "two"
+
+# AI利用回数0のユーザー
+no_ai_usage:
+  name: No AI Usage
+  email: no.ai.usage@example.com
+  provider: google_oauth2
+  uid: "google-uid-11111"
+  username: "no_ai_usage"
+  ai_timetable_count: 10 # AI利用上限に達している状態を再現
+  ai_timetable_reset_at: <%= Date.current %> # AI利用回数がリセットされたのが1ヶ月以内であることを再現

@@ -48,6 +48,8 @@ class User < ApplicationRecord
   validates :description, length: { maximum: 500 }
   # username が予約語でないことを確認するカスタムバリデーション
   validate :username_must_not_be_reserved
+  # AIタイムテーブル機能の利用上限が設定されていることを確認するカスタムバリデーション
+  validate :ai_timetable_limit_must_exist
 
   # Googleログイン時に呼ばれるユーザー検索 or 生成メソッド
   def self.from_omniauth(auth)
@@ -113,6 +115,13 @@ class User < ApplicationRecord
     increment!(:ai_timetable_count)
   end
 
+  # AIタイムテーブル機能の残り利用回数を取得
+  def remaining_ai_timetable_count
+    reset_if_needed
+    limit = ai_timetable_monthly_limit
+    [ limit - ai_timetable_count, 0 ].max # マイナス防止
+  end
+
   private
 
   # ユーザー名を生成するメソッド
@@ -141,5 +150,12 @@ class User < ApplicationRecord
       ai_timetable_count: 0,
       ai_timetable_reset_at: Date.current
     )
+  end
+
+  # AIタイムテーブル機能の利用上限が設定されていることを確認するカスタムバリデーション
+  def ai_timetable_limit_must_exist
+    limit = Rails.application.credentials.dig(:ai_timetable_monthly_limit, role.to_sym)
+    return if limit.present?
+    errors.add(:role, "のAI利用上限が設定されていません")
   end
 end

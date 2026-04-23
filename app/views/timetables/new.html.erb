@@ -11,6 +11,11 @@
                 class: "space-y-6" do |f| %>
       <%# エラーメッセージ %>
       <%= render "devise/shared/error_messages", resource: @event %>
+      <p class="text-sm text-gray-600">
+        今月の使用回数：
+        <%= current_user.ai_timetable_count %> / <%= current_user.ai_timetable_monthly_limit %>回<br>
+        残り<%= current_user.remaining_ai_timetable_count %>回使用できます。
+      </p>
       <%# 画像アップロードエリア %>
       <div data-controller="image-preview"
             data-action="dragover->image-preview#dragOver dragleave->image-preview#dragLeave drop->image-preview#drop"
