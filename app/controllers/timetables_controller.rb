@@ -15,6 +15,7 @@ class TimetablesController < ApplicationController
   before_action :performances_by_stage, only: %i[ show ]
   # ビュー上でパフォーマンスを素早く検索できるようにHash化しておく
   before_action :set_performance_map, only: %i[ show ]
+  before_action :set_remaining_ai_timetable_count, only: %i[ new create ]
   # ページタイトルを設定
   before_action :set_page_title
   # イベントヘッダー表示フラグ
@@ -23,9 +24,6 @@ class TimetablesController < ApplicationController
   before_action :set_selected_date_for_form, only: %i[ create ]
 
   def new
-    @remaining_ai_timetable_count = current_user.remaining_ai_timetable_count # 内部でreset_if_neededが呼ばれる
-    @ai_timetable_count = current_user.ai_timetable_count
-    @ai_timetable_monthly_limit = current_user.ai_timetable_monthly_limit
   end
 
   def show
@@ -168,5 +166,11 @@ class TimetablesController < ApplicationController
     def set_selected_date_for_form
       return unless params[:day_id].present?
       @selected_day_id = params[:day_id]
+    end
+
+    def set_remaining_ai_timetable_count
+      @remaining_ai_timetable_count = current_user.remaining_ai_timetable_count # 内部でreset_if_neededが呼ばれる
+      @ai_timetable_count = current_user.ai_timetable_count
+      @ai_timetable_monthly_limit = current_user.ai_timetable_monthly_limit
     end
 end
