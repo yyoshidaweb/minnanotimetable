@@ -8,6 +8,7 @@ class TimetableExtractor
     # 画像をURL形式に変換
     data_url = "data:image/jpeg;base64,#{image_base64}"
     response = client.responses.create(
+      model: "gpt-5.4-mini",
       prompt: {
         id: Rails.application.credentials.dig(:openai, :timetable_extractor_prompt_id)
       },
@@ -24,6 +25,28 @@ class TimetableExtractor
       ]
     )
     json = JSON.parse(response.output_text)
+    stages = json["stages"] || []
+    # ステージ数が10以上の場合、高度なモデルで再度解析する
+    if stages.size >= 10
+      response = client.responses.create(
+        model: "gpt-5.4",
+        prompt: {
+          id: Rails.application.credentials.dig(:openai, :timetable_extractor_prompt_id)
+        },
+        input: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "input_image",
+                image_url: data_url
+              }
+            ]
+          }
+        ]
+      )
+      json = JSON.parse(response.output_text)
+    end
     { success: true, data: json }
   rescue JSON::ParserError => e
     Rails.logger.error("JSON parse error: #{e.message}")
