@@ -1,76 +1,80 @@
 <%# 検索結果などに表示されるタイトルと説明 %>
 <% content_for :title, "#{@page_title} #{@event.display_name} | みんなのタイムテーブル" %>
 <% content_for :description, "#{@event.display_name}の#{@page_title}。" %>
-<div class="my-4 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
-  <div class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
-    <%= form_with model: @event,
-                url: event_timetables_path(@event.event_key),
-                method: :post,
-                local: true,
-                multipart: true,
-                class: "space-y-6" do |f| %>
-      <%# エラーメッセージ %>
-      <%= render "devise/shared/error_messages", resource: @event %>
-      <p class="text-sm text-gray-500">
-        今月の使用回数：
-        <%= @ai_timetable_count %> / <%= @ai_timetable_monthly_limit %>回<br>
-        残り<%= @remaining_ai_timetable_count %>回使用できます。
-      </p>
-      <p class="text-xs text-gray-500">
-        AIが画像を解析してタイムテーブルを作成します。<br>
-        解析には30秒〜1分程度かかる場合があります。
-      </p>
-      <%# 画像アップロードエリア %>
-      <div data-controller="image-preview"
-            data-action="dragover->image-preview#dragOver dragleave->image-preview#dragLeave drop->image-preview#drop"
-        class="space-y-3">
-        <%= f.label :image, "画像",
-                    class: "block text-md font-semibold text-gray-800 mb-2" %>
-        <%# ドロップエリア %>
-        <label class="flex flex-col items-center justify-center w-full px-4 py-6
-                  border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
-                data-image-preview-target="dropzone">
-          <span data-image-preview-target="label"
-                  class="mb-px text-gray-500 text-sm">
-            画像を選択 または ドラッグ＆ドロップ
-          </span>
-          <span class="text-xs text-gray-500">※JPEG, PNG形式のみ選択できます。</span>
-          <%= file_field_tag :image,
-                              accept: "image/png,image/jpeg",
-                              class: "hidden",
-                              data: { action: "change->image-preview#preview" } %>
-        </label>
-        <%# 画像プレビュー %>
-        <img data-image-preview-target="preview"
-              class="hidden w-full rounded-md shadow" />
-      </div>
-      <div>
-        <%= f.label :day_id, "どの日のタイムテーブルを作成しますか？",
-                            class: "block text-md font-semibold text-gray-800 mb-1" %>
-        <%# 作成モーダルに対応するためにパーシャルとして表示する %>
-        <div id="day_select">
-          <%= render "shared/day_select",
-                                      days: @days,
-                                      selected_day: @selected_day_id,
-                                      form_type: @form_type %>
-        </div>
-        <div class="flex justify-end">
-          <span class="text-xs text-gray-500">または、</span>
-          <%= link_to "開催日を追加",
-                                      new_event_day_path(form_type: @form_type),
-                                      data: { turbo_frame: "modal" },
-                                      class: "text-xs text-blue-800 underline" %>
-        </div>
-      </div>
-      <%# 作成ボタン %>
-      <div class="space-y-1">
-        <p class="text-red-600 text-sm">
-          ※この日の既存の出演情報がある場合はすべて削除後、新しいタイムテーブルが作成されます。
+<div data-controller="loading">
+  <%# ローディングモーダル %>
+  <%= render "timetables/loading" %>
+  <div class="my-4 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
+    <div class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
+      <%= form_with model: @event,
+                  url: event_timetables_path(@event.event_key),
+                  method: :post,
+                  local: true,
+                  multipart: true,
+                  class: "space-y-6",
+                data: { action: "turbo:submit-start->loading#open" } do |f| %>
+        <%# エラーメッセージ %>
+        <%= render "devise/shared/error_messages", resource: @event %>
+        <p class="text-sm text-gray-500">
+          今月の使用回数：
+          <%= @ai_timetable_count %> / <%= @ai_timetable_monthly_limit %>回<br>
+          残り<%= @remaining_ai_timetable_count %>回使用できます。
         </p>
-        <%= f.submit "作成",
-                class: "w-full py-2 rounded-md bg-gray-800 text-white hover:bg-gray-900 transition cursor-pointer" %>
-      </div>
-    <% end %>
+        <p class="text-xs text-gray-500">
+          AIが画像を解析してタイムテーブルを作成します。
+        </p>
+        <%# 画像アップロードエリア %>
+        <div data-controller="image-preview"
+              data-action="dragover->image-preview#dragOver dragleave->image-preview#dragLeave drop->image-preview#drop"
+          class="space-y-3">
+          <%= f.label :image, "画像",
+                      class: "block text-md font-semibold text-gray-800 mb-2" %>
+          <%# ドロップエリア %>
+          <label class="flex flex-col items-center justify-center w-full px-4 py-6
+                    border-2 border-dashed border-gray-300 rounded-md cursor-pointer hover:bg-gray-50"
+                  data-image-preview-target="dropzone">
+            <span data-image-preview-target="label"
+                    class="mb-px text-gray-500 text-sm">
+              画像を選択 または ドラッグ＆ドロップ
+            </span>
+            <span class="text-xs text-gray-500">※JPEG, PNG形式のみ選択できます。</span>
+            <%= file_field_tag :image,
+                                accept: "image/png,image/jpeg",
+                                class: "hidden",
+                                data: { action: "change->image-preview#preview" } %>
+          </label>
+          <%# 画像プレビュー %>
+          <img data-image-preview-target="preview"
+                class="hidden w-full rounded-md shadow" />
+        </div>
+        <div>
+          <%= f.label :day_id, "どの日のタイムテーブルを作成しますか？",
+                              class: "block text-md font-semibold text-gray-800 mb-1" %>
+          <%# 作成モーダルに対応するためにパーシャルとして表示する %>
+          <div id="day_select">
+            <%= render "shared/day_select",
+                                        days: @days,
+                                        selected_day: @selected_day_id,
+                                        form_type: @form_type %>
+          </div>
+          <div class="flex justify-end">
+            <span class="text-xs text-gray-500">または、</span>
+            <%= link_to "開催日を追加",
+                                        new_event_day_path(form_type: @form_type),
+                                        data: { turbo_frame: "modal" },
+                                        class: "text-xs text-blue-800 underline" %>
+          </div>
+        </div>
+        <%# 作成ボタン %>
+        <div class="space-y-1">
+          <p class="text-red-600 text-sm">
+            ※この日の既存の出演情報がある場合はすべて削除後、新しいタイムテーブルが作成されます。
+          </p>
+          <%= f.submit "作成",
+                  class: "w-full py-2 rounded-md bg-gray-800 text-white hover:bg-gray-900 transition cursor-pointer" %>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
 <%# 下部タブメニュー %>
