@@ -15,3 +15,6 @@ five:
 
 six:
   name: "Event6"
+
+no_ai_usage_event:
+  name: "AI利用回数0のイベント"

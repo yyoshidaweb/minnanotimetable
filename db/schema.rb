@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_27_075203) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_22_021648) do
   create_table "days", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.date "date", null: false
@@ -115,6 +115,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_075203) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.integer "ai_timetable_count", default: 0, null: false
+    t.date "ai_timetable_reset_at"
     t.datetime "created_at", null: false
     t.text "description"
     t.string "email", default: "", null: false
@@ -125,6 +127,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_27_075203) do
     t.string "remember_token"
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
+    t.integer "role", default: 0, null: false
     t.string "uid", limit: 255, default: "", null: false
     t.datetime "updated_at", null: false
     t.string "username", limit: 50, default: "", null: false

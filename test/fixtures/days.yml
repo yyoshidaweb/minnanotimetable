@@ -9,3 +9,11 @@ two:
 three:
   event: four
   date: <%= Date.current + 2.day %>
+
+no_performance_event_day:
+  event: no_performance_event
+  date: <%= Date.current %>
+
+no_ai_usage_event_day:
+  event: no_ai_usage_event
+  date: <%= Date.current %>

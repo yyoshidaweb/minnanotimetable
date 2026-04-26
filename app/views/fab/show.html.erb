@@ -1,0 +1,29 @@
+<%# FAB %>
+<%= turbo_frame_tag "modal" do %>
+  <div class="fixed inset-0 z-300 flex items-center justify-center bg-black/40",
+        data-controller="fab"
+        data-action="click->fab#close">
+    <%# ボタン群 %>
+    <div class="fixed right-2 bottom-[calc(0.5rem+5.25rem+env(safe-area-inset-bottom))] z-160
+                flex flex-col items-end gap-2">
+      <%# 画像から作成ボタン %>
+      <%= link_to new_event_timetable_path(@event.event_key),
+          class: "gap-2 flex items-center justify-center p-3 bg-white text-gray-800 font-semibold rounded-full shadow-md hover:bg-gray-50" do %>
+        <span>画像から作成</span>
+        <span class="material-symbols-outlined">wand_stars</span>
+      <% end %>
+      <%# 出演情報追加ボタン %>
+      <%= link_to new_event_performance_path(@event.event_key),
+          class: "gap-2 flex items-center justify-center p-3 bg-white text-gray-800 font-semibold rounded-full shadow-md hover:bg-gray-50" do %>
+        <span>出演情報を追加</span>
+        <span class="material-symbols-outlined">calendar_add_on</span>
+      <% end %>
+      <%# closeボタン %>
+      <button
+        data-action="click->fab#close"
+        class="flex items-center justify-center p-2 bg-gray-800 text-white rounded-full shadow hover:bg-gray-900 cursor-pointer">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+  </div>
+<% end %>

@@ -12,6 +12,7 @@ class PerformancesController < ApplicationController
   # ページタイトル設定
   before_action :set_page_title, except: %i[ destroy ]
   before_action :show_event_header, except: %i[ destroy ]
+  before_action :set_form_type, only: %i[ new create edit update ]
 
   def new
     @performance = Performance.new
@@ -123,6 +124,11 @@ class PerformancesController < ApplicationController
     def show_event_header
       # イベント用ヘッダー表示フラグ
       @show_event_header = true
+    end
+
+    # form_typeをセットする
+    def set_form_type
+      @form_type = "performance"
     end
 
     # create時に許可するパラメーター

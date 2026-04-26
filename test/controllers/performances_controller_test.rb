@@ -90,6 +90,18 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
+  # 作成時のバリデーションエラー時にform_typeが維持されていることを確認
+  test "should maintain form_type on validation error when creating performance" do
+    post event_performances_path(@event.event_key), params: {
+      performance: {
+        performer_id: ""
+      }
+    }
+    assert_response :unprocessable_entity
+    # form_typeに応じたselectタグが存在することを確認
+    assert_select 'select[name="performance[day_id]"]'
+  end
+
   # 出演情報編集ページ
   test "should get edit" do
     get edit_event_performance_url(@event.event_key, @performance)
@@ -157,6 +169,18 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
       }
     }
     assert_response :unprocessable_entity
+  end
+
+  # 編集時のバリデーションエラー時にform_typeが維持されていることを確認
+  test "should maintain form_type on validation error when editing performance" do
+    patch event_performance_path(@event.event_key, @performance), params: {
+      performance: {
+        duration: 30
+      }
+    }
+    assert_response :unprocessable_entity
+    # form_typeに応じたselectタグが存在することを確認
+    assert_select 'select[name="performance[day_id]"]'
   end
 
   # 出演情報削除

@@ -54,6 +54,8 @@ Rails.application.routes.draw do
     end
     resources :performers, only: [ :index, :new, :create, :show, :edit, :update, :destroy ]
     resources :performances, only: [ :new, :create, :edit, :update, :destroy ]
+    # AIタイムテーブル作成
+    resources :timetables, only: [ :new, :create ]
   end
 
   # タイムテーブルお気に入り登録・解除のルーティング
@@ -67,6 +69,9 @@ Rails.application.routes.draw do
   delete "/performer_favorites", to: "performer_favorites#destroy"
 
   get "/share", to: "share#show", as: :share
+
+  # FAB（右下に固定表示されるボタン）のルーティング
+  get "/fab", to: "fab#show", as: :fab
 
   # 利用規約・プライバシーポリシー
   get "/terms", to: "static_pages#terms"

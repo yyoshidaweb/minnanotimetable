@@ -7,6 +7,7 @@ class DaysController < ApplicationController
   before_action :set_day, only: %i[ destroy ]
   before_action :set_page_title, only: %i[ index new create ]
   before_action :show_event_header, except: %i[ destroy ]
+  before_action :set_form_type, only: %i[ new create ]
 
   # 開催日の追加と削除を行うページ
   def index
@@ -70,6 +71,11 @@ class DaysController < ApplicationController
     def show_event_header
       # イベント用ヘッダー表示フラグ
       @show_event_header = true
+    end
+
+    # form_typeをセットする
+    def set_form_type
+      @form_type = params[:form_type]
     end
 
     # 許可するパラメーター

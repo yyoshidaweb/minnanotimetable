@@ -9,6 +9,12 @@ class User < ApplicationRecord
   has_many :performance_favorites, dependent: :destroy
   has_many :favorite_performances, through: :performance_favorites, source: :performance
 
+  # ユーザーロールの定義
+  enum :role, {
+    free: 0, # 無料ユーザー
+    developer: 1 # 開発者
+  }
+
   # 予約語として使用禁止の username リスト
   MANUAL_RESERVED_USERNAMES = %w[
     sign_in
@@ -89,6 +95,37 @@ class User < ApplicationRecord
       end
   end
 
+  # AIタイムテーブル機能の上限回数を取得
+  def ai_timetable_monthly_limit
+    case role.to_sym
+    # 無料ユーザー
+    when :free
+      10
+    # 開発者
+    when :developer
+      300
+    end
+  end
+
+  # AIタイムテーブル機能の利用可能か判定
+  def ai_timetable_available?
+    reset_if_needed
+    ai_timetable_count < ai_timetable_monthly_limit
+  end
+
+  # カウント増加
+  def increment_ai_timetable_count!
+    reset_if_needed
+    increment!(:ai_timetable_count)
+  end
+
+  # AIタイムテーブル機能の残り利用回数を取得
+  def remaining_ai_timetable_count
+    reset_if_needed
+    limit = ai_timetable_monthly_limit
+    [ limit - ai_timetable_count, 0 ].max # マイナス防止
+  end
+
   private
 
   # ユーザー名を生成するメソッド
@@ -107,5 +144,15 @@ class User < ApplicationRecord
     if MANUAL_RESERVED_USERNAMES.include?(username)
       errors.add(:username, "は使用できません。別のIDを登録してください。")
     end
+  end
+
+  # 月が変わったらAIタイムテーブル機能のカウントをリセット
+  def reset_if_needed
+    return if ai_timetable_reset_at&.month == Date.current.month &&
+              ai_timetable_reset_at&.year == Date.current.year
+    update!(
+      ai_timetable_count: 0,
+      ai_timetable_reset_at: Date.current
+    )
   end
 end

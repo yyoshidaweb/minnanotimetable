@@ -12,6 +12,10 @@
         class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800
                 focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800" %>
     </div>
+    <%# フォームごとに表示を分岐するためにフォーム情報を送信する %>
+    <% if @form_type %>
+      <%= hidden_field_tag :form_type, @form_type %>
+    <% end %>
     <%# 作成ボタン %>
     <div>
       <%= f.submit "作成",

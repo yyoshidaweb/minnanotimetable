@@ -2,7 +2,8 @@
 <%= turbo_stream.update "modal", "" %>
 <%# 選択肢を更新する %>
 <%= turbo_stream.update "day_select" do %>
-  <%= render "performances/day_select",
+  <%= render "shared/day_select",
             days: @days,
-            selected_day: @day.id %>
+            selected_day: @day.id,
+            form_type: @form_type %>
 <% end %>

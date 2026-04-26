@@ -1,0 +1,26 @@
+{
+  "stages": [
+    {
+      "stage_name": "Stage1",
+      "performances": [
+        {
+          "performer_name": "Performer1",
+          "start_time": "10:00"
+        },
+        {
+          "performer_name": "Performer2",
+          "start_time": "11:00"
+        }
+      ]
+    },
+    {
+      "stage_name": "Stage2",
+      "performances": [
+        {
+          "performer_name": "Performer3",
+          "start_time": "12:00"
+        }
+      ]
+    }
+  ]
+}
