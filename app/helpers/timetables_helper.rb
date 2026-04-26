@@ -92,4 +92,9 @@ module TimetablesHelper
       ""
     end
   end
+
+  # イベントに出演情報があるか判定
+  def event_has_performances?
+    @event_has_performances
+  end
 end

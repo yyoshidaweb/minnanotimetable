@@ -16,6 +16,7 @@ class TimetablesController < ApplicationController
   # ビュー上でパフォーマンスを素早く検索できるようにHash化しておく
   before_action :set_performance_map, only: %i[ show ]
   before_action :set_remaining_ai_timetable_count, only: %i[ new create ]
+  before_action :event_has_performances?, only: %i[ new create ]
   # ページタイトルを設定
   before_action :set_page_title
   # イベントヘッダー表示フラグ
@@ -172,5 +173,10 @@ class TimetablesController < ApplicationController
       @remaining_ai_timetable_count = current_user.remaining_ai_timetable_count # 内部でreset_if_neededが呼ばれる
       @ai_timetable_count = current_user.ai_timetable_count
       @ai_timetable_monthly_limit = current_user.ai_timetable_monthly_limit
+    end
+
+    # イベントに出演情報があるか判定
+    def event_has_performances?
+      @event_has_performances = @event.performances.exists?
     end
 end

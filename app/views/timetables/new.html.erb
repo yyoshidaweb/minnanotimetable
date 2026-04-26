@@ -68,10 +68,12 @@
         </div>
         <%# 作成ボタン %>
         <div class="space-y-1">
-          <p class="text-red-600 text-sm">
-            ※この日の既存の出演情報がある場合はすべて削除後、新しいタイムテーブルが作成されます。
-          </p>
           <%= f.submit "作成",
+                  data: (
+                    event_has_performances? ? {
+                      turbo_confirm: "⚠️ このイベントには既に出演情報があります!\n選択した開催日の既存の出演情報はすべて削除されます。\n削除して続けますか？"
+                    } : {}
+                  ),
                   class: "w-full py-2 rounded-md bg-gray-800 text-white hover:bg-gray-900 transition cursor-pointer" %>
         </div>
       <% end %>
