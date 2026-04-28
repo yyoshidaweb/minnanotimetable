@@ -50,10 +50,7 @@
     </div>
     <%# 作成日時 %>
     <p class="text-xs text-gray-500 mt-4">
-      作成者：
-      <%= link_to show_user_path(@event.user.username), class: "underline" do %>
-        @<%= @event.user.username %>
-      <% end %>
+      作成者：@<%= @event.user.username %>
     </p>
     <%# 作成日時 %>
     <div class="text-xs text-gray-500 mt-4">
