@@ -12,9 +12,6 @@ Rails.application.routes.draw do
   # プレビュー環境でのログイン用ルーティング
   post "/preview_login", to: "preview_sessions#create"
 
-  # ユーザー詳細ページ（/users/:username）
-  get "/u/:username", to: "users#show", as: :show_user
-
   # トップページ
   root to: "home#index"
 
