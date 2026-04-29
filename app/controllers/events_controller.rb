@@ -23,7 +23,10 @@ class EventsController < ApplicationController
       @events = Event.recent_created_by(current_user)
       @page_title = "作成したタイムテーブル一覧"
     else
-      @events = Event.popular_for_all
+      future = Event.future_all.to_a
+      past   = Event.past_all.to_a
+      @events = (future + past)
+      @past_index = future.size # 未来イベントと過去イベントの境界インデックス
       @page_title = "みんなが作ったタイムテーブル"
     end
   end
