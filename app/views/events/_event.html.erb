@@ -1,0 +1,33 @@
+<%# タイムテーブルカードパーシャル %>
+<%= link_to show_timetable_path(event.event_key),
+                          class: "block bg-white shadow-md rounded-lg p-4 border hover:shadow-xl hover:bg-gray-50 transition" do %>
+  <%# タイトル %>
+  <p class="text-lg font-semibold text-gray-800 line-clamp-1">
+    <%= event.display_name %>
+  </p>
+  <%# 開催日 %>
+  <p class="text-sm text-gray-500">
+    <% if event.days.size >= 2 %>
+      開催日：<%= event.days.first.date.strftime("%-Y/%-m/%-d") %>
+      <span class="text-xs"><%= "ほか#{event.days.size - 1}日" %></span>
+    <% elsif event.days.any? %>
+      開催日：<%= event.days.first.date.strftime("%-Y/%-m/%-d") %>
+    <% else %>
+      開催日：未定
+    <% end %>
+  </p>
+  <div class="flex items-center text-gray-500">
+    <%# 作成者 %>
+    <p class="mr-2 text-xs">
+      作成者：@<%= event.user.username %>
+    </p>
+    <%# お気に入り数 %>
+    <p class="text-sm flex justify-center items-center">
+      <span class="material-symbols-outlined"
+                      style="font-size: 1rem;">
+        favorite
+      </span>
+      <%= event.event_favorites.size %>
+    </p>
+  </div>
+<% end %>

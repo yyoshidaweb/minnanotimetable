@@ -26,18 +26,40 @@ class Event < ApplicationRecord
   # 1ユーザー内のイベント名はユニーク
   validates :event_name_tag, presence: true, uniqueness: { scope: :user_id }
 
-  # みんなが作ったタイムテーブルを取得
-  scope :popular_for_all, -> {
+  # みんなが作ったタイムテーブルのうち、未来イベントを取得
+  scope :future_all, -> {
+    now = Time.current.to_date
     left_joins(:event_favorites)
       .left_joins(performers: :performances)
+      .left_joins(:days)
       .includes(:user, :days)
       .group(:id)
+      .having("MAX(days.date) >= ?", now)
       .order(
-        Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"),
-        Arel.sql("COUNT(DISTINCT performances.id) DESC"),
-        created_at: :desc
+        Arel.sql("CASE WHEN MAX(days.date) >= '#{now}' THEN MAX(days.date) END ASC"), # 現在日付に近い順
+        Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
+        Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
+        created_at: :desc # 作成日の降順
       )
-      .limit(100)
+      .limit(100) # 取得上限
+  }
+
+  # みんなが作ったタイムテーブルのうち、過去イベントを取得
+  scope :past_all, -> {
+    now = Time.current.to_date
+    left_joins(:event_favorites)
+      .left_joins(performers: :performances)
+      .left_joins(:days)
+      .includes(:user, :days)
+      .group(:id)
+      .having("MAX(days.date) < ?", now)
+      .order(
+        Arel.sql("CASE WHEN MAX(days.date) < '#{now}' THEN MAX(days.date) END DESC"), # 現在日付に近い順
+        Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
+        Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
+        created_at: :desc # 作成日の降順
+      )
+      .limit(100) # 取得上限
   }
 
   # トップページ用にみんなが作ったタイムテーブルを取得
