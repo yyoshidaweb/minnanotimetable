@@ -83,7 +83,7 @@ GEM
     bcrypt_pbkdf (1.1.2)
     bigdecimal (4.1.2)
     bindex (0.8.1)
-    bootsnap (1.24.3)
+    bootsnap (1.24.4)
       msgpack (~> 1.2)
     brakeman (8.0.4)
       racc
@@ -254,7 +254,7 @@ GEM
       base64
       cgi
       connection_pool
-    openssl (4.0.1)
+    openssl (4.0.2)
     orm_adapter (0.5.0)
     ostruct (0.6.3)
     parallel (1.27.0)
