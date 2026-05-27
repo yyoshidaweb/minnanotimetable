@@ -31,13 +31,7 @@
         <%= f.label :description, "説明", class: "block text-sm font-semibold text-gray-800 mb-1" %>
         <%= f.text_area :description,
           class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800
-                  focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800 min-h-24 resize-none",
-          rows: 3,
-          data: {
-            controller: "autosize",
-            action: "input->autosize#resize",
-            autosize_target: "textarea"
-          } %>
+                  focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800 min-h-32 resize-y overflow-y-auto"%>
       </div>
       <%# 住所 %>
       <div>

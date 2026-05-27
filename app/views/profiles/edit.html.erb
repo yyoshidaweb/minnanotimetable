@@ -10,17 +10,11 @@
       <%= f.label :name, "名前", class: "block text-sm font-semibold text-gray-800 mb-1" %>
       <%= f.text_field :name, class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800" %>
     </div>
-    <%# 説明欄入力（文字数に応じて自動リサイズ） %>
+    <%# 説明欄 %>
     <div>
       <%= f.label :description, "自己紹介", class: "block text-sm font-semibold text-gray-800 mb-1" %>
-      <%= f.text_area :description, 
-      rows: 1, 
-      class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800 min-h-24 resize-none",
-      data: {
-        controller: "autosize",
-        action: "input->autosize#resize",
-        autosize_target: "textarea"
-      } %>
+      <%= f.text_area :description,
+        class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800 min-h-32 resize-y overflow-y-auto" %>
     </div>
     <%# ユーザー名入力 %>
     <div>
