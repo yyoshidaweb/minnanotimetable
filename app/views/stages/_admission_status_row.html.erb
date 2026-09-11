@@ -4,7 +4,7 @@
   <% stages.each do |stage| %>
     <div class="stage-admission-status-col flex-1 flex justify-center items-center min-h-[1em] w-0 min-w-16 overflow-hidden border-b text-center px-px">
       <% if stage.admission_restricted? %>
-        <span class="w-full bg-yellow-400 text-white text-xs leading-tight font-bold px-0.5 py-px wrap-break-word">
+        <span class="w-full m-px bg-yellow-400 text-white text-xs leading-tight font-bold px-0.5 py-px text-left wrap-break-word">
           入場規制中
         </span>
       <% end %>
