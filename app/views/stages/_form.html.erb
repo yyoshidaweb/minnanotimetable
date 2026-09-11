@@ -45,6 +45,15 @@
       <%= f.text_field :address,
                 class: "w-full border border-gray-300 rounded-md px-3 py-2 text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-800 focus:border-gray-800" %>
     </div>
+    <%# 入場規制 %>
+    <div>
+      <label class="inline-flex items-center gap-2 cursor-pointer">
+        <%= f.check_box :admission_restricted,
+                  class: "rounded border-gray-300 text-gray-800 focus:ring-gray-800" %>
+        <span class="text-sm font-semibold text-gray-800">入場規制中</span>
+      </label>
+      <p class="mt-1 text-xs text-gray-500">オンにするとタイムテーブルのステージ名下にバッジを表示します。</p>
+    </div>
     <%# 送信ボタン %>
     <div>
       <%= f.submit editing ? "更新" : "作成",

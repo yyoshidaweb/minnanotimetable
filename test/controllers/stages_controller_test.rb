@@ -324,6 +324,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
       stage: {
         description: "説明更新",
         address: "住所更新",
+        admission_restricted: "1",
         stage_name_tag_attributes: { name: new_tag_name }
       }
     }
@@ -334,6 +335,34 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     # Stage 本体の値も更新されていること
     assert_equal "説明更新", stage.description
     assert_equal "住所更新", stage.address
+    assert stage.admission_restricted?
+  end
+
+  # 入場規制をオフに更新できる
+  test "should clear admission_restricted" do
+    stage = @event.stages.first
+    stage.update!(admission_restricted: true)
+
+    patch event_stage_url(@event.event_key, stage), params: {
+      stage: {
+        description: stage.description,
+        address: stage.address,
+        admission_restricted: "0",
+        stage_name_tag_attributes: { name: stage.stage_name_tag.name }
+      }
+    }
+    assert_redirected_to event_stage_path(@event.event_key, stage)
+    assert_not stage.reload.admission_restricted?
+  end
+
+  # ステージ詳細に入場規制バッジを表示する
+  test "show displays admission restricted badge" do
+    stage = @event.stages.first
+    stage.update!(admission_restricted: true)
+
+    get event_stage_url(@event.event_key, stage)
+    assert_response :success
+    assert_select "span", text: "入場規制中"
   end
 
   # ステージ名が空文字の場合は編集できない

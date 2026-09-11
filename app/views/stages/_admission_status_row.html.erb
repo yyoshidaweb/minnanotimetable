@@ -1,0 +1,13 @@
+<%# ステージ名直下の入場規制行（stickyにせず縦スクロールに追従しない） %>
+<div class="flex stage-admission-status-row">
+  <div class="sticky left-0 w-5 bg-white z-100"></div>
+  <% stages.each do |stage| %>
+    <div class="stage-admission-status-col stage-header-col flex-1 flex justify-center items-center h-[1em] w-0 min-w-16 overflow-hidden border-b text-center px-px">
+      <% if stage.admission_restricted? %>
+        <span class="inline-block max-w-full truncate bg-yellow-400 text-white text-[10px] leading-none font-bold px-0.5 py-px">
+          入場規制中
+        </span>
+      <% end %>
+    </div>
+  <% end %>
+</div>

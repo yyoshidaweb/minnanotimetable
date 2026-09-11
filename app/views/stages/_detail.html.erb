@@ -11,6 +11,11 @@
 <h1 class="text-xl font-bold text-gray-900 mb-2">
   <%= @stage.stage_name_tag.name %>
 </h1>
+<% if @stage.admission_restricted? %>
+  <p class="mb-4">
+    <span class="inline-block bg-yellow-400 text-white text-xs font-bold px-2 py-0.5">入場規制中</span>
+  </p>
+<% end %>
 <%# 説明 %>
 <% if @stage.description.present? %>
   <div class="mb-6">

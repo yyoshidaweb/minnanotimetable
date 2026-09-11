@@ -31,4 +31,15 @@ class StageTest < ActiveSupport::TestCase
     new_stage.save!
     assert_equal max_position + 1, new_stage.position
   end
+
+  # 入場規制はデフォルトでオフ
+  test "admission_restricted defaults to false" do
+    assert_not @stage.admission_restricted?
+  end
+
+  # 入場規制フラグを更新できる
+  test "updates admission_restricted" do
+    assert @stage.update(admission_restricted: true)
+    assert @stage.reload.admission_restricted?
+  end
 end
