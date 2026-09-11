@@ -93,6 +93,16 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     assert_select ".stage-admission-status-col", count: @event.stages.count
   end
 
+  # 入場規制行はステージ名ヘッダーと同じsticky領域内に置く
+  test "admission status row is inside sticky stage header" do
+    get show_timetable_path(@event.event_key)
+    assert_response :success
+    assert_select "div.sticky.top-0.z-110" do
+      assert_select "a.stage-header-col"
+      assert_select ".stage-admission-status-row"
+    end
+  end
+
   # オーナーには下部アクションボタンが常時表示される
   test "owner sees bottom action buttons on timetable" do
     get show_timetable_path(@event.event_key)
