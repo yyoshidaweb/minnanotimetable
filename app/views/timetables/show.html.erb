@@ -33,18 +33,18 @@
         <div class="flex sticky top-0 z-110 bg-white">
           <%# 左上空白 %>
           <div class="sticky left-0 w-5 bg-white z-100"></div>
-          <%# ステージヘッダー %>
+          <%# ステージヘッダー（バッジも含めて詳細モーダルへ） %>
           <% @stages.each do |stage| %>
-            <div class="stage-header-col flex-1 flex flex-col w-0 min-w-16 overflow-hidden z-95 border-b">
-              <%= link_to event_stage_path(@event.event_key, stage),
-                  data: { turbo_frame: "modal" },
-                  class: "flex justify-center items-center min-h-8 max-h-12 text-xs font-bold text-center p-px" do %>
+            <%= link_to event_stage_path(@event.event_key, stage),
+                data: { turbo_frame: "modal" },
+                class: "stage-header-col flex-1 flex flex-col w-0 min-w-16 overflow-hidden z-95 border-b" do %>
+              <span class="flex justify-center items-center min-h-8 max-h-12 text-xs font-bold text-center p-px">
                 <span class="line-clamp-3 wrap-break-word w-full"><%= stage.stage_name_tag.name %></span>
-              <% end %>
+              </span>
               <% if stage.admission_restricted? %>
                 <%= render "stages/admission_restricted_badge" %>
               <% end %>
-            </div>
+            <% end %>
           <% end %>
         </div>
         <%# ボディ %>
