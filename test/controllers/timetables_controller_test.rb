@@ -68,7 +68,7 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
   test "performance cards and stage names open detail in modal" do
     get show_timetable_path(@event.event_key)
     assert_response :success
-    assert_select "a.stage-header-col[href=?][data-turbo-frame=modal]",
+    assert_select "div.stage-header-col a[href=?][data-turbo-frame=modal]",
                   event_stage_path(@event.event_key, @performance1.stage)
     assert_select "a[href=?][data-turbo-frame=modal]",
                   event_performer_path(@event.event_key, @performance1.performer)
@@ -82,24 +82,27 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
 
     get show_timetable_path(@event.event_key)
     assert_response :success
-    assert_select "span", text: "入場規制中", count: 1
+    assert_select "span.stage-admission-restricted-badge", text: "入場規制中", count: 1
   end
 
-  # 入場規制オフのときはバッジを出さない（余白行は確保）
+  # 入場規制オフのときはバッジを出さない
   test "hides admission restricted badge when not restricted" do
     get show_timetable_path(@event.event_key)
     assert_response :success
-    assert_select "span", text: "入場規制中", count: 0
-    assert_select ".stage-admission-status-col", count: @event.stages.count
+    assert_select "span.stage-admission-restricted-badge", count: 0
   end
 
-  # 入場規制行はステージ名ヘッダーと同じsticky領域内に置く
-  test "admission status row is inside sticky stage header" do
+  # 入場規制バッジはstickyなステージヘッダー列の中にだけ置く
+  test "admission restricted badge is inside sticky stage header column" do
+    @performance1.stage.update!(admission_restricted: true)
+
     get show_timetable_path(@event.event_key)
     assert_response :success
-    assert_select "div.sticky.top-0.z-110" do
-      assert_select "a.stage-header-col"
-      assert_select ".stage-admission-status-row"
+    assert_select "div.flex.sticky.top-0.z-110" do
+      assert_select "div.stage-header-col" do
+        assert_select "a[data-turbo-frame=modal]"
+        assert_select "span.stage-admission-restricted-badge", text: "入場規制中"
+      end
     end
   end
 

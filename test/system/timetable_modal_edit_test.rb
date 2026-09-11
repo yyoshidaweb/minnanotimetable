@@ -38,7 +38,7 @@ class TimetableModalEditTest < ApplicationSystemTestCase
   test "タイムテーブルのステージモーダルから編集フォームへ差し替えられる" do
     visit show_timetable_path(@event.event_key)
 
-    find("a.stage-header-col[data-turbo-frame='modal']", text: @stage.display_name).click
+    find("div.stage-header-col a[data-turbo-frame='modal']", text: @stage.display_name).click
 
     within "#modal" do
       assert_text @stage.display_name
@@ -74,7 +74,7 @@ class TimetableModalEditTest < ApplicationSystemTestCase
     new_name = "モーダル更新後のステージ"
     visit show_timetable_path(@event.event_key)
 
-    find("a.stage-header-col[data-turbo-frame='modal']", text: @stage.display_name).click
+    find("div.stage-header-col a[data-turbo-frame='modal']", text: @stage.display_name).click
 
     within "#modal" do
       find("a[href='#{edit_event_stage_path(@event.event_key, @stage)}'][data-action='click->modal#navigate']").click
@@ -108,7 +108,7 @@ class TimetableModalEditTest < ApplicationSystemTestCase
   test "モーダルからステージ名が空だとエラーがモーダル内に表示される" do
     visit show_timetable_path(@event.event_key)
 
-    find("a.stage-header-col[data-turbo-frame='modal']", text: @stage.display_name).click
+    find("div.stage-header-col a[data-turbo-frame='modal']", text: @stage.display_name).click
 
     within "#modal" do
       find("a[href='#{edit_event_stage_path(@event.event_key, @stage)}'][data-action='click->modal#navigate']").click

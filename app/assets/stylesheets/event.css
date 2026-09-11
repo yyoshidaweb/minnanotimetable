@@ -24,17 +24,6 @@
     background-color: #e5e7eb;
 }
 
-/* 入場規制行はボディと同じ配色（ヘッダー色は使わない） */
-.stage-admission-status-col:nth-child(odd) {
-    /* gray-100 */
-    background-color: #f3f4f6;
-}
-
-.stage-admission-status-col:nth-child(even) {
-    /* gray-200 */
-    background-color: #e5e7eb;
-}
-
 /* タイムテーブルの区切り線（10分・1時間） */
 .timetable-body-col {
     /* 必ず表示させるために強制GPUレイヤー化 */

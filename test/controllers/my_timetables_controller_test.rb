@@ -37,7 +37,7 @@ class MyTimetablesControllerTest < ActionDispatch::IntegrationTest
   test "performance cards and stage names open detail in modal" do
     get show_my_timetable_path(event_key: @event.event_key, username: @user.username)
     assert_response :success
-    assert_select "a.stage-header-col[href=?][data-turbo-frame=modal]",
+    assert_select "div.stage-header-col a[href=?][data-turbo-frame=modal]",
                   event_stage_path(@event.event_key, @performance1.stage)
     assert_select "a[href=?][data-turbo-frame=modal]",
                   event_performer_path(@event.event_key, @performance1.performer)
