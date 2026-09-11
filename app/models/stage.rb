@@ -1,5 +1,8 @@
 class Stage < ApplicationRecord
   before_create :set_position_to_last
+  # マイグレーション直後にスキーマキャッシュが古いと、SELECT * では
+  # admission_restricted を読めても UPDATE 対象から除外されるため再読込する
+  before_save :ensure_admission_restricted_column_known
 
   belongs_to :event
   belongs_to :stage_name_tag
@@ -30,5 +33,12 @@ class Stage < ApplicationRecord
     def set_position_to_last
       self.position =
         event.stages.maximum(:position).to_i + 1
+    end
+
+    # admission_restricted が column_names に無いときはスキーマを再読込する
+    def ensure_admission_restricted_column_known
+      return if self.class.column_names.include?("admission_restricted")
+
+      self.class.reset_column_information
     end
 end

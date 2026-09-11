@@ -355,6 +355,27 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     assert_not stage.reload.admission_restricted?
   end
 
+  # モーダルから入場規制をオンにすると保存される（説明・住所が空でも）
+  test "modal update persists admission_restricted with blank description and address" do
+    stage = @event.stages.first
+    stage.update!(admission_restricted: false, description: nil, address: nil)
+
+    patch event_stage_url(@event.event_key, stage), params: {
+      from_modal: "1",
+      stage: {
+        description: "",
+        address: "",
+        admission_restricted: "1",
+        stage_name_tag_attributes: {
+          name: stage.stage_name_tag.name,
+          id: stage.stage_name_tag_id
+        }
+      }
+    }
+    assert_response :redirect
+    assert stage.reload.admission_restricted?
+  end
+
   # ステージ詳細に入場規制バッジを表示する
   test "show displays admission restricted badge" do
     stage = @event.stages.first
