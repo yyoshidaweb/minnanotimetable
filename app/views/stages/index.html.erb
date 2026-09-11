@@ -22,9 +22,14 @@
       <%= link_to event_stage_path(@event.event_key, stage),
                   class: "bg-white shadow-md rounded-lg p-4 border hover:bg-gray-50 transition" do %>
         <%# タイトル %>
-        <p class="text-lg font-semibold text-gray-800 line-clamp-2">
-          <%= stage.stage_name_tag.name %>
-        </p>
+        <div class="flex flex-wrap items-center gap-2">
+          <p class="text-lg font-semibold text-gray-800 line-clamp-2 min-w-0">
+            <%= stage.stage_name_tag.name %>
+          </p>
+          <% if stage.admission_restricted? %>
+            <%= render "stages/admission_restricted_badge" %>
+          <% end %>
+        </div>
         <%# 説明文 %>
         <% if stage.description.present? %>
           <p class="text-gray-700 mt-2 line-clamp-2">

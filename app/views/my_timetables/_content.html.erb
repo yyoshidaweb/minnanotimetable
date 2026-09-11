@@ -18,7 +18,7 @@
                 <span class="line-clamp-3 wrap-break-word w-full"><%= stage.stage_name_tag.name %></span>
               </span>
               <% if stage.admission_restricted? %>
-                <%= render "stages/admission_restricted_badge" %>
+                <%= render "stages/admission_restricted_badge", variant: :timetable %>
               <% end %>
             <% end %>
           <% end %>

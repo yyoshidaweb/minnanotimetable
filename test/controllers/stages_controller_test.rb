@@ -383,7 +383,26 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
 
     get event_stage_url(@event.event_key, stage)
     assert_response :success
-    assert_select "span", text: "入場規制中"
+    assert_select "span.stage-admission-restricted-badge", text: "入場規制中"
+  end
+
+  # ステージ一覧に入場規制バッジを表示する
+  test "index displays admission restricted badge" do
+    stage = @event.stages.first
+    stage.update!(admission_restricted: true)
+
+    get event_stages_url(@event.event_key)
+    assert_response :success
+    assert_select "span.stage-admission-restricted-badge", text: "入場規制中"
+  end
+
+  # 入場規制オフのステージ一覧にはバッジを出さない
+  test "index hides admission restricted badge when not restricted" do
+    @event.stages.update_all(admission_restricted: false)
+
+    get event_stages_url(@event.event_key)
+    assert_response :success
+    assert_select "span.stage-admission-restricted-badge", count: 0
   end
 
   # ステージ名が空文字の場合は編集できない

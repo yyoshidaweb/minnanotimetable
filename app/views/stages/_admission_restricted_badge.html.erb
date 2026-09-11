@@ -1,5 +1,13 @@
-<%# タイムテーブル用の入場規制バッジ（ステージヘッダーリンク内に置き、クリックで詳細を開く） %>
-<%# ステージ名の p-px と同じく左右1pxずつ空け、mx-auto で中央配置する %>
-<span class="stage-admission-restricted-badge mt-auto mb-px mx-auto flex w-[calc(100%-2px)] items-center justify-center box-border bg-yellow-400 text-white text-xs leading-tight font-bold px-px py-px text-center wrap-break-word">
-  入場規制中
-</span>
+<%# locals: variant (:timetable / :inline) %>
+<% variant = local_assigns.fetch(:variant, :inline) %>
+<% if variant == :timetable %>
+  <%# タイムテーブル用（ステージヘッダーリンク内。左右1px余白で中央配置） %>
+  <span class="stage-admission-restricted-badge mt-auto mb-px mx-auto flex w-[calc(100%-2px)] items-center justify-center box-border bg-yellow-400 text-white text-xs leading-tight font-bold px-px py-px text-center wrap-break-word">
+    入場規制中
+  </span>
+<% else %>
+  <%# 一覧・詳細などインライン表示用 %>
+  <span class="stage-admission-restricted-badge inline-flex shrink-0 items-center justify-center bg-yellow-400 text-white text-xs font-bold px-1.5 py-0.5">
+    入場規制中
+  </span>
+<% end %>
