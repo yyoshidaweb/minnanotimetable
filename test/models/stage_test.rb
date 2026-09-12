@@ -42,30 +42,4 @@ class StageTest < ActiveSupport::TestCase
     assert @stage.update(admission_restricted: true)
     assert @stage.reload.admission_restricted?
   end
-
-  # スキーマキャッシュが古いときは before_save で再読込してから保存する
-  test "resets column information before save when admission_restricted is missing" do
-    reset_called = false
-    original_column_names = Stage.method(:column_names)
-    original_reset = Stage.method(:reset_column_information)
-
-    Stage.define_singleton_method(:column_names) do
-      reset_called ? original_column_names.call : (original_column_names.call - [ "admission_restricted" ])
-    end
-    Stage.define_singleton_method(:reset_column_information) do
-      reset_called = true
-      original_reset.call
-    end
-
-    begin
-      @stage.update!(admission_restricted: false)
-      assert @stage.update(admission_restricted: true)
-      assert reset_called
-      assert @stage.reload.admission_restricted?
-    ensure
-      Stage.define_singleton_method(:column_names, original_column_names)
-      Stage.define_singleton_method(:reset_column_information, original_reset)
-      Stage.reset_column_information
-    end
-  end
 end

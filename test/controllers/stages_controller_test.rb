@@ -386,14 +386,17 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     assert_select "span.stage-admission-restricted-badge", text: "入場規制中"
   end
 
-  # ステージ一覧に入場規制バッジを表示する
-  test "index displays admission restricted badge" do
+  # ステージ一覧に入場規制バッジを表示する（ステージ名の下）
+  test "index displays admission restricted badge below stage name" do
     stage = @event.stages.first
     stage.update!(admission_restricted: true)
 
     get event_stages_url(@event.event_key)
     assert_response :success
-    assert_select "span.stage-admission-restricted-badge", text: "入場規制中"
+    assert_select "div.flex.flex-col.items-start" do
+      assert_select "p", text: stage.stage_name_tag.name
+      assert_select "span.stage-admission-restricted-badge", text: "入場規制中"
+    end
   end
 
   # 入場規制オフのステージ一覧にはバッジを出さない
