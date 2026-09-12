@@ -4,6 +4,14 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   # Devise のテストヘルパーをインクルード
   include Devise::Test::IntegrationHelpers
 
+  setup do
+    @original_is_pull_request = ENV["IS_PULL_REQUEST"]
+  end
+
+  teardown do
+    restore_env("IS_PULL_REQUEST", @original_is_pull_request)
+  end
+
   # トップページ表示
   test "should get index" do
     get "/"
@@ -42,10 +50,23 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
 
   # 本番ではGoogle AdSenseスクリプトがheadに含まれる
   test "index includes AdSense script in production" do
+    ENV.delete("IS_PULL_REQUEST")
+
     Rails.stub(:env, ActiveSupport::StringInquirer.new("production")) do
       get "/"
       assert_select "script[src=?][crossorigin=anonymous]",
                     "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8583631849079682"
+    end
+  end
+
+  # PRプレビューではGoogle AnalyticsとAdSenseを読み込まない
+  test "index does not include AdSense or Analytics scripts in preview" do
+    ENV["IS_PULL_REQUEST"] = "true"
+
+    Rails.stub(:env, ActiveSupport::StringInquirer.new("production")) do
+      get "/"
+      assert_not_includes response.body, "pagead2.googlesyndication.com"
+      assert_not_includes response.body, "googletagmanager.com/gtag/js"
     end
   end
 
@@ -101,4 +122,13 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     get "/"
     assert_not_includes response.body, new_name_confirmation_path
   end
+
+  private
+    def restore_env(key, value)
+      if value.nil?
+        ENV.delete(key)
+      else
+        ENV[key] = value
+      end
+    end
 end
