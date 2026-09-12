@@ -40,6 +40,21 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_select "html[lang=ja]"
   end
 
+  # 本番ではGoogle AdSenseスクリプトがheadに含まれる
+  test "index includes AdSense script in production" do
+    Rails.stub(:env, ActiveSupport::StringInquirer.new("production")) do
+      get "/"
+      assert_select "script[src=?][crossorigin=anonymous]",
+                    "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8583631849079682"
+    end
+  end
+
+  # テスト環境ではGoogle AdSenseスクリプトを読み込まない
+  test "index does not include AdSense script outside production" do
+    get "/"
+    assert_not_includes response.body, "pagead2.googlesyndication.com"
+  end
+
   # トップページにサイト名とサイトリンク対象ページの構造化データがある
   test "index includes website structured data with sitelinks" do
     get "/"
