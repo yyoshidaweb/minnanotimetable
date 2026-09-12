@@ -324,6 +324,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
       stage: {
         description: "説明更新",
         address: "住所更新",
+        admission_restricted: "1",
         stage_name_tag_attributes: { name: new_tag_name }
       }
     }
@@ -334,6 +335,77 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     # Stage 本体の値も更新されていること
     assert_equal "説明更新", stage.description
     assert_equal "住所更新", stage.address
+    assert stage.admission_restricted?
+  end
+
+  # 入場規制をオフに更新できる
+  test "should clear admission_restricted" do
+    stage = @event.stages.first
+    stage.update!(admission_restricted: true)
+
+    patch event_stage_url(@event.event_key, stage), params: {
+      stage: {
+        description: stage.description,
+        address: stage.address,
+        admission_restricted: "0",
+        stage_name_tag_attributes: { name: stage.stage_name_tag.name }
+      }
+    }
+    assert_redirected_to event_stage_path(@event.event_key, stage)
+    assert_not stage.reload.admission_restricted?
+  end
+
+  # モーダルから入場規制をオンにすると保存される（説明・住所が空でも）
+  test "modal update persists admission_restricted with blank description and address" do
+    stage = @event.stages.first
+    stage.update!(admission_restricted: false, description: nil, address: nil)
+
+    patch event_stage_url(@event.event_key, stage), params: {
+      from_modal: "1",
+      stage: {
+        description: "",
+        address: "",
+        admission_restricted: "1",
+        stage_name_tag_attributes: {
+          name: stage.stage_name_tag.name,
+          id: stage.stage_name_tag_id
+        }
+      }
+    }
+    assert_response :redirect
+    assert stage.reload.admission_restricted?
+  end
+
+  # ステージ詳細に入場規制バッジを表示する
+  test "show displays admission restricted badge" do
+    stage = @event.stages.first
+    stage.update!(admission_restricted: true)
+
+    get event_stage_url(@event.event_key, stage)
+    assert_response :success
+    assert_select "span.stage-admission-restricted-badge", text: "入場規制中"
+  end
+
+  # ステージ一覧に入場規制バッジを表示する（ステージ名の下）
+  test "index displays admission restricted badge below stage name" do
+    stage = @event.stages.first
+    stage.update!(admission_restricted: true)
+
+    get event_stages_url(@event.event_key)
+    assert_response :success
+    assert_select "div.flex.flex-col.items-start" do
+      assert_select "p", text: stage.stage_name_tag.name
+      assert_select "span.stage-admission-restricted-badge", text: "入場規制中"
+    end
+  end
+
+  # 入場規制オフのステージ一覧にはバッジを出さない
+  test "index hides admission restricted badge when not restricted" do
+    @event.stages.update_all(admission_restricted: false)
+
+    get event_stages_url(@event.event_key)
+    assert_response :success
+    assert_select "span.stage-admission-restricted-badge", count: 0
   end
 
   # ステージ名が空文字の場合は編集できない

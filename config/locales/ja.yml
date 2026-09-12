@@ -41,6 +41,7 @@ ja:
 
       stage:
         address: "住所"
+        admission_restricted: "入場規制中"
         description: "説明"
         event_id: "タイムテーブル"
         position: "表示順"

@@ -75,6 +75,37 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     assert_select "#favorite_marker_performance_#{@performance1.id}"
   end
 
+  # 入場規制中のステージはバッジを表示し、規制なしでは出さない
+  test "shows admission restricted badge under stage name" do
+    restricted_stage = @performance1.stage
+    restricted_stage.update!(admission_restricted: true)
+
+    get show_timetable_path(@event.event_key)
+    assert_response :success
+    assert_select "span.stage-admission-restricted-badge", text: "入場規制中", count: 1
+  end
+
+  # 入場規制オフのときはバッジを出さない
+  test "hides admission restricted badge when not restricted" do
+    get show_timetable_path(@event.event_key)
+    assert_response :success
+    assert_select "span.stage-admission-restricted-badge", count: 0
+  end
+
+  # 入場規制バッジはstickyなステージヘッダーリンクの中に置く（クリックで詳細を開く）
+  test "admission restricted badge is inside sticky stage header link" do
+    @performance1.stage.update!(admission_restricted: true)
+
+    get show_timetable_path(@event.event_key)
+    assert_response :success
+    assert_select "div.flex.sticky.top-0.z-110" do
+      assert_select "a.stage-header-col[href=?][data-turbo-frame=modal]",
+                    event_stage_path(@event.event_key, @performance1.stage) do
+        assert_select "span.stage-admission-restricted-badge", text: "入場規制中"
+      end
+    end
+  end
+
   # オーナーには下部アクションボタンが常時表示される
   test "owner sees bottom action buttons on timetable" do
     get show_timetable_path(@event.event_key)

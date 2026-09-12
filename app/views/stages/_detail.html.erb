@@ -11,6 +11,11 @@
 <h1 class="text-xl font-bold text-gray-900 mb-2">
   <%= @stage.stage_name_tag.name %>
 </h1>
+<% if @stage.admission_restricted? %>
+  <p class="mb-4">
+    <%= render "stages/admission_restricted_badge" %>
+  </p>
+<% end %>
 <%# 説明 %>
 <% if @stage.description.present? %>
   <div class="mb-6">

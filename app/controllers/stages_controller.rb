@@ -193,6 +193,7 @@ class StagesController < ApplicationController
       params.require(:stage).permit(
         :description,
         :address,
+        :admission_restricted,
         :position,
         stage_name_tag_attributes: [ :name ] # stage_name_tagに対するエラーの伝播を許可
       )
