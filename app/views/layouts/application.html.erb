@@ -44,7 +44,7 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <%# Google Analyticsを利用するために必要なコード（本番環境のみ実行される） %>
+    <%# Google Analytics / AdSense（本番環境のみ。PRプレビューでは外部通信を止める） %>
     <% if Rails.env.production? && !preview_environment? %>
       <%# Google tag (gtag.js) %>
       <script async src="https://www.googletagmanager.com/gtag/js?id=G-X5QSF6431B"></script>
@@ -55,6 +55,9 @@
 
         gtag('config', 'G-X5QSF6431B');
       </script>
+      <%# Google AdSense %>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8583631849079682"
+              crossorigin="anonymous"></script>
     <% end %>
   </head>
   <body class="<%= body_element_class %>">
