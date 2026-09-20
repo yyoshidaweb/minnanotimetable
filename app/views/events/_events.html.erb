@@ -1,5 +1,5 @@
 <%# タイムテーブル一覧パーシャル %>
-<% if @show_upcoming_heading || @past_index.present? %>
+<% if @show_upcoming_heading || @past_index.present? || @without_timetable_ready_index.present? %>
   <% if @show_upcoming_heading %>
     <h2 class="col-span-1 sm:col-span-2 lg:col-span-3 text-gray-800 font-semibold text-xl">
       もうすぐ開催されるイベント
@@ -9,6 +9,11 @@
     <% if @past_index.present? && i == @past_index %>
       <h2 class="<%= @show_upcoming_heading ? "mt-6 " : "" %>col-span-1 sm:col-span-2 lg:col-span-3 text-gray-800 font-semibold text-xl">
         過去のイベント
+      </h2>
+    <% end %>
+    <% if @without_timetable_ready_index.present? && i == @without_timetable_ready_index %>
+      <h2 class="<%= (@show_upcoming_heading || i.positive?) ? "mt-6 " : "" %>col-span-1 sm:col-span-2 lg:col-span-3 text-gray-800 font-semibold text-xl">
+        出演情報なし
       </h2>
     <% end %>
     <%= render "events/event", event: event %>

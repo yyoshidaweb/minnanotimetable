@@ -91,7 +91,12 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should paginate public events with infinite scroll frames" do
-    create_events_for(@user, Event::PER_PAGE + 1, day_date: Date.current + 10.days)
+    create_events_for(
+      @user,
+      Event::PER_PAGE + 1,
+      day_date: Date.current + 10.days,
+      with_ready_performance: true
+    )
 
     get events_path
     assert_response :success
@@ -107,6 +112,61 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "turbo-frame#events_page_#{last_page}"
     assert_select "turbo-frame#events_page_#{last_page + 1}", count: 0
+  end
+
+  # 開催日あり・描画可能な出演情報なしの公開イベントは「出演情報なし」に表示する
+  test "should show public events without ready performances under that heading" do
+    empty_name = "出演なし公開#{SecureRandom.hex(4)}"
+    empty_event = @user.events.create!(
+      event_key: "empty-ready-index-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: empty_name),
+      description: "描画可能出演なし公開",
+      visibility: :public,
+      created_at: Time.current
+    )
+    empty_event.days.create!(date: Date.current + 1.day)
+    assert_equal 0, empty_event.performances.count
+
+    last_page = last_public_events_page
+    found = false
+    (1..last_page).each do |page|
+      get events_path(page: page)
+      assert_response :success
+      if response.body.include?(empty_name)
+        assert_select "h2", text: "出演情報なし"
+        found = true
+        break
+      end
+    end
+    assert found, "expected event without ready performances under that heading"
+  end
+
+  # 開催日未設定の公開イベントも「出演情報なし」セクションに表示する
+  test "should show public events without days under without-ready heading" do
+    empty_name = "出演ゼロ公開#{SecureRandom.hex(4)}"
+    empty_event = @user.events.create!(
+      event_key: "empty-public-index-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: empty_name),
+      description: "出演情報なし公開",
+      visibility: :public,
+      created_at: Time.current
+    )
+    assert_equal 0, empty_event.performances.count
+    assert_equal 0, empty_event.days.count
+
+    last_page = last_public_events_page
+    found = false
+    (1..last_page).each do |page|
+      get events_path(page: page)
+      assert_response :success
+      if response.body.include?(empty_name)
+        assert_select "h2", text: "出演情報なし"
+        assert_select "p", text: /開催日：未定/
+        found = true
+        break
+      end
+    end
+    assert found, "expected undated public event under without-ready heading"
   end
 
   test "should paginate favorite events with infinite scroll frames" do
@@ -129,7 +189,12 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should show past heading when public list includes past events" do
-    create_events_for(@user, Event::PER_PAGE, day_date: Date.current - 14.days)
+    create_events_for(
+      @user,
+      Event::PER_PAGE,
+      day_date: Date.current - 14.days,
+      with_ready_performance: true
+    )
 
     page = 1
     found = false
@@ -406,7 +471,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   # ページング検証用にイベントを一括作成する
-  def create_events_for(user, count, day_date: nil)
+  def create_events_for(user, count, day_date: nil, with_ready_performance: false)
     Array.new(count) do |i|
       tag = EventNameTag.create!(name: "paging-#{user.id}-#{i}-#{SecureRandom.hex(4)}")
       event = user.events.create!(
@@ -415,7 +480,24 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
         description: "ページングテスト",
         visibility: :public
       )
-      event.days.create!(date: day_date) if day_date
+      if day_date
+        day = event.days.create!(date: day_date)
+        if with_ready_performance
+          stage = event.stages.create!(
+            stage_name_tag: StageNameTag.create!(name: "paging-stage-#{SecureRandom.hex(4)}")
+          )
+          performer = event.performers.create!(
+            performer_name_tag: PerformerNameTag.create!(name: "paging-performer-#{SecureRandom.hex(4)}")
+          )
+          Performance.create!(
+            performer: performer,
+            day: day,
+            stage: stage,
+            start_time: "12:00",
+            duration: 60
+          )
+        end
+      end
       event
     end
   end
