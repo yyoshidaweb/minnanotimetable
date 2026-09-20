@@ -71,6 +71,19 @@ class EventTest < ActiveSupport::TestCase
     assert_equal 1, result[:events].size
   end
 
+  test "paginate_public_all hides upcoming heading when there are no future events" do
+    Event.future_all.find_each do |event|
+      event.days.order(:id).each_with_index do |day, index|
+        day.update!(date: Date.current - 30.days - index.days)
+      end
+    end
+    create_list_events(users(:one), 1, day_date: Date.current - 7.days)
+
+    page1 = Event.paginate_public_all(page: 1)
+    assert_not page1[:show_upcoming_heading]
+    assert_equal 0, page1[:past_index]
+  end
+
   test "paginate_public_all paginates and sets section headings" do
     create_list_events(users(:one), Event::PER_PAGE + 5, day_date: Date.current + 40.days)
 

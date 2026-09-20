@@ -49,7 +49,8 @@ class Event < ApplicationRecord
         Arel.sql("CASE WHEN MAX(days.date) >= '#{now}' THEN MAX(days.date) END ASC"), # 現在日付に近い順
         Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
         Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
-        created_at: :desc # 作成日の降順
+        created_at: :desc, # 作成日の降順
+        id: :asc # ページング用の安定した全順序
       )
   }
 
@@ -67,7 +68,8 @@ class Event < ApplicationRecord
         Arel.sql("CASE WHEN MAX(days.date) < '#{now}' THEN MAX(days.date) END DESC"), # 現在日付に近い順
         Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
         Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
-        created_at: :desc # 作成日の降順
+        created_at: :desc, # 作成日の降順
+        id: :asc # ページング用の安定した全順序
       )
   }
 
@@ -80,7 +82,7 @@ class Event < ApplicationRecord
   scope :recent_created_by, ->(user) {
     where(user: user)
       .includes(:user, :days, :event_name_tag, :event_favorites)
-      .order(created_at: :desc)
+      .order(created_at: :desc, id: :asc) # idはページング用の安定した全順序
   }
 
   # トップページ用に作成したタイムテーブルを取得
@@ -95,7 +97,7 @@ class Event < ApplicationRecord
       .where(event_favorites: { user_id: user.id })
       .where("events.visibility != ? OR events.user_id = ?", visibilities[:private], user.id)
       .includes(:user, :days, :event_name_tag, :event_favorites)
-      .order("event_favorites.created_at DESC")
+      .order("event_favorites.created_at DESC, events.id ASC") # idはページング用の安定した全順序
   }
 
   # トップページ用にお気に入りタイムテーブルを取得
@@ -156,7 +158,7 @@ class Event < ApplicationRecord
       events: events,
       page: page,
       next_page: (offset + events.size) < total ? page + 1 : nil,
-      show_upcoming_heading: page == 1,
+      show_upcoming_heading: page == 1 && future_count.positive?,
       past_index: past_index
     }
   end
