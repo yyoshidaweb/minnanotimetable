@@ -46,7 +46,8 @@ class Event < ApplicationRecord
       .group(:id)
       .having("MAX(days.date) >= ?", now)
       .order(
-        Arel.sql("MAX(days.date) ASC"), # 現在日付に近い順（HAVINGで未来のみに絞済み）
+        # 直近の開催日（未来日のうち最も早い日）で並べる
+        Arel.sql(sanitize_sql_array([ "MIN(CASE WHEN days.date >= ? THEN days.date END) ASC", now ])),
         Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
         Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
         created_at: :desc, # 作成日の降順
@@ -185,9 +186,10 @@ class Event < ApplicationRecord
       [ page.to_i, 1 ].max
     end
 
-    # group(:id) 付きスコープの件数を返す
+    # group(:id) 付きスコープの件数を返す（Hash展開を避けてスカラー件数にする）
     def grouped_event_count(scope)
-      scope.unscope(:includes, :order).count.size
+      grouped_scope = scope.unscope(:includes, :order).select(:id)
+      unscoped.from(grouped_scope, :events).count
     end
   end
 end

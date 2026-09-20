@@ -1,6 +1,28 @@
 require "test_helper"
 
 class EventTest < ActiveSupport::TestCase
+  test "future_all orders by nearest upcoming day not last day" do
+    near = users(:developer).events.create!(
+      event_key: "near-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "near-#{SecureRandom.hex(4)}"),
+      description: "近い未来日を含む複数日",
+      visibility: :public
+    )
+    near.days.create!(date: Date.current + 1.day)
+    near.days.create!(date: Date.current + 30.days)
+
+    far = users(:developer).events.create!(
+      event_key: "far-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "far-#{SecureRandom.hex(4)}"),
+      description: "遠い未来日のみ",
+      visibility: :public
+    )
+    far.days.create!(date: Date.current + 10.days)
+
+    futures = Event.future_all.to_a
+    assert_operator futures.index(near), :<, futures.index(far)
+  end
+
   test "future_all excludes non-public events" do
     assert_not_includes Event.future_all, events(:unpublished)
     assert_not_includes Event.future_all, events(:unlisted)
