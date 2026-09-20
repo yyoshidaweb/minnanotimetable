@@ -46,7 +46,7 @@ class Event < ApplicationRecord
       .group(:id)
       .having("MAX(days.date) >= ?", now)
       .order(
-        Arel.sql("CASE WHEN MAX(days.date) >= '#{now}' THEN MAX(days.date) END ASC"), # 現在日付に近い順
+        Arel.sql("MAX(days.date) ASC"), # 現在日付に近い順（HAVINGで未来のみに絞済み）
         Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
         Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
         created_at: :desc, # 作成日の降順
@@ -65,7 +65,7 @@ class Event < ApplicationRecord
       .group(:id)
       .having("MAX(days.date) < ?", now)
       .order(
-        Arel.sql("CASE WHEN MAX(days.date) < '#{now}' THEN MAX(days.date) END DESC"), # 現在日付に近い順
+        Arel.sql("MAX(days.date) DESC"), # 現在日付に近い順（HAVINGで過去のみに絞済み）
         Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
         Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
         created_at: :desc, # 作成日の降順
