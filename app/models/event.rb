@@ -36,7 +36,6 @@ class Event < ApplicationRecord
   validates :event_name_tag, presence: true, uniqueness: { scope: :user_id }
 
   # みんなが作ったタイムテーブルのうち、未来イベントを取得
-  # 開催日未設定（出演情報0件を含む）の公開イベントも一覧に含める
   scope :future_all, -> {
     now = Time.current.to_date
     visibility_public
@@ -45,10 +44,8 @@ class Event < ApplicationRecord
       .left_joins(:days)
       .includes(:user, :days, :event_name_tag, :event_favorites)
       .group(:id)
-      .having("MAX(days.date) IS NULL OR MAX(days.date) >= ?", now)
+      .having("MAX(days.date) >= ?", now)
       .order(
-        # 開催日未定は未来セクション末尾へ（DB間でNULL順が違うため明示する）
-        Arel.sql("CASE WHEN MAX(days.date) IS NULL THEN 1 ELSE 0 END ASC"),
         # 直近の開催日（未来日のうち最も早い日）で並べる
         Arel.sql(sanitize_sql_array([ "MIN(CASE WHEN days.date >= ? THEN days.date END) ASC", now ])),
         Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
@@ -70,6 +67,22 @@ class Event < ApplicationRecord
       .having("MAX(days.date) < ?", now)
       .order(
         Arel.sql("MAX(days.date) DESC"), # 現在日付に近い順（HAVINGで過去のみに絞済み）
+        Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
+        Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
+        created_at: :desc, # 作成日の降順
+        id: :asc # ページング用の安定した全順序
+      )
+  }
+
+  # みんなが作ったタイムテーブルのうち、開催日未定の公開イベントを取得
+  scope :undated_all, -> {
+    visibility_public
+      .where.missing(:days)
+      .left_joins(:event_favorites)
+      .left_joins(performers: :performances)
+      .includes(:user, :days, :event_name_tag, :event_favorites)
+      .group(:id)
+      .order(
         Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
         Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
         created_at: :desc, # 作成日の降順
@@ -122,48 +135,53 @@ class Event < ApplicationRecord
     { events: events, page: page, next_page: has_more ? page + 1 : nil }
   end
 
-  # みんなが作ったタイムテーブル（未来→過去）をページングする
-  # @return [Hash] :events, :page, :next_page, :show_upcoming_heading, :past_index
+  # みんなが作ったタイムテーブル（未来→過去→開催日未定）をページングする
+  # @return [Hash] :events, :page, :next_page, :show_upcoming_heading, :past_index, :undated_index
   def self.paginate_public_all(page:)
     page = normalize_page(page)
     offset = (page - 1) * PER_PAGE
-    future_scope = future_all
-    past_scope = past_all
-    future_count = grouped_event_count(future_scope)
-    past_count = grouped_event_count(past_scope)
-    total = future_count + past_count
+    segments = [
+      [ :future, future_all ],
+      [ :past, past_all ],
+      [ :undated, undated_all ]
+    ].map { |key, scope| [ key, scope, grouped_event_count(scope) ] }
 
+    total = segments.sum { |_, _, count| count }
     events = []
     past_index = nil
+    undated_index = nil
+    skip = offset
+    slots = PER_PAGE
 
-    if offset < future_count
-      future_limit = [ PER_PAGE, future_count - offset ].min
-      futures = future_scope.offset(offset).limit(future_limit).to_a
-      events.concat(futures)
-
-      remaining = PER_PAGE - futures.size
-      if remaining > 0 && past_count > 0
-        pasts = past_scope.limit(remaining).to_a
-        past_index = events.size if pasts.any?
-        events.concat(pasts)
-      elsif page == 1
-        # 1ページ目で未来のみの場合も、従来どおりセクション見出し用に境界を渡す
-        past_index = events.size
+    segments.each do |key, scope, count|
+      break if slots.zero?
+      if skip >= count
+        skip -= count
+        next
       end
-    else
-      past_offset = offset - future_count
-      pasts = past_scope.offset(past_offset).limit(PER_PAGE).to_a
-      events.concat(pasts)
-      # このページの先頭が「最初の過去イベント」のときだけ見出しを出す
-      past_index = 0 if past_offset.zero? && pasts.any?
+
+      section_offset = skip
+      skip = 0
+      take = [ slots, count - section_offset ].min
+      batch = scope.offset(section_offset).limit(take).to_a
+
+      # このページで当該セクションが始まるときだけ見出し位置を渡す
+      if section_offset.zero? && batch.any?
+        past_index = events.size if key == :past
+        undated_index = events.size if key == :undated
+      end
+
+      events.concat(batch)
+      slots -= batch.size
     end
 
     {
       events: events,
       page: page,
       next_page: (offset + events.size) < total ? page + 1 : nil,
-      show_upcoming_heading: page == 1 && future_count.positive?,
-      past_index: past_index
+      show_upcoming_heading: page == 1 && segments.dig(0, 2).to_i.positive?,
+      past_index: past_index,
+      undated_index: undated_index
     }
   end
 
