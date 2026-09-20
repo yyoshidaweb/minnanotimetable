@@ -84,7 +84,7 @@ class Event < ApplicationRecord
   }
 
   # タイムテーブル描画可能な出演情報が0件の公開イベント（開催日未定を含む）
-  # 並び: 開催日あり（現在日付に近い順）→ 開催日未定
+  # 並び: 未来 → 過去 → 開催日未定（未来・過去セクションと同じ考え方）
   scope :without_timetable_ready_all, -> {
     now = Time.current.to_date
     visibility_public
@@ -95,8 +95,16 @@ class Event < ApplicationRecord
       .includes(:user, :days, :event_name_tag, :event_favorites)
       .group(:id)
       .order(
-        Arel.sql("CASE WHEN MAX(days.date) IS NULL THEN 1 ELSE 0 END ASC"), # 開催日ありを先に
-        Arel.sql(Event.send(:days_proximity_order_sql, now)), # 現在日付に近い順
+        # 0: 未来, 1: 過去, 2: 開催日未定
+        Arel.sql(sanitize_sql_array([
+          "CASE WHEN MAX(days.date) IS NULL THEN 2 " \
+          "WHEN MAX(days.date) >= ? THEN 0 ELSE 1 END ASC",
+          now
+        ])),
+        # 未来グループ内: 直近の開催日が早い順
+        Arel.sql(sanitize_sql_array([ "MIN(CASE WHEN days.date >= ? THEN days.date END) ASC", now ])),
+        # 過去グループ内: 現在日付に近い順
+        Arel.sql("MAX(days.date) DESC"),
         Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
         Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
         created_at: :desc, # 作成日の降順
@@ -226,15 +234,6 @@ class Event < ApplicationRecord
     def grouped_event_count(scope)
       grouped_scope = scope.unscope(:includes, :order).select(:id)
       unscoped.from(grouped_scope, :events).count
-    end
-
-    # 開催日と基準日の差の最小値（SQLite / PostgreSQL両対応）
-    def days_proximity_order_sql(date)
-      if connection.adapter_name.match?(/PostgreSQL/i)
-        sanitize_sql_array([ "MIN(ABS(days.date - ?))", date ])
-      else
-        sanitize_sql_array([ "MIN(ABS(JULIANDAY(days.date) - JULIANDAY(?)))", date ])
-      end
     end
   end
 end

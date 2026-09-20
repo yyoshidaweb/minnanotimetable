@@ -94,8 +94,8 @@ class EventTest < ActiveSupport::TestCase
     assert_not_includes Event.past_all, public_empty
   end
 
-  # 出演情報なしは開催日あり（現在日に近い順）のあと開催日未定
-  test "without_timetable_ready_all orders dated before undated by proximity" do
+  # 出演情報なしは未来 → 過去 → 開催日未定の順
+  test "without_timetable_ready_all orders future then past then undated" do
     user = users(:developer)
     undated = user.events.create!(
       event_key: "order-undated-#{SecureRandom.urlsafe_base64(4)}",
@@ -103,24 +103,32 @@ class EventTest < ActiveSupport::TestCase
       description: "開催日未定",
       visibility: :public
     )
-    near = user.events.create!(
-      event_key: "order-near-#{SecureRandom.urlsafe_base64(4)}",
-      event_name_tag: EventNameTag.create!(name: "order-near-#{SecureRandom.hex(4)}"),
-      description: "近い開催日",
+    future_near = user.events.create!(
+      event_key: "order-future-near-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "order-future-near-#{SecureRandom.hex(4)}"),
+      description: "近い未来",
       visibility: :public
     )
-    near.days.create!(date: Date.current + 1.day)
-    far = user.events.create!(
-      event_key: "order-far-#{SecureRandom.urlsafe_base64(4)}",
-      event_name_tag: EventNameTag.create!(name: "order-far-#{SecureRandom.hex(4)}"),
-      description: "遠い開催日",
+    future_near.days.create!(date: Date.current + 1.day)
+    future_far = user.events.create!(
+      event_key: "order-future-far-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "order-future-far-#{SecureRandom.hex(4)}"),
+      description: "遠い未来",
       visibility: :public
     )
-    far.days.create!(date: Date.current + 30.days)
+    future_far.days.create!(date: Date.current + 30.days)
+    past = user.events.create!(
+      event_key: "order-past-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "order-past-#{SecureRandom.hex(4)}"),
+      description: "過去",
+      visibility: :public
+    )
+    past.days.create!(date: Date.current - 5.days)
 
     empty_list = Event.without_timetable_ready_all.to_a
-    assert_operator empty_list.index(near), :<, empty_list.index(far)
-    assert_operator empty_list.index(far), :<, empty_list.index(undated)
+    assert_operator empty_list.index(future_near), :<, empty_list.index(future_far)
+    assert_operator empty_list.index(future_far), :<, empty_list.index(past)
+    assert_operator empty_list.index(past), :<, empty_list.index(undated)
   end
 
   test "paginate_public_all places without_timetable_ready after past" do
