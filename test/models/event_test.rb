@@ -45,7 +45,7 @@ class EventTest < ActiveSupport::TestCase
     assert_not_includes Event.past_all, event
   end
 
-  # 出演日・ステージ・時刻が欠けた出演情報だけでは future/past に入らない
+  # 出演日・ステージ・時刻が欠けた出演情報だけではfuture/pastに入らない
   test "without_timetable_ready_all includes events with only incomplete performances" do
     user = users(:developer)
     event = user.events.create!(
@@ -54,12 +54,21 @@ class EventTest < ActiveSupport::TestCase
       description: "未定だらけの出演のみ",
       visibility: :public
     )
-    event.days.create!(date: Date.current + 3.days)
+    day = event.days.create!(date: Date.current + 3.days)
+    stage = event.stages.create!(
+      stage_name_tag: StageNameTag.create!(name: "incomplete-stage-#{SecureRandom.hex(4)}")
+    )
     performer = event.performers.create!(
       performer_name_tag: PerformerNameTag.create!(name: "incomplete-performer-#{SecureRandom.hex(4)}")
     )
-    Performance.create!(performer: performer) # day/stage/time すべて未定
+    Performance.create!(performer: performer) # day/stage/timeすべて未定
+    # start_timeのみ残し、end_time/durationを欠落させた不完全データ
+    partial = Performance.create!(
+      performer: performer, day: day, stage: stage, start_time: "12:00", duration: 60
+    )
+    partial.update_columns(end_time: nil, duration: nil)
 
+    assert_not Performance.timetable_ready.exists?(id: partial.id)
     assert_includes Event.without_timetable_ready_all, event
     assert_not_includes Event.future_all, event
   end
@@ -283,7 +292,7 @@ class EventTest < ActiveSupport::TestCase
     result = nil
     100.times do
       result = Event.paginate_public_all(page: page)
-      # page 1 で未来のみのとき past_index は nil のため、過去が載るページを探す
+      # page1で未来のみのときpast_indexはnilのため、過去が載るページを探す
       break if result[:past_index] && result[:past_index] < result[:events].size
       break unless result[:next_page]
 
