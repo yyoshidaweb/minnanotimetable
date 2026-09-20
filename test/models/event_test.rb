@@ -8,8 +8,9 @@ class EventTest < ActiveSupport::TestCase
       description: "近い未来日を含む複数日",
       visibility: :public
     )
-    near.days.create!(date: Date.current + 1.day)
+    near_day = near.days.create!(date: Date.current + 1.day)
     near.days.create!(date: Date.current + 30.days)
+    add_timetable_ready_performance!(near, day: near_day)
 
     far = users(:developer).events.create!(
       event_key: "far-#{SecureRandom.urlsafe_base64(4)}",
@@ -17,7 +18,8 @@ class EventTest < ActiveSupport::TestCase
       description: "遠い未来日のみ",
       visibility: :public
     )
-    far.days.create!(date: Date.current + 10.days)
+    far_day = far.days.create!(date: Date.current + 10.days)
+    add_timetable_ready_performance!(far, day: far_day)
 
     futures = Event.future_all.to_a
     assert_operator futures.index(near), :<, futures.index(far)
@@ -33,15 +35,37 @@ class EventTest < ActiveSupport::TestCase
     assert_not_includes Event.past_all, events(:unlisted)
   end
 
-  # 出演情報0件（開催日あり）の公開イベントは未来一覧に含める
-  test "future_all includes public events with days but no performances" do
+  # 開催日あり・描画可能な出演情報0件は「出演情報なし」へ
+  test "without_timetable_ready_all includes public events with days but no ready performances" do
     event = events(:no_performance_event)
     assert_equal 0, event.performances.count
     assert event.days.any?
-    assert_includes Event.future_all, event
+    assert_includes Event.without_timetable_ready_all, event
+    assert_not_includes Event.future_all, event
+    assert_not_includes Event.past_all, event
+    assert_not_includes Event.undated_all, event
   end
 
-  # 開催日未定の公開イベントは undated_all にまとめ、future/past には入れない
+  # 出演日・ステージ・時刻が欠けた出演情報だけでは future/past に入らない
+  test "without_timetable_ready_all includes events with only incomplete performances" do
+    user = users(:developer)
+    event = user.events.create!(
+      event_key: "incomplete-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "incomplete-#{SecureRandom.hex(4)}"),
+      description: "未定だらけの出演のみ",
+      visibility: :public
+    )
+    event.days.create!(date: Date.current + 3.days)
+    performer = event.performers.create!(
+      performer_name_tag: PerformerNameTag.create!(name: "incomplete-performer-#{SecureRandom.hex(4)}")
+    )
+    Performance.create!(performer: performer) # day/stage/time すべて未定
+
+    assert_includes Event.without_timetable_ready_all, event
+    assert_not_includes Event.future_all, event
+  end
+
+  # 開催日未定の公開イベントは undated_all にまとめ、他セクションには入れない
   test "undated_all includes only public events without days" do
     user = users(:developer)
     public_empty = user.events.create!(
@@ -69,10 +93,38 @@ class EventTest < ActiveSupport::TestCase
     assert_not_includes undated, private_empty
     assert_not_includes Event.future_all, public_empty
     assert_not_includes Event.past_all, public_empty
+    assert_not_includes Event.without_timetable_ready_all, public_empty
   end
 
-  test "paginate_public_all places undated events after past with undated_index" do
-    create_list_events(users(:one), 1, day_date: Date.current - 5.days)
+  test "paginate_public_all places without_timetable_ready after past" do
+    create_list_events(users(:one), 1, day_date: Date.current - 5.days, with_ready_performance: true)
+    create_list_events(users(:one), 1, day_date: Date.current + 2.days) # 出演情報なし
+
+    page = 1
+    result = nil
+    100.times do
+      result = Event.paginate_public_all(page: page)
+      break if result[:without_timetable_ready_index] &&
+        result[:without_timetable_ready_index] < result[:events].size
+      break unless result[:next_page]
+
+      page = result[:next_page]
+    end
+
+    assert result[:without_timetable_ready_index],
+           "without_timetable_ready_index should be present"
+    empty_event = result[:events][result[:without_timetable_ready_index]]
+    assert empty_event.days.any?
+    assert_not empty_event.performances.timetable_ready.exists?
+
+    if result[:without_timetable_ready_index].positive?
+      previous = result[:events][result[:without_timetable_ready_index] - 1]
+      assert previous.performances.merge(Performance.timetable_ready).exists?
+    end
+  end
+
+  test "paginate_public_all places undated events after without_timetable_ready" do
+    create_list_events(users(:one), 1, day_date: Date.current - 5.days) # 出演情報なし
     create_list_events(users(:one), 1) # 開催日未定
 
     page = 1
@@ -161,7 +213,7 @@ class EventTest < ActiveSupport::TestCase
         day.update!(date: Date.current - 30.days - index.days)
       end
     end
-    create_list_events(users(:one), 1, day_date: Date.current - 7.days)
+    create_list_events(users(:one), 1, day_date: Date.current - 7.days, with_ready_performance: true)
 
     page1 = Event.paginate_public_all(page: 1)
     assert_not page1[:show_upcoming_heading]
@@ -169,7 +221,12 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "paginate_public_all paginates and sets section headings" do
-    create_list_events(users(:one), Event::PER_PAGE + 5, day_date: Date.current + 40.days)
+    create_list_events(
+      users(:one),
+      Event::PER_PAGE + 5,
+      day_date: Date.current + 40.days,
+      with_ready_performance: true
+    )
 
     page1 = Event.paginate_public_all(page: 1)
     assert_equal Event::PER_PAGE, page1[:events].size
@@ -182,7 +239,12 @@ class EventTest < ActiveSupport::TestCase
   end
 
   test "paginate_public_all sets past_index at future/past boundary" do
-    create_list_events(users(:one), Event::PER_PAGE, day_date: Date.current - 10.days)
+    create_list_events(
+      users(:one),
+      Event::PER_PAGE,
+      day_date: Date.current - 10.days,
+      with_ready_performance: true
+    )
 
     page = 1
     result = nil
@@ -212,8 +274,18 @@ class EventTest < ActiveSupport::TestCase
   test "paginate_public_all fills remaining slots from past on the same page" do
     future_count = Event.future_all.unscope(:includes, :order).count.size
     # 最終の未来ページに余りが出るよう、割り切れる場合は未来を1件足す
-    create_list_events(users(:one), 1, day_date: Date.current + 60.days) if (future_count % Event::PER_PAGE).zero?
-    create_list_events(users(:one), 1, day_date: Date.current - 20.days)
+    if (future_count % Event::PER_PAGE).zero?
+      create_list_events(
+        users(:one), 1,
+        day_date: Date.current + 60.days,
+        with_ready_performance: true
+      )
+    end
+    create_list_events(
+      users(:one), 1,
+      day_date: Date.current - 20.days,
+      with_ready_performance: true
+    )
 
     future_count = Event.future_all.unscope(:includes, :order).count.size
     boundary_page = (future_count / Event::PER_PAGE) + 1
@@ -227,7 +299,7 @@ class EventTest < ActiveSupport::TestCase
 
   private
 
-  def create_list_events(user, count, day_date: nil)
+  def create_list_events(user, count, day_date: nil, with_ready_performance: false)
     count.times do |i|
       tag = EventNameTag.create!(name: "model-paging-#{user.id}-#{i}-#{SecureRandom.hex(4)}")
       event = user.events.create!(
@@ -236,7 +308,27 @@ class EventTest < ActiveSupport::TestCase
         description: "モデルページングテスト",
         visibility: :public
       )
-      event.days.create!(date: day_date) if day_date
+      next unless day_date
+
+      day = event.days.create!(date: day_date)
+      add_timetable_ready_performance!(event, day: day) if with_ready_performance
     end
+  end
+
+  # タイムテーブル描画可能な出演情報を1件追加する
+  def add_timetable_ready_performance!(event, day:)
+    stage = event.stages.create!(
+      stage_name_tag: StageNameTag.create!(name: "stage-#{SecureRandom.hex(4)}")
+    )
+    performer = event.performers.create!(
+      performer_name_tag: PerformerNameTag.create!(name: "performer-#{SecureRandom.hex(4)}")
+    )
+    Performance.create!(
+      performer: performer,
+      day: day,
+      stage: stage,
+      start_time: "12:00",
+      duration: 60
+    )
   end
 end

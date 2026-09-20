@@ -35,10 +35,17 @@ class Event < ApplicationRecord
   # 1ユーザー内のイベント名はユニーク
   validates :event_name_tag, presence: true, uniqueness: { scope: :user_id }
 
+  # タイムテーブル描画可能な出演情報を1件以上持つイベント
+  scope :with_timetable_ready_performances, -> {
+    where(id: Performance.timetable_ready.joins(:performer).select("performers.event_id"))
+  }
+
   # みんなが作ったタイムテーブルのうち、未来イベントを取得
+  # タイムテーブル描画可能な出演情報が1件以上ある公開イベントが対象
   scope :future_all, -> {
     now = Time.current.to_date
     visibility_public
+      .with_timetable_ready_performances
       .left_joins(:event_favorites)
       .left_joins(performers: :performances)
       .left_joins(:days)
@@ -56,9 +63,11 @@ class Event < ApplicationRecord
   }
 
   # みんなが作ったタイムテーブルのうち、過去イベントを取得
+  # タイムテーブル描画可能な出演情報が1件以上ある公開イベントが対象
   scope :past_all, -> {
     now = Time.current.to_date
     visibility_public
+      .with_timetable_ready_performances
       .left_joins(:event_favorites)
       .left_joins(performers: :performances)
       .left_joins(:days)
@@ -67,6 +76,25 @@ class Event < ApplicationRecord
       .having("MAX(days.date) < ?", now)
       .order(
         Arel.sql("MAX(days.date) DESC"), # 現在日付に近い順（HAVINGで過去のみに絞済み）
+        Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
+        Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
+        created_at: :desc, # 作成日の降順
+        id: :asc # ページング用の安定した全順序
+      )
+  }
+
+  # 開催日はあるが、タイムテーブル描画可能な出演情報が0件の公開イベント
+  scope :without_timetable_ready_all, -> {
+    visibility_public
+      .where.associated(:days)
+      .where.not(id: Performance.timetable_ready.joins(:performer).select("performers.event_id"))
+      .left_joins(:event_favorites)
+      .left_joins(performers: :performances)
+      .left_joins(:days)
+      .includes(:user, :days, :event_name_tag, :event_favorites)
+      .group(:id)
+      .order(
+        Arel.sql("MAX(days.date) DESC"), # 開催日が新しい順
         Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
         Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
         created_at: :desc, # 作成日の降順
@@ -135,20 +163,23 @@ class Event < ApplicationRecord
     { events: events, page: page, next_page: has_more ? page + 1 : nil }
   end
 
-  # みんなが作ったタイムテーブル（未来→過去→開催日未定）をページングする
-  # @return [Hash] :events, :page, :next_page, :show_upcoming_heading, :past_index, :undated_index
+  # みんなが作ったタイムテーブル（未来→過去→出演情報なし→開催日未定）をページングする
+  # @return [Hash] :events, :page, :next_page, :show_upcoming_heading, :past_index,
+  #   :without_timetable_ready_index, :undated_index
   def self.paginate_public_all(page:)
     page = normalize_page(page)
     offset = (page - 1) * PER_PAGE
     segments = [
       [ :future, future_all ],
       [ :past, past_all ],
+      [ :without_timetable_ready, without_timetable_ready_all ],
       [ :undated, undated_all ]
     ].map { |key, scope| [ key, scope, grouped_event_count(scope) ] }
 
     total = segments.sum { |_, _, count| count }
     events = []
     past_index = nil
+    without_timetable_ready_index = nil
     undated_index = nil
     skip = offset
     slots = PER_PAGE
@@ -168,6 +199,7 @@ class Event < ApplicationRecord
       # このページで当該セクションが始まるときだけ見出し位置を渡す
       if section_offset.zero? && batch.any?
         past_index = events.size if key == :past
+        without_timetable_ready_index = events.size if key == :without_timetable_ready
         undated_index = events.size if key == :undated
       end
 
@@ -181,6 +213,7 @@ class Event < ApplicationRecord
       next_page: (offset + events.size) < total ? page + 1 : nil,
       show_upcoming_heading: page == 1 && segments.dig(0, 2).to_i.positive?,
       past_index: past_index,
+      without_timetable_ready_index: without_timetable_ready_index,
       undated_index: undated_index
     }
   end

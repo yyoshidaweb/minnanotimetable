@@ -50,18 +50,25 @@ class Performance < ApplicationRecord
     ordered_by_festival_day_and_time.includes(:day, stage: :stage_name_tag)
   }
 
+  # タイムテーブル描画に必要な情報がすべて揃った performance
+  # （出演日・ステージ・開始時刻・終了時刻・出演時間がすべて存在する）
+  scope :timetable_ready, -> {
+    joins(:day, :stage)
+      .where.not(
+        start_time: nil,
+        end_time: nil,
+        duration: nil
+      )
+  }
+
   # タイムテーブル描画に必要な情報がすべて揃った performance を取得するスコープ
   scope :timetable_ready_for_event_on_date, ->(event, date) {
-    joins(:performer, :day, :stage)
-    .where.not(
-      start_time: nil,
-      end_time: nil,
-      duration: nil
-    )
-    .where(performers: { event_id: event.id })
-    .where(days: { date: date })
-    .includes(performer: :performer_name_tag)
-    .ordered_by_festival_start_time
+    timetable_ready
+      .joins(:performer)
+      .where(performers: { event_id: event.id })
+      .where(days: { date: date })
+      .includes(performer: :performer_name_tag)
+      .ordered_by_festival_start_time
   }
 
   # ==== タイムテーブル表示用メソッド ====
