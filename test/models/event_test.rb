@@ -33,6 +33,54 @@ class EventTest < ActiveSupport::TestCase
     assert_not_includes Event.past_all, events(:unlisted)
   end
 
+  # 出演情報0件（開催日あり）の公開イベントは未来一覧に含める
+  test "future_all includes public events with days but no performances" do
+    event = events(:no_performance_event)
+    assert_equal 0, event.performances.count
+    assert event.days.any?
+    assert_includes Event.future_all, event
+  end
+
+  # 開催日未設定の公開イベントも未来一覧に含め、限定公開・非公開は含めない
+  test "future_all includes public events without days" do
+    user = users(:developer)
+    public_empty = user.events.create!(
+      event_key: "empty-public-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "empty-public-#{SecureRandom.hex(4)}"),
+      description: "開催日なし公開",
+      visibility: :public
+    )
+    unlisted_empty = user.events.create!(
+      event_key: "empty-unlisted-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "empty-unlisted-#{SecureRandom.hex(4)}"),
+      description: "開催日なし限定公開",
+      visibility: :unlisted
+    )
+    private_empty = user.events.create!(
+      event_key: "empty-private-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "empty-private-#{SecureRandom.hex(4)}"),
+      description: "開催日なし非公開",
+      visibility: :private
+    )
+
+    futures = Event.future_all.to_a
+    assert_includes futures, public_empty
+    assert_not_includes futures, unlisted_empty
+    assert_not_includes futures, private_empty
+    assert_not_includes Event.past_all, public_empty
+
+    # 開催日未定は未来セクション末尾（日付ありの未来より後）
+    dated = user.events.create!(
+      event_key: "dated-future-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "dated-future-#{SecureRandom.hex(4)}"),
+      description: "日付あり未来",
+      visibility: :public
+    )
+    dated.days.create!(date: Date.current + 5.days)
+    futures = Event.future_all.to_a
+    assert_operator futures.index(dated), :<, futures.index(public_empty)
+  end
+
   test "visibility enum values" do
     event = events(:one)
     assert event.visibility_public?
@@ -95,8 +143,13 @@ class EventTest < ActiveSupport::TestCase
 
   test "paginate_public_all hides upcoming heading when there are no future events" do
     Event.future_all.find_each do |event|
-      event.days.order(:id).each_with_index do |day, index|
-        day.update!(date: Date.current - 30.days - index.days)
+      if event.days.empty?
+        # 開催日未定も未来扱いのため、過去日を付けて未来から外す
+        event.days.create!(date: Date.current - 30.days)
+      else
+        event.days.order(:id).each_with_index do |day, index|
+          day.update!(date: Date.current - 30.days - index.days)
+        end
       end
     end
     create_list_events(users(:one), 1, day_date: Date.current - 7.days)
@@ -141,7 +194,9 @@ class EventTest < ActiveSupport::TestCase
 
     if idx.positive?
       future_event = result[:events][idx - 1]
-      assert future_event.days.maximum(:date) >= Date.current
+      max_date = future_event.days.maximum(:date)
+      # 開催日未定（nil）も未来セクション扱い
+      assert max_date.nil? || max_date >= Date.current
     else
       assert_not result[:show_upcoming_heading]
     end
@@ -159,7 +214,8 @@ class EventTest < ActiveSupport::TestCase
 
     assert result[:past_index].positive?
     assert_operator result[:events].size, :>, result[:past_index]
-    assert result[:events][result[:past_index] - 1].days.maximum(:date) >= Date.current
+    boundary_future_max = result[:events][result[:past_index] - 1].days.maximum(:date)
+    assert boundary_future_max.nil? || boundary_future_max >= Date.current
     assert result[:events][result[:past_index]].days.maximum(:date) < Date.current
   end
 

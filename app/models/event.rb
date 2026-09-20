@@ -36,6 +36,7 @@ class Event < ApplicationRecord
   validates :event_name_tag, presence: true, uniqueness: { scope: :user_id }
 
   # みんなが作ったタイムテーブルのうち、未来イベントを取得
+  # 開催日未設定（出演情報0件を含む）の公開イベントも一覧に含める
   scope :future_all, -> {
     now = Time.current.to_date
     visibility_public
@@ -44,8 +45,10 @@ class Event < ApplicationRecord
       .left_joins(:days)
       .includes(:user, :days, :event_name_tag, :event_favorites)
       .group(:id)
-      .having("MAX(days.date) >= ?", now)
+      .having("MAX(days.date) IS NULL OR MAX(days.date) >= ?", now)
       .order(
+        # 開催日未定は未来セクション末尾へ（DB間でNULL順が違うため明示する）
+        Arel.sql("CASE WHEN MAX(days.date) IS NULL THEN 1 ELSE 0 END ASC"),
         # 直近の開催日（未来日のうち最も早い日）で並べる
         Arel.sql(sanitize_sql_array([ "MIN(CASE WHEN days.date >= ? THEN days.date END) ASC", now ])),
         Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
