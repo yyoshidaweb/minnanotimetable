@@ -19,18 +19,21 @@ class EventsController < ApplicationController
     # パラメータによって取得するイベントを分岐
     case params[:filter]
     when "favorites"
-      @events = Event.recent_favorite_by(current_user)
+      result = Event.paginate_relation(Event.recent_favorite_by(current_user), page: params[:page])
       @page_title = "お気に入りのタイムテーブル一覧"
     when "created"
-      @events = Event.recent_created_by(current_user)
+      result = Event.paginate_relation(Event.recent_created_by(current_user), page: params[:page])
       @page_title = "作成したタイムテーブル一覧"
     else
-      future = Event.future_all.to_a
-      past   = Event.past_all.to_a
-      @events = (future + past)
-      @past_index = future.size # 未来イベントと過去イベントの境界インデックス
+      result = Event.paginate_public_all(page: params[:page])
+      @show_upcoming_heading = result[:show_upcoming_heading]
+      @past_index = result[:past_index]
       @page_title = "みんなが作ったタイムテーブル"
     end
+
+    @events = result[:events]
+    @page = result[:page]
+    @next_page = result[:next_page]
   end
 
   # 未ログインでも閲覧可能

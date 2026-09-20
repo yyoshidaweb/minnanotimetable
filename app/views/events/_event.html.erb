@@ -1,5 +1,7 @@
 <%# タイムテーブルカードパーシャル %>
+<%# 一覧の無限スクロール用 Turbo Frame 内でも、詳細へはページ全体で遷移する %>
 <%= link_to show_timetable_path(event.event_key),
+                          data: { turbo_frame: "_top" },
                           class: "block bg-white shadow-md rounded-lg p-4 border hover:shadow-xl hover:bg-gray-50 transition" do %>
   <%# タイトル（単語途中でも省略し、表示文字数を確保する） %>
   <p class="text-lg font-semibold text-gray-800 truncate" title="<%= event.display_name %>">

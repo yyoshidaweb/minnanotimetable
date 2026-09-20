@@ -1,8 +1,8 @@
 <%# 検索結果などに表示されるタイトルと説明 %>
 <% content_for :title, "#{@page_title} | みんなのタイムテーブル" %>
 <% content_for :description, "#{@page_title}。" %>
-<% if @events.any? %>
-  <% if created? %>
+<% if @events.any? || @page > 1 %>
+  <% if created? && @page == 1 %>
     <%= link_to new_event_path,
                 class: "mb-6 px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-900
                         inline-flex justify-center items-center" do %>
@@ -10,9 +10,12 @@
       <span class="font-semibold">タイムテーブルを作る</span>
     <% end %>
   <% end %>
-  <%# タイムテーブル一覧 %>
+  <%# タイムテーブル一覧（Turbo Frameの遅延読み込みで無限スクロール） %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <%= render "events/events", events: @events %>
+    <%= render "events/page",
+               events: @events,
+               page: @page,
+               next_page: @next_page %>
   </div>
 <% else %>
   <% if created? %>

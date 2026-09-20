@@ -1,11 +1,13 @@
 <%# タイムテーブル一覧パーシャル %>
-<% if @past_index.present? %>
-  <h2 class="col-span-1 sm:col-span-2 lg:col-span-3 text-gray-800 font-semibold text-xl">
-    もうすぐ開催されるイベント
-  </h2>
+<% if @show_upcoming_heading || @past_index.present? %>
+  <% if @show_upcoming_heading %>
+    <h2 class="col-span-1 sm:col-span-2 lg:col-span-3 text-gray-800 font-semibold text-xl">
+      もうすぐ開催されるイベント
+    </h2>
+  <% end %>
   <% events.each_with_index do |event, i| %>
-    <% if i == @past_index %>
-      <h2 class="mt-6 col-span-1 sm:col-span-2 lg:col-span-3 text-gray-800 font-semibold text-xl">
+    <% if @past_index.present? && i == @past_index %>
+      <h2 class="<%= @show_upcoming_heading ? "mt-6 " : "" %>col-span-1 sm:col-span-2 lg:col-span-3 text-gray-800 font-semibold text-xl">
         過去のイベント
       </h2>
     <% end %>

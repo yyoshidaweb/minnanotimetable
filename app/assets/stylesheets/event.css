@@ -85,3 +85,8 @@
             rgba(31, 41, 55, 0.2) 50%,
             oklch(27.8% 0.033 256.848 / 0.2) 50%);
 }
+/* 一覧の無限スクロール: 遅延読み込み中は枠を残し、完了後だけ grid に参加させる
+   （最初から display:contents だと IntersectionObserver が発火しない） */
+turbo-frame[id^="events_page_"][complete] {
+    display: contents;
+}
