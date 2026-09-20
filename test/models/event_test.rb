@@ -48,4 +48,45 @@ class EventTest < ActiveSupport::TestCase
     favorites = Event.recent_favorite_by(users(:two))
     assert_includes favorites, events(:unlisted)
   end
+
+  test "paginate_relation returns 20 per page and next_page" do
+    user = users(:one)
+    create_list_events(user, Event::PER_PAGE + 1)
+
+    page1 = Event.paginate_relation(Event.recent_created_by(user), page: 1)
+    assert_equal Event::PER_PAGE, page1[:events].size
+    assert_equal 2, page1[:next_page]
+
+    page2 = Event.paginate_relation(Event.recent_created_by(user), page: 2)
+    assert_operator page2[:events].size, :>=, 1
+    assert_nil page2[:next_page]
+  end
+
+  test "paginate_public_all paginates and sets section headings" do
+    create_list_events(users(:one), Event::PER_PAGE + 5, day_date: Date.current + 40.days)
+
+    page1 = Event.paginate_public_all(page: 1)
+    assert_equal Event::PER_PAGE, page1[:events].size
+    assert page1[:show_upcoming_heading]
+    assert_equal 2, page1[:next_page]
+
+    page2 = Event.paginate_public_all(page: 2)
+    assert_operator page2[:events].size, :>, 0
+    assert_not page2[:show_upcoming_heading]
+  end
+
+  private
+
+  def create_list_events(user, count, day_date: nil)
+    count.times do |i|
+      tag = EventNameTag.create!(name: "model-paging-#{user.id}-#{i}-#{SecureRandom.hex(4)}")
+      event = user.events.create!(
+        event_key: "model-paging-#{user.id}-#{i}-#{SecureRandom.urlsafe_base64(4)}",
+        event_name_tag: tag,
+        description: "モデルページングテスト",
+        visibility: :public
+      )
+      event.days.create!(date: day_date) if day_date
+    end
+  end
 end

@@ -68,6 +68,52 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should paginate created events with infinite scroll frames" do
+    create_events_for(@user, Event::PER_PAGE + 1)
+
+    get events_path(filter: "created")
+    assert_response :success
+    assert_select "turbo-frame#events_page_1"
+    assert_select "turbo-frame#events_page_2[loading=?]", "lazy"
+    assert_select "turbo-frame#events_page_1 a[href*='/t/']", count: Event::PER_PAGE
+
+    get events_path(filter: "created", page: 2)
+    assert_response :success
+    assert_select "turbo-frame#events_page_2"
+    assert_select "turbo-frame#events_page_2 a[href*='/t/']", minimum: 1
+    assert_select "turbo-frame#events_page_3", count: 0
+  end
+
+  test "should paginate public events with infinite scroll frames" do
+    create_events_for(@user, Event::PER_PAGE + 1, day_date: Date.current + 10.days)
+
+    get events_path
+    assert_response :success
+    assert_select "turbo-frame#events_page_1"
+    assert_select "turbo-frame#events_page_2[loading=?]", "lazy"
+    assert_select "h2", text: "もうすぐ開催されるイベント"
+
+    get events_path(page: 2)
+    assert_response :success
+    assert_select "turbo-frame#events_page_2"
+    assert_select "turbo-frame#events_page_3", count: 0
+  end
+
+  test "should paginate favorite events with infinite scroll frames" do
+    events = create_events_for(users(:two), Event::PER_PAGE + 1, day_date: Date.current + 5.days)
+    events.each { |event| @user.event_favorites.create!(event: event) }
+
+    get events_path(filter: "favorites")
+    assert_response :success
+    assert_select "turbo-frame#events_page_1"
+    assert_select "turbo-frame#events_page_2[loading=?]", "lazy"
+
+    get events_path(filter: "favorites", page: 2)
+    assert_response :success
+    assert_select "turbo-frame#events_page_2"
+    assert_select "turbo-frame#events_page_3", count: 0
+  end
+
   test "should show lock icon for unpublished event in created list" do
     get events_path(filter: "created")
     assert_response :success
@@ -303,5 +349,22 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
       delete event_url(@other_event.event_key)
     end
     assert_response :not_found
+  end
+
+  private
+
+  # ページング検証用にイベントを一括作成する
+  def create_events_for(user, count, day_date: nil)
+    Array.new(count) do |i|
+      tag = EventNameTag.create!(name: "paging-#{user.id}-#{i}-#{SecureRandom.hex(4)}")
+      event = user.events.create!(
+        event_key: "paging-#{user.id}-#{i}-#{SecureRandom.urlsafe_base64(4)}",
+        event_name_tag: tag,
+        description: "ページングテスト",
+        visibility: :public
+      )
+      event.days.create!(date: day_date) if day_date
+      event
+    end
   end
 end
