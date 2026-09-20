@@ -43,7 +43,6 @@ class EventTest < ActiveSupport::TestCase
     assert_includes Event.without_timetable_ready_all, event
     assert_not_includes Event.future_all, event
     assert_not_includes Event.past_all, event
-    assert_not_includes Event.undated_all, event
   end
 
   # 出演日・ステージ・時刻が欠けた出演情報だけでは future/past に入らない
@@ -65,8 +64,8 @@ class EventTest < ActiveSupport::TestCase
     assert_not_includes Event.future_all, event
   end
 
-  # 開催日未定の公開イベントは undated_all にまとめ、他セクションには入れない
-  test "undated_all includes only public events without days" do
+  # 開催日未定の公開イベントも「出演情報なし」に含め、限定公開・非公開は含めない
+  test "without_timetable_ready_all includes public events without days" do
     user = users(:developer)
     public_empty = user.events.create!(
       event_key: "empty-public-#{SecureRandom.urlsafe_base64(4)}",
@@ -87,13 +86,41 @@ class EventTest < ActiveSupport::TestCase
       visibility: :private
     )
 
-    undated = Event.undated_all.to_a
-    assert_includes undated, public_empty
-    assert_not_includes undated, unlisted_empty
-    assert_not_includes undated, private_empty
+    empty_list = Event.without_timetable_ready_all.to_a
+    assert_includes empty_list, public_empty
+    assert_not_includes empty_list, unlisted_empty
+    assert_not_includes empty_list, private_empty
     assert_not_includes Event.future_all, public_empty
     assert_not_includes Event.past_all, public_empty
-    assert_not_includes Event.without_timetable_ready_all, public_empty
+  end
+
+  # 出演情報なしは開催日あり（現在日に近い順）のあと開催日未定
+  test "without_timetable_ready_all orders dated before undated by proximity" do
+    user = users(:developer)
+    undated = user.events.create!(
+      event_key: "order-undated-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "order-undated-#{SecureRandom.hex(4)}"),
+      description: "開催日未定",
+      visibility: :public
+    )
+    near = user.events.create!(
+      event_key: "order-near-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "order-near-#{SecureRandom.hex(4)}"),
+      description: "近い開催日",
+      visibility: :public
+    )
+    near.days.create!(date: Date.current + 1.day)
+    far = user.events.create!(
+      event_key: "order-far-#{SecureRandom.urlsafe_base64(4)}",
+      event_name_tag: EventNameTag.create!(name: "order-far-#{SecureRandom.hex(4)}"),
+      description: "遠い開催日",
+      visibility: :public
+    )
+    far.days.create!(date: Date.current + 30.days)
+
+    empty_list = Event.without_timetable_ready_all.to_a
+    assert_operator empty_list.index(near), :<, empty_list.index(far)
+    assert_operator empty_list.index(far), :<, empty_list.index(undated)
   end
 
   test "paginate_public_all places without_timetable_ready after past" do
@@ -123,28 +150,26 @@ class EventTest < ActiveSupport::TestCase
     end
   end
 
-  test "paginate_public_all places undated events after without_timetable_ready" do
-    create_list_events(users(:one), 1, day_date: Date.current - 5.days) # 出演情報なし
+  test "paginate_public_all includes undated events in without_timetable_ready pages" do
     create_list_events(users(:one), 1) # 開催日未定
 
+    found_undated = false
     page = 1
-    result = nil
     100.times do
       result = Event.paginate_public_all(page: page)
-      break if result[:undated_index] && result[:undated_index] < result[:events].size
-      break unless result[:next_page]
+      events =
+        if result[:without_timetable_ready_index]
+          result[:events][result[:without_timetable_ready_index]..]
+        else
+          # 出演情報なしセクションのみのページ
+          result[:past_index].nil? && !result[:show_upcoming_heading] ? result[:events] : []
+        end
+      found_undated = events.any? { |e| e.days.empty? }
+      break if found_undated || result[:next_page].nil?
 
       page = result[:next_page]
     end
-
-    assert result[:undated_index], "undated_index should be present on the page with undated events"
-    undated_event = result[:events][result[:undated_index]]
-    assert_empty undated_event.days
-
-    if result[:undated_index].positive?
-      previous = result[:events][result[:undated_index] - 1]
-      assert previous.days.any?
-    end
+    assert found_undated, "undated events should appear in without_timetable_ready section"
   end
 
   test "visibility enum values" do

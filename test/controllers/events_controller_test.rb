@@ -141,8 +141,8 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert found, "expected event without ready performances under that heading"
   end
 
-  # 開催日未設定の公開イベントは一覧末尾の「開催日未定」セクションに表示する
-  test "should show public events without days under undated heading" do
+  # 開催日未設定の公開イベントも「出演情報なし」セクションに表示する
+  test "should show public events without days under without-ready heading" do
     empty_name = "出演ゼロ公開#{SecureRandom.hex(4)}"
     empty_event = @user.events.create!(
       event_key: "empty-public-index-#{SecureRandom.urlsafe_base64(4)}",
@@ -160,13 +160,13 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
       get events_path(page: page)
       assert_response :success
       if response.body.include?(empty_name)
-        assert_select "h2", text: "開催日未定"
+        assert_select "h2", text: "出演情報なし"
         assert_select "p", text: /開催日：未定/
         found = true
         break
       end
     end
-    assert found, "expected empty public event to appear under undated heading"
+    assert found, "expected undated public event under without-ready heading"
   end
 
   test "should paginate favorite events with infinite scroll frames" do

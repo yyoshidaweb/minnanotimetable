@@ -29,7 +29,6 @@ class EventsController < ApplicationController
       @show_upcoming_heading = result[:show_upcoming_heading]
       @past_index = result[:past_index]
       @without_timetable_ready_index = result[:without_timetable_ready_index]
-      @undated_index = result[:undated_index]
       @page_title = "みんなが作ったタイムテーブル"
     end
 

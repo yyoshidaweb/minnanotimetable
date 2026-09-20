@@ -83,10 +83,11 @@ class Event < ApplicationRecord
       )
   }
 
-  # 開催日はあるが、タイムテーブル描画可能な出演情報が0件の公開イベント
+  # タイムテーブル描画可能な出演情報が0件の公開イベント（開催日未定を含む）
+  # 並び: 開催日あり（現在日付に近い順）→ 開催日未定
   scope :without_timetable_ready_all, -> {
+    now = Time.current.to_date
     visibility_public
-      .where.associated(:days)
       .where.not(id: Performance.timetable_ready.joins(:performer).select("performers.event_id"))
       .left_joins(:event_favorites)
       .left_joins(performers: :performances)
@@ -94,23 +95,8 @@ class Event < ApplicationRecord
       .includes(:user, :days, :event_name_tag, :event_favorites)
       .group(:id)
       .order(
-        Arel.sql("MAX(days.date) DESC"), # 開催日が新しい順
-        Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
-        Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
-        created_at: :desc, # 作成日の降順
-        id: :asc # ページング用の安定した全順序
-      )
-  }
-
-  # みんなが作ったタイムテーブルのうち、開催日未定の公開イベントを取得
-  scope :undated_all, -> {
-    visibility_public
-      .where.missing(:days)
-      .left_joins(:event_favorites)
-      .left_joins(performers: :performances)
-      .includes(:user, :days, :event_name_tag, :event_favorites)
-      .group(:id)
-      .order(
+        Arel.sql("CASE WHEN MAX(days.date) IS NULL THEN 1 ELSE 0 END ASC"), # 開催日ありを先に
+        Arel.sql(Event.send(:days_proximity_order_sql, now)), # 現在日付に近い順
         Arel.sql("COUNT(DISTINCT event_favorites.id) DESC"), # お気に入り数の多い順
         Arel.sql("COUNT(DISTINCT performances.id) DESC"), # 出演情報の多い順
         created_at: :desc, # 作成日の降順
@@ -163,24 +149,22 @@ class Event < ApplicationRecord
     { events: events, page: page, next_page: has_more ? page + 1 : nil }
   end
 
-  # みんなが作ったタイムテーブル（未来→過去→出演情報なし→開催日未定）をページングする
+  # みんなが作ったタイムテーブル（未来→過去→出演情報なし）をページングする
   # @return [Hash] :events, :page, :next_page, :show_upcoming_heading, :past_index,
-  #   :without_timetable_ready_index, :undated_index
+  #   :without_timetable_ready_index
   def self.paginate_public_all(page:)
     page = normalize_page(page)
     offset = (page - 1) * PER_PAGE
     segments = [
       [ :future, future_all ],
       [ :past, past_all ],
-      [ :without_timetable_ready, without_timetable_ready_all ],
-      [ :undated, undated_all ]
+      [ :without_timetable_ready, without_timetable_ready_all ]
     ].map { |key, scope| [ key, scope, grouped_event_count(scope) ] }
 
     total = segments.sum { |_, _, count| count }
     events = []
     past_index = nil
     without_timetable_ready_index = nil
-    undated_index = nil
     skip = offset
     slots = PER_PAGE
 
@@ -200,7 +184,6 @@ class Event < ApplicationRecord
       if section_offset.zero? && batch.any?
         past_index = events.size if key == :past
         without_timetable_ready_index = events.size if key == :without_timetable_ready
-        undated_index = events.size if key == :undated
       end
 
       events.concat(batch)
@@ -213,8 +196,7 @@ class Event < ApplicationRecord
       next_page: (offset + events.size) < total ? page + 1 : nil,
       show_upcoming_heading: page == 1 && segments.dig(0, 2).to_i.positive?,
       past_index: past_index,
-      without_timetable_ready_index: without_timetable_ready_index,
-      undated_index: undated_index
+      without_timetable_ready_index: without_timetable_ready_index
     }
   end
 
@@ -244,6 +226,15 @@ class Event < ApplicationRecord
     def grouped_event_count(scope)
       grouped_scope = scope.unscope(:includes, :order).select(:id)
       unscoped.from(grouped_scope, :events).count
+    end
+
+    # 開催日と基準日の差の最小値（SQLite / PostgreSQL両対応）
+    def days_proximity_order_sql(date)
+      if connection.adapter_name.match?(/PostgreSQL/i)
+        sanitize_sql_array([ "MIN(ABS(days.date - ?))", date ])
+      else
+        sanitize_sql_array([ "MIN(ABS(JULIANDAY(days.date) - JULIANDAY(?)))", date ])
+      end
     end
   end
 end
