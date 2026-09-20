@@ -69,13 +69,19 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should paginate created events with infinite scroll frames" do
-    create_events_for(@user, Event::PER_PAGE + 1)
+    user = users(:developer)
+    sign_in user
+    create_events_for(user, Event::PER_PAGE + 1)
 
     get events_path(filter: "created")
     assert_response :success
-    assert_select "turbo-frame#events_page_1"
+    assert_select "turbo-frame#events_page_1.contents"
     assert_select "turbo-frame#events_page_2[loading=?]", "lazy"
+    assert_select "turbo-frame#events_page_2.contents", count: 0
+    assert_select "turbo-frame#events_page_2[src*='filter=created']"
+    assert_select "turbo-frame#events_page_2[src*='page=2']"
     assert_select "turbo-frame#events_page_1 a[href*='/t/']", count: Event::PER_PAGE
+    assert_select "turbo-frame#events_page_1 a[data-turbo-frame=?]", "_top"
 
     get events_path(filter: "created", page: 2)
     assert_response :success
@@ -89,24 +95,32 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
 
     get events_path
     assert_response :success
-    assert_select "turbo-frame#events_page_1"
+    assert_select "turbo-frame#events_page_1.contents"
     assert_select "turbo-frame#events_page_2[loading=?]", "lazy"
+    assert_select "turbo-frame#events_page_2.contents", count: 0
+    assert_select "turbo-frame#events_page_2[src*='page=2']"
     assert_select "h2", text: "もうすぐ開催されるイベント"
+    assert_select "a[data-turbo-frame=?]", "_top"
 
-    get events_path(page: 2)
+    last_page = last_public_events_page
+    get events_path(page: last_page)
     assert_response :success
-    assert_select "turbo-frame#events_page_2"
-    assert_select "turbo-frame#events_page_3", count: 0
+    assert_select "turbo-frame#events_page_#{last_page}"
+    assert_select "turbo-frame#events_page_#{last_page + 1}", count: 0
   end
 
   test "should paginate favorite events with infinite scroll frames" do
+    user = users(:developer)
+    sign_in user
     events = create_events_for(users(:two), Event::PER_PAGE + 1, day_date: Date.current + 5.days)
-    events.each { |event| @user.event_favorites.create!(event: event) }
+    events.each { |event| user.event_favorites.create!(event: event) }
 
     get events_path(filter: "favorites")
     assert_response :success
     assert_select "turbo-frame#events_page_1"
     assert_select "turbo-frame#events_page_2[loading=?]", "lazy"
+    assert_select "turbo-frame#events_page_2[src*='filter=favorites']"
+    assert_select "turbo-frame#events_page_2[src*='page=2']"
 
     get events_path(filter: "favorites", page: 2)
     assert_response :success
@@ -114,13 +128,38 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_select "turbo-frame#events_page_3", count: 0
   end
 
+  test "should show past heading when public list includes past events" do
+    create_events_for(@user, Event::PER_PAGE, day_date: Date.current - 14.days)
+
+    page = 1
+    found = false
+    100.times do
+      result = Event.paginate_public_all(page: page)
+      if result[:past_index] && result[:past_index] < result[:events].size
+        get events_path(page: page)
+        assert_response :success
+        assert_select "h2", text: "過去のイベント"
+        found = true
+        break
+      end
+      break unless result[:next_page]
+
+      page = result[:next_page]
+    end
+    assert found, "expected a page that shows the past events heading"
+  end
+
   test "should show lock icon for unpublished event in created list" do
+    events(:unpublished).update!(created_at: Time.current)
+
     get events_path(filter: "created")
     assert_response :success
     assert_select "span.material-symbols-outlined", text: "lock"
   end
 
   test "should show link icon for unlisted event in created list" do
+    events(:unlisted).update!(created_at: Time.current)
+
     get events_path(filter: "created")
     assert_response :success
     assert_select "span.material-symbols-outlined", text: "link"
@@ -130,6 +169,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   test "should truncate event name mid-word on index" do
     long_name = "SuperLongTimetableNameWithoutAnySpacesToForceMidWordTruncationOnTheIndexCard"
     @event.event_name_tag.update!(name: long_name)
+    @event.update!(created_at: Time.current)
 
     get events_path(filter: "created")
     assert_response :success
@@ -352,6 +392,18 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   private
+
+  # みんなが作った一覧の最終ページ番号を返す
+  def last_public_events_page
+    page = 1
+    100.times do
+      result = Event.paginate_public_all(page: page)
+      return page unless result[:next_page]
+
+      page = result[:next_page]
+    end
+    flunk "public events pagination did not reach the last page"
+  end
 
   # ページング検証用にイベントを一括作成する
   def create_events_for(user, count, day_date: nil)

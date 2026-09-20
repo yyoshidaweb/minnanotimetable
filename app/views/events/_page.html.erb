@@ -1,12 +1,14 @@
 <%# 1ページ分のタイムテーブル一覧（無限スクロール用Turbo Frame） %>
+<%# 遅延読み込みフレームに display:contents を付けると IntersectionObserver が発火しないため、
+    読み込み完了後のみ CSS（event.css）で contents にする %>
 <%= turbo_frame_tag "events_page_#{page}", class: "contents" do %>
   <%= render "events/events", events: events %>
   <% if next_page %>
     <%= turbo_frame_tag "events_page_#{next_page}",
                         src: events_path({ filter: params[:filter], page: next_page }.compact_blank),
                         loading: :lazy,
-                        class: "contents" do %>
-      <div class="col-span-1 sm:col-span-2 lg:col-span-3 flex justify-center py-6 text-gray-400">
+                        class: "col-span-1 sm:col-span-2 lg:col-span-3 block" do %>
+      <div class="flex justify-center py-6 text-gray-400">
         読み込み中...
       </div>
     <% end %>

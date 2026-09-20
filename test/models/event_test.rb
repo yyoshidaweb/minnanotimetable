@@ -49,8 +49,8 @@ class EventTest < ActiveSupport::TestCase
     assert_includes favorites, events(:unlisted)
   end
 
-  test "paginate_relation returns 20 per page and next_page" do
-    user = users(:one)
+  test "paginate_relation returns PER_PAGE items and next_page" do
+    user = users(:developer)
     create_list_events(user, Event::PER_PAGE + 1)
 
     page1 = Event.paginate_relation(Event.recent_created_by(user), page: 1)
@@ -58,8 +58,17 @@ class EventTest < ActiveSupport::TestCase
     assert_equal 2, page1[:next_page]
 
     page2 = Event.paginate_relation(Event.recent_created_by(user), page: 2)
-    assert_operator page2[:events].size, :>=, 1
+    assert_equal 1, page2[:events].size
     assert_nil page2[:next_page]
+  end
+
+  test "paginate_relation treats invalid page as page 1" do
+    user = users(:developer)
+    create_list_events(user, 1)
+
+    result = Event.paginate_relation(Event.recent_created_by(user), page: 0)
+    assert_equal 1, result[:page]
+    assert_equal 1, result[:events].size
   end
 
   test "paginate_public_all paginates and sets section headings" do
@@ -73,6 +82,50 @@ class EventTest < ActiveSupport::TestCase
     page2 = Event.paginate_public_all(page: 2)
     assert_operator page2[:events].size, :>, 0
     assert_not page2[:show_upcoming_heading]
+  end
+
+  test "paginate_public_all sets past_index at future/past boundary" do
+    create_list_events(users(:one), Event::PER_PAGE, day_date: Date.current - 10.days)
+
+    page = 1
+    result = nil
+    100.times do
+      result = Event.paginate_public_all(page: page)
+      # page 1 で未来のみのとき past_index は events.size（見出し用）になり得るため除外する
+      break if result[:past_index] && result[:past_index] < result[:events].size
+      break unless result[:next_page]
+
+      page = result[:next_page]
+    end
+
+    assert result[:past_index], "past_index should be present on the page that includes past events"
+    assert_operator result[:past_index], :<, result[:events].size
+    idx = result[:past_index]
+    past_event = result[:events][idx]
+    assert past_event.days.maximum(:date) < Date.current
+
+    if idx.positive?
+      future_event = result[:events][idx - 1]
+      assert future_event.days.maximum(:date) >= Date.current
+    else
+      assert_not result[:show_upcoming_heading]
+    end
+  end
+
+  test "paginate_public_all fills remaining slots from past on the same page" do
+    future_count = Event.future_all.unscope(:includes, :order).count.size
+    # 最終の未来ページに余りが出るよう、割り切れる場合は未来を1件足す
+    create_list_events(users(:one), 1, day_date: Date.current + 60.days) if (future_count % Event::PER_PAGE).zero?
+    create_list_events(users(:one), 1, day_date: Date.current - 20.days)
+
+    future_count = Event.future_all.unscope(:includes, :order).count.size
+    boundary_page = (future_count / Event::PER_PAGE) + 1
+    result = Event.paginate_public_all(page: boundary_page)
+
+    assert result[:past_index].positive?
+    assert_operator result[:events].size, :>, result[:past_index]
+    assert result[:events][result[:past_index] - 1].days.maximum(:date) >= Date.current
+    assert result[:events][result[:past_index]].days.maximum(:date) < Date.current
   end
 
   private
