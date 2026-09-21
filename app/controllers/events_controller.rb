@@ -167,8 +167,8 @@ class EventsController < ApplicationController
     case action_name
     when "new", "create"
       @page_title = "タイムテーブルを作成"
-      @back_path = root_path
-      @back_label = "トップ"
+      @back_path = events_path(filter: "created")
+      @back_label = "一覧"
     when "show"
       @page_title = "概要"
     when "edit", "update"

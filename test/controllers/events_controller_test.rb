@@ -275,6 +275,16 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # タイムテーブル作成には作成した一覧への戻るボタンがある
+  test "new includes back link to created events index" do
+    get new_event_url
+    assert_response :success
+    assert_select "a[href=?][aria-label=?]", events_path(filter: "created"), "一覧へ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "一覧"
+    end
+  end
+
   # イベント作成処理（タグ未存在の場合にイベント作成と同時にタグも作成されることを確認）
   test "should create event and create tag when tag not exists" do
     event_name = "タグ未存在の名前"
