@@ -138,8 +138,15 @@ class PerformancesController < ApplicationController
     end
 
     # 出演情報作成フォームの戻り先（出演者詳細経由なら詳細、それ以外はタイムテーブル）
+    # new は params のみ参照し、古い session の出演者IDで戻り先が誤らないようにする。
+    # create（バリデーションエラー再表示含む）は session をフォールバックに使う。
     def set_performance_form_back
-      performer_id = params[:performer_id].presence || session[:fixed_performer_id]
+      performer_id =
+        if action_name == "new"
+          params[:performer_id].presence
+        else
+          params[:performer_id].presence || session[:fixed_performer_id]
+        end
       if performer_id.present?
         @back_path = event_performer_path(@event.event_key, performer_id)
         @back_label = "詳細"
