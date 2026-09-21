@@ -23,10 +23,30 @@ class DaysControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # 開催日一覧には概要への戻るボタンがある
+  test "index includes back link to event show" do
+    get event_days_path(@event.event_key)
+    assert_response :success
+    assert_select "a[href=?][aria-label=?]", event_path(@event.event_key), "概要へ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "概要"
+    end
+  end
+
   # 開催日追加ページ
   test "should get new" do
     get new_event_day_url(@event.event_key)
     assert_response :success
+  end
+
+  # 開催日追加には一覧への戻るボタンがある
+  test "new includes back link to days index" do
+    get new_event_day_url(@event.event_key)
+    assert_response :success
+    assert_select "a[href=?][aria-label=?]", event_days_path(@event.event_key), "一覧へ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "一覧"
+    end
   end
 
   # 通常遷移で開催日追加処理
@@ -63,6 +83,18 @@ class DaysControllerTest < ActionDispatch::IntegrationTest
       }
     end
     assert_response :unprocessable_entity
+  end
+
+  # 作成失敗時も一覧への戻るボタンがある
+  test "create failure keeps back link to days index" do
+    post event_days_path(@event.event_key), params: {
+      day: { date: "" }
+    }
+    assert_response :unprocessable_entity
+    assert_select "a[href=?][aria-label=?]", event_days_path(@event.event_key), "一覧へ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "一覧"
+    end
   end
 
   # イベント内の開催日が重複する場合は追加できない

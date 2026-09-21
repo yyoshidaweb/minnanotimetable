@@ -224,6 +224,16 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # AIタイムテーブル作成にはタイムテーブルへの戻るボタンがある
+  test "new includes back link to timetable show" do
+    get new_event_timetable_path(@event.event_key)
+    assert_response :success
+    assert_select "a[href=?][aria-label=?]", show_timetable_path(@event.event_key), "タイムテーブルへ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "タイムテーブル"
+    end
+  end
+
   # 他人のAIタイムテーブル作成ページにはアクセスできない
   test "should not get new timetable page for other users" do
     get new_event_timetable_path(@no_performance_event.event_key)
@@ -313,6 +323,22 @@ class TimetablesControllerTest < ActionDispatch::IntegrationTest
     end
     assert_response :unprocessable_entity
     assert_match "画像を選択してください", response.body
+  end
+
+  # 作成失敗時もタイムテーブルへの戻るボタンがある
+  test "create failure keeps back link to timetable show" do
+    sign_out @user
+    sign_in @user_two
+    post event_timetables_path(@no_performance_event.event_key), params: {
+      day_id: @no_performance_event_day.id
+    }
+    assert_response :unprocessable_entity
+    assert_select "a[href=?][aria-label=?]",
+                  show_timetable_path(@no_performance_event.event_key),
+                  "タイムテーブルへ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "タイムテーブル"
+    end
   end
 
   # AIタイムテーブル作成時に開催日が選択されていない場合は作成できない
