@@ -165,21 +165,24 @@ class StagesController < ApplicationController
       @stage = @event.stages.find(params[:id])
     end
 
-    # ページタイトルを設定
+    # ページタイトルと戻り先を設定（一覧タブには戻るボタンを付けない）
     def set_page_title
-      @page_title =
-        case action_name
-        when "index"
-          "ステージ一覧"
-        when "new", "create"
-          "ステージを作成"
-        when "show"
-          "ステージ詳細"
-        when "edit", "update"
-          "ステージを編集"
-        when "sort", "update_sort"
-          "ステージを並び替え"
-        end
+      case action_name
+      when "index"
+        @page_title = "ステージ一覧"
+      when "new", "create"
+        @page_title = "ステージを作成"
+        @back_path = event_stages_path(@event.event_key)
+      when "show"
+        @page_title = "ステージ詳細"
+        @back_path = event_stages_path(@event.event_key)
+      when "edit", "update"
+        @page_title = "ステージを編集"
+        @back_path = event_stage_path(@event.event_key, @stage)
+      when "sort", "update_sort"
+        @page_title = "ステージを並び替え"
+        @back_path = event_stages_path(@event.event_key)
+      end
     end
 
     # イベントヘッダー表示フラグ

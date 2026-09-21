@@ -156,13 +156,13 @@ class TimetablesController < ApplicationController
       @show_event_header = true
     end
 
-    # ページタイトルを設定
+    # ページタイトルと戻り先を設定（タイムテーブル表示には付けない）
     def set_page_title
-      @page_title =
-        case action_name
-        when "new", "create"
-          "画像からタイムテーブルを作成"
-        end
+      case action_name
+      when "new", "create"
+        @page_title = "画像からタイムテーブルを作成"
+        @back_path = show_timetable_path(@event.event_key)
+      end
     end
 
     # form_typeをセットする

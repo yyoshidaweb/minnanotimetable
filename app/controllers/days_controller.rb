@@ -56,15 +56,16 @@ class DaysController < ApplicationController
       @day = @event.days.find(params[:id])
     end
 
-    # ページタイトルを設定
+    # ページタイトルと戻り先を設定
     def set_page_title
-      @page_title =
-        case action_name
-        when "index"
-          "開催日一覧"
-        when "new", "create"
-          "開催日を追加"
-        end
+      case action_name
+      when "index"
+        @page_title = "開催日一覧"
+        @back_path = event_path(@event.event_key)
+      when "new", "create"
+        @page_title = "開催日を追加"
+        @back_path = event_days_path(@event.event_key)
+      end
     end
 
     # イベントヘッダー表示フラグ
