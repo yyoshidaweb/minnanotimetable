@@ -144,15 +144,21 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  # 所有者には未設定項目バッジとフィルタリンクを表示する
+  # 所有者には未設定項目バッジと絞り込みメニューを表示する
   test "index shows unset field badges and filter for owner" do
     incomplete_performer = create_incomplete_performer
     empty_performer = create_performer_without_performances
 
     get event_performers_url(@event.event_key)
     assert_response :success
-    assert_select "a[href=?]", event_performers_path(@event.event_key, filter: "unset"),
-                  text: "未設定項目あり"
+    assert_select "button[aria-label=?]", "絞り込み" do
+      assert_select "span.material-symbols-outlined", text: "filter_alt"
+    end
+    assert_select "[role=menu]" do
+      assert_select "a[href=?][role=menuitem]",
+                    event_performers_path(@event.event_key, filter: "unset"),
+                    text: "未設定項目あり"
+    end
 
     assert_select "a[href=?]", event_performer_path(@event.event_key, incomplete_performer) do
       assert_select "span.performer-unset-field-badge", text: "出演日が未設定です"
@@ -174,6 +180,7 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
 
     get event_performers_url(@event.event_key)
     assert_response :success
+    assert_select "button[aria-label=?]", "絞り込み", count: 0
     assert_select "a", text: "未設定項目あり", count: 0
     assert_select "span.performer-unset-field-badge", count: 0
   end
@@ -186,6 +193,7 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
 
     get event_performers_url(@event.event_key)
     assert_response :success
+    assert_select "button[aria-label=?]", "絞り込み", count: 0
     assert_select "a", text: "未設定項目あり", count: 0
     assert_select "span.performer-unset-field-badge", count: 0
   end
@@ -198,7 +206,14 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
 
     get event_performers_url(@event.event_key, filter: "unset")
     assert_response :success
-    assert_select "a[href=?]", event_performers_path(@event.event_key), text: "すべて表示"
+    assert_select "[role=menu]" do
+      assert_select "a[href=?][role=menuitem]",
+                    event_performers_path(@event.event_key),
+                    text: "すべて表示"
+      assert_select "a[href=?][role=menuitem]",
+                    event_performers_path(@event.event_key, filter: "unset"),
+                    text: "未設定項目あり"
+    end
     assert_select "a[href=?]", event_performer_path(@event.event_key, incomplete_performer)
     assert_select "a[href=?]", event_performer_path(@event.event_key, empty_performer)
     assert_select "a[href=?]", event_performer_path(@event.event_key, complete_performer), count: 0
@@ -212,6 +227,7 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     get event_performers_url(@event.event_key, filter: "unset")
     assert_response :success
     assert_select "a[href=?]", event_performer_path(@event.event_key, performers(:one))
+    assert_select "button[aria-label=?]", "絞り込み", count: 0
     assert_select "a", text: "すべて表示", count: 0
   end
 

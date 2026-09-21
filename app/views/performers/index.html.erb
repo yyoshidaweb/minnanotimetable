@@ -9,13 +9,7 @@
       <span class="material-symbols-outlined mr-1">person_add</span>
       <span class="font-semibold">出演者を追加する</span>
     <% end %>
-    <% if unset_items_filter? %>
-      <%= link_to "すべて表示", event_performers_path(@event.event_key),
-                  class: "text-sm text-blue-800 hover:underline" %>
-    <% else %>
-      <%= link_to "未設定項目あり", event_performers_path(@event.event_key, filter: "unset"),
-                  class: "text-sm text-blue-800 hover:underline" %>
-    <% end %>
+    <%= render "performers/filter_menu" %>
   </div>
 <% end %>
 <% if @performers.any? %>
