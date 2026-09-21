@@ -1,13 +1,22 @@
 <%# 検索結果などに表示されるタイトルと説明 %>
 <% content_for :title, "#{@event.display_name} #{@page_title} | みんなのタイムテーブル" %>
 <% content_for :description, "#{@event.display_name}の#{@page_title}。" %>
-<% if user_signed_in? && current_user == @event.user %>
-  <%= link_to new_event_performer_path(@event.event_key),
-                class: "mb-6 px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-900
-                        inline-flex justify-center items-center" do %>
-    <span class="material-symbols-outlined mr-1">person_add</span>
-    <span class="font-semibold">出演者を追加する</span>
-  <% end %>
+<% if event_owner? %>
+  <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
+    <%= link_to new_event_performer_path(@event.event_key),
+                  class: "px-4 py-2 bg-gray-800 text-white rounded-full hover:bg-gray-900
+                          inline-flex justify-center items-center" do %>
+      <span class="material-symbols-outlined mr-1">person_add</span>
+      <span class="font-semibold">出演者を追加する</span>
+    <% end %>
+    <% if unset_items_filter? %>
+      <%= link_to "すべて表示", event_performers_path(@event.event_key),
+                  class: "text-sm text-blue-800 hover:underline" %>
+    <% else %>
+      <%= link_to "未設定項目あり", event_performers_path(@event.event_key, filter: "unset"),
+                  class: "text-sm text-blue-800 hover:underline" %>
+    <% end %>
+  </div>
 <% end %>
 <% if @performers.any? %>
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">
@@ -18,7 +27,14 @@
         <%= link_to event_performer_path(@event.event_key, performer),
                       class: "block bg-white shadow-md rounded-lg pl-4 pr-10 py-4 border hover:bg-gray-50 transition" do %>
           <%# 名前 %>
-          <p class="mb-2 text-lg font-semibold text-gray-800 line-clamp-2"><%= performer.display_name %></p>
+          <div class="mb-2 flex flex-col items-start gap-1">
+            <p class="text-lg font-semibold text-gray-800 line-clamp-2"><%= performer.display_name %></p>
+            <% if event_owner? %>
+              <% performer.unset_field_labels.each do |label| %>
+                <%= render "performers/unset_field_badge", label: label %>
+              <% end %>
+            <% end %>
+          </div>
           <%# 出演情報 %>
           <% if performer.performances.any? %>
             <div class="gap-1 flex flex-col text-gray-500">
@@ -59,7 +75,13 @@
     <% end %>
   </div>
 <% else %>
-  <p class="text-gray-600">まだ出演者がいません</p>
+  <p class="text-gray-600">
+    <% if event_owner? && unset_items_filter? %>
+      未設定項目のある出演者はいません
+    <% else %>
+      まだ出演者がいません
+    <% end %>
+  </p>
 <% end %>
 <%# 下部タブメニュー %>
 <%= render "layouts/bottom_tab" %>

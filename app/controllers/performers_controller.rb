@@ -17,6 +17,10 @@ class PerformersController < ApplicationController
                         .order_by_name
                         .includes(:performer_name_tag)
                         .preload(performances: [ :day, { stage: :stage_name_tag } ])
+    # 所有者のみ「未設定項目あり」で絞り込み可能
+    if event_owner? && params[:filter] == "unset"
+      @performers = @performers.with_unset_items
+    end
     # お気に入り登録している出演者IDの配列を取得
     if user_signed_in?
       @favorite_performer_map = current_user.favorite_performer_map
@@ -143,9 +147,15 @@ class PerformersController < ApplicationController
       @event = Event.find_by!(event_key: params[:event_event_key])
     end
 
+    # イベントの所有者かどうか
+    def event_owner?
+      user_signed_in? && @event.user == current_user
+    end
+    helper_method :event_owner?
+
     # イベントの所有者かどうかチェック（異なる場合は404エラーを発生させる）
     def authorize_event!
-      raise ActiveRecord::RecordNotFound unless @event.user == current_user
+      raise ActiveRecord::RecordNotFound unless event_owner?
     end
 
     # 非公開イベントは作成者のみ閲覧可能

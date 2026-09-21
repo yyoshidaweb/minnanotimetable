@@ -59,6 +59,28 @@ class Performance < ApplicationRecord
       .where.not(duration: nil)
   }
 
+  # 出演日・ステージ・開始時刻・出演時間のいずれかが未設定のperformance
+  scope :incomplete, -> {
+    where(day_id: nil)
+      .or(where(stage_id: nil))
+      .or(where(start_time: nil))
+      .or(where(duration: nil))
+  }
+
+  # 未設定の項目ラベル（バッジ表示用）。表示順は一覧カードの出演情報と同じ
+  def missing_field_labels
+    labels = []
+    labels << "出演日" if day_id.blank?
+    labels << "時刻" if start_time.blank? || duration.blank?
+    labels << "ステージ" if stage_id.blank?
+    labels
+  end
+
+  # タイムテーブル描画に必要な項目が欠けているか
+  def incomplete?
+    missing_field_labels.any?
+  end
+
   # タイムテーブル描画に必要な情報がすべて揃ったperformanceを取得するスコープ
   scope :timetable_ready_for_event_on_date, ->(event, date) {
     timetable_ready

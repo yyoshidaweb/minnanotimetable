@@ -65,4 +65,44 @@ class PerformerTest < ActiveSupport::TestCase
     ordered = @performer.performances.to_a
     assert_operator ordered.index(earlier_day_overnight), :<, ordered.index(later_day)
   end
+
+  test "unset_field_labels returns 出演情報 when there are no performances" do
+    performer = Performer.create!(
+      event: events(:one),
+      performer_name_tag: PerformerNameTag.create!(name: "バッジ確認出演者")
+    )
+
+    assert_equal [ "出演情報" ], performer.unset_field_labels
+    assert performer.has_unset_items?
+  end
+
+  test "unset_field_labels returns missing fields from incomplete performances" do
+    performer = Performer.create!(
+      event: events(:one),
+      performer_name_tag: PerformerNameTag.create!(name: "一部未設定出演者")
+    )
+    Performance.create!(performer: performer, day: @day)
+
+    assert_equal %w[時刻 ステージ], performer.unset_field_labels
+    assert performer.has_unset_items?
+  end
+
+  test "with_unset_items includes incomplete and empty performers only" do
+    empty = Performer.create!(
+      event: events(:one),
+      performer_name_tag: PerformerNameTag.create!(name: "空出演者")
+    )
+    incomplete = Performer.create!(
+      event: events(:one),
+      performer_name_tag: PerformerNameTag.create!(name: "不完全出演者")
+    )
+    Performance.create!(performer: incomplete)
+    complete = performers(:one)
+
+    result = events(:one).performers.with_unset_items
+
+    assert_includes result, empty
+    assert_includes result, incomplete
+    assert_not_includes result, complete
+  end
 end
