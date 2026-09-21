@@ -17,7 +17,7 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "a[href=?][aria-label=?]", root_path, "トップへ戻る" do
       assert_select "span.material-symbols-outlined", text: "arrow_back"
-      assert_select "span", text: "トップへ"
+      assert_select "span", text: "トップ"
     end
   end
 
@@ -26,7 +26,7 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "a[href=?][aria-label=?]", root_path, "トップへ戻る" do
       assert_select "span.material-symbols-outlined", text: "arrow_back"
-      assert_select "span", text: "トップへ"
+      assert_select "span", text: "トップ"
     end
   end
 

@@ -162,7 +162,7 @@ class TimetablesController < ApplicationController
       when "new", "create"
         @page_title = "画像からタイムテーブルを作成"
         @back_path = show_timetable_path(@event.event_key)
-        @back_label = "タイムテーブルへ"
+        @back_label = "タイムテーブル"
       end
     end
 

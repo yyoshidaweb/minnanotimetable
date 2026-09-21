@@ -32,7 +32,7 @@ class EventsController < ApplicationController
       @page_title = "みんなが作ったタイムテーブル"
     end
     @back_path = root_path
-    @back_label = "トップへ"
+    @back_label = "トップ"
 
     @events = result[:events]
     @page = result[:page]
@@ -168,13 +168,13 @@ class EventsController < ApplicationController
     when "new", "create"
       @page_title = "タイムテーブルを作成"
       @back_path = root_path
-      @back_label = "トップへ"
+      @back_label = "トップ"
     when "show"
       @page_title = "概要"
     when "edit", "update"
       @page_title = "タイムテーブルを編集"
       @back_path = event_path(@event.event_key)
-      @back_label = "概要へ"
+      @back_label = "概要"
     end
   end
 

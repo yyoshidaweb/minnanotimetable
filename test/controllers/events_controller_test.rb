@@ -35,7 +35,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "a[href=?][aria-label=?]", event_path(@event.event_key), "概要へ戻る" do
       assert_select "span.material-symbols-outlined", text: "arrow_back"
-      assert_select "span", text: "概要へ"
+      assert_select "span", text: "概要"
     end
   end
 
@@ -45,7 +45,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "a[href=?][aria-label=?]", root_path, "トップへ戻る" do
       assert_select "span.material-symbols-outlined", text: "arrow_back"
-      assert_select "span", text: "トップへ"
+      assert_select "span", text: "トップ"
     end
   end
 

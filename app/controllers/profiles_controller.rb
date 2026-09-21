@@ -7,14 +7,14 @@ class ProfilesController < ApplicationController
     @user = current_user
     @page_title = "プロフィール"
     @back_path = root_path
-    @back_label = "トップへ"
+    @back_label = "トップ"
   end
 
   def edit
     @user = current_user
     @page_title = "プロフィールを編集"
     @back_path = profile_path
-    @back_label = "詳細へ"
+    @back_label = "詳細"
   end
 
   def update
@@ -26,7 +26,7 @@ class ProfilesController < ApplicationController
       # 更新に失敗した場合、編集ページを再表示
       @page_title = "プロフィールを編集"
       @back_path = profile_path
-      @back_label = "詳細へ"
+      @back_label = "詳細"
       render :edit, status: :unprocessable_entity
     end
   end

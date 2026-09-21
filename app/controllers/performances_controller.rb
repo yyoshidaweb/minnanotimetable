@@ -133,7 +133,7 @@ class PerformancesController < ApplicationController
       when "edit", "update"
         @page_title = "出演情報を編集"
         @back_path = event_performer_path(@event.event_key, @performance.performer)
-        @back_label = "詳細へ"
+        @back_label = "詳細"
       end
     end
 
@@ -142,10 +142,10 @@ class PerformancesController < ApplicationController
       performer_id = params[:performer_id].presence || session[:fixed_performer_id]
       if performer_id.present?
         @back_path = event_performer_path(@event.event_key, performer_id)
-        @back_label = "詳細へ"
+        @back_label = "詳細"
       else
         @back_path = show_timetable_path(@event.event_key)
-        @back_label = "タイムテーブルへ"
+        @back_label = "タイムテーブル"
       end
     end
 

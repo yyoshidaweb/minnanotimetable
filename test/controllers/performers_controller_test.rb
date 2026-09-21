@@ -57,7 +57,7 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "a[href=?][aria-label=?]", event_performers_path(@event.event_key), "一覧へ戻る" do
       assert_select "span.material-symbols-outlined", text: "arrow_back"
-      assert_select "span", text: "一覧へ"
+      assert_select "span", text: "一覧"
     end
   end
 
