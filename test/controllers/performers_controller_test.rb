@@ -144,6 +144,93 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  # 所有者には未設定項目バッジと絞り込みメニューを表示する
+  test "index shows unset field badges and filter for owner" do
+    incomplete_performer = create_incomplete_performer
+    empty_performer = create_performer_without_performances
+
+    get event_performers_url(@event.event_key)
+    assert_response :success
+    assert_select "button[aria-label=?]", "絞り込み" do
+      assert_select "span.material-symbols-outlined", text: "filter_alt"
+    end
+    assert_select "[role=menu]" do
+      assert_select "a[href=?][role=menuitem]",
+                    event_performers_path(@event.event_key, filter: "unset"),
+                    text: "未設定項目あり"
+    end
+
+    assert_select "a[href=?]", event_performer_path(@event.event_key, incomplete_performer) do
+      assert_select "span.performer-unset-field-badge", text: "出演日が未設定です"
+      assert_select "span.performer-unset-field-badge", text: "時刻が未設定です"
+      assert_select "span.performer-unset-field-badge", text: "ステージが未設定です"
+    end
+    assert_select "a[href=?]", event_performer_path(@event.event_key, empty_performer) do
+      assert_select "span.performer-unset-field-badge", text: "出演情報が未設定です"
+    end
+    assert_select "a[href=?]", event_performer_path(@event.event_key, performers(:one)) do
+      assert_select "span.performer-unset-field-badge", count: 0
+    end
+  end
+
+  # 未ログインでは未設定バッジとフィルタを出さない
+  test "index hides unset field badges and filter for guest" do
+    create_incomplete_performer
+    sign_out @user
+
+    get event_performers_url(@event.event_key)
+    assert_response :success
+    assert_select "button[aria-label=?]", "絞り込み", count: 0
+    assert_select "a", text: "未設定項目あり", count: 0
+    assert_select "span.performer-unset-field-badge", count: 0
+  end
+
+  # 他ユーザーでも未設定バッジとフィルタを出さない
+  test "index hides unset field badges and filter for other user" do
+    create_incomplete_performer
+    sign_out @user
+    sign_in users(:two)
+
+    get event_performers_url(@event.event_key)
+    assert_response :success
+    assert_select "button[aria-label=?]", "絞り込み", count: 0
+    assert_select "a", text: "未設定項目あり", count: 0
+    assert_select "span.performer-unset-field-badge", count: 0
+  end
+
+  # 所有者の「未設定項目あり」フィルタは未設定の出演者のみ表示する
+  test "index filter unset shows only performers with unset items for owner" do
+    incomplete_performer = create_incomplete_performer
+    empty_performer = create_performer_without_performances
+    complete_performer = performers(:one)
+
+    get event_performers_url(@event.event_key, filter: "unset")
+    assert_response :success
+    assert_select "[role=menu]" do
+      assert_select "a[href=?][role=menuitem]",
+                    event_performers_path(@event.event_key),
+                    text: "すべて表示"
+      assert_select "a[href=?][role=menuitem]",
+                    event_performers_path(@event.event_key, filter: "unset"),
+                    text: "未設定項目あり"
+    end
+    assert_select "a[href=?]", event_performer_path(@event.event_key, incomplete_performer)
+    assert_select "a[href=?]", event_performer_path(@event.event_key, empty_performer)
+    assert_select "a[href=?]", event_performer_path(@event.event_key, complete_performer), count: 0
+  end
+
+  # 非所有者は filter=unset を指定しても絞り込みされない
+  test "index ignores unset filter for non-owner" do
+    create_incomplete_performer
+    sign_out @user
+
+    get event_performers_url(@event.event_key, filter: "unset")
+    assert_response :success
+    assert_select "a[href=?]", event_performer_path(@event.event_key, performers(:one))
+    assert_select "button[aria-label=?]", "絞り込み", count: 0
+    assert_select "a", text: "すべて表示", count: 0
+  end
+
   # 出演者詳細の出演一覧も6時起点の順
   test "show lists performances in festival time order" do
     performer = create_overnight_performer
@@ -503,5 +590,17 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
         duration: 30
       )
       performer
+    end
+
+    def create_incomplete_performer
+      tag = PerformerNameTag.create!(name: "未設定出演者")
+      performer = @event.performers.create!(performer_name_tag: tag)
+      Performance.create!(performer: performer)
+      performer
+    end
+
+    def create_performer_without_performances
+      tag = PerformerNameTag.create!(name: "出演情報なし出演者")
+      @event.performers.create!(performer_name_tag: tag)
     end
 end

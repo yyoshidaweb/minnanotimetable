@@ -28,8 +28,34 @@ class Performer < ApplicationRecord
       .order("performer_name_tags.name ASC")
   }
 
+  # 未設定項目のある出演情報を持つ、または出演情報が1件もない出演者
+  scope :with_unset_items, -> {
+    where(
+      id: left_outer_joins(:performances)
+        .where(
+          "performances.id IS NULL OR performances.day_id IS NULL OR " \
+          "performances.stage_id IS NULL OR performances.start_time IS NULL OR " \
+          "performances.duration IS NULL"
+        )
+        .select(:id)
+    )
+  }
+
   # フォームや一覧表示用の名前
   def display_name
     performer_name_tag.name
+  end
+
+  # 所有者向けバッジ用。出演情報がない場合は「出演情報」、ある場合は欠けている項目の和集合
+  def unset_field_labels
+    return [ "出演情報" ] if performances.empty?
+
+    labels = performances.flat_map(&:missing_field_labels)
+    %w[出演日 時刻 ステージ].select { |label| labels.include?(label) }
+  end
+
+  # 未設定項目ありフィルタの対象か
+  def has_unset_items?
+    performances.empty? || performances.any?(&:incomplete?)
   end
 end

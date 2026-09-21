@@ -20,4 +20,9 @@ module PerformersHelper
     return unless user_signed_in?
     @favorite_performer_map[performer.id]
   end
+
+  # 出演者一覧の「未設定項目あり」フィルタが有効か
+  def unset_items_filter?
+    params[:filter] == "unset"
+  end
 end

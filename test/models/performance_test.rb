@@ -21,6 +21,22 @@ class PerformanceTest < ActiveSupport::TestCase
     assert_nil performance.duration
   end
 
+  test "incomplete? and missing_field_labels for unset fields" do
+    performance = Performance.create!(performer: @performer)
+
+    assert performance.incomplete?
+    assert_equal %w[出演日 時刻 ステージ], performance.missing_field_labels
+    assert_includes Performance.incomplete, performance
+  end
+
+  test "timetable ready performance is not incomplete" do
+    performance = performances(:one)
+
+    assert_not performance.incomplete?
+    assert_empty performance.missing_field_labels
+    assert_not_includes Performance.incomplete, performance
+  end
+
   # start_time + duration で end_time が自動生成される
   test "calculates end_time from start_time and duration" do
     performance = Performance.new(
