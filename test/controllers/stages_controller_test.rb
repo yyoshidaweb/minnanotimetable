@@ -55,8 +55,9 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     stage = @event.stages.first
     get event_stage_url(@event.event_key, stage)
     assert_response :success
-    assert_select "a[href=?][aria-label=戻る]", event_stages_path(@event.event_key) do
+    assert_select "a[href=?][aria-label=?]", event_stages_path(@event.event_key), "一覧へ戻る" do
       assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "一覧へ"
     end
   end
 
@@ -64,7 +65,7 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
   test "index does not include back link" do
     get event_stages_url(@event.event_key)
     assert_response :success
-    assert_select "a[aria-label=戻る]", count: 0
+    assert_select "a[aria-label$=戻る]", count: 0
   end
 
   # 未ログインでもステージ詳細にアクセス可能

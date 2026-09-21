@@ -3,18 +3,21 @@
   <header class="fixed left-0 w-full h-8 bg-white border-b border-gray-100 z-50 flex items-center
                   <%= secondary_header_top_position %>">
     <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
-      <%# 左: 戻るボタン（@back_path がある場合のみ表示。左右同幅でタイトルを中央に保つ） %>
-      <div class="w-8 shrink-0 flex items-center">
+      <%# 左: 戻るボタン（@back_path がある場合のみ表示。左右 flex-1 でタイトルを中央に保つ） %>
+      <div class="flex-1 flex items-center justify-start min-w-0">
         <% if defined?(@back_path) && @back_path.present? %>
           <%= link_to @back_path,
-                      class: "flex items-center text-gray-800 hover:text-gray-600",
-                      aria: { label: "戻る" } do %>
-            <span class="material-symbols-outlined" style="font-size: 1.25rem;">arrow_back</span>
+                      class: "inline-flex items-center gap-0.5 text-gray-800 hover:text-gray-600 min-w-0",
+                      aria: { label: "#{@back_label}戻る" } do %>
+            <span class="material-symbols-outlined shrink-0" style="font-size: 1.25rem;">arrow_back</span>
+            <% if defined?(@back_label) && @back_label.present? %>
+              <span class="text-xs truncate"><%= @back_label %></span>
+            <% end %>
           <% end %>
         <% end %>
       </div>
-      <h1 class="flex-1 text-center text-md text-gray-800 font-semibold"><%= @page_title %></h1>
-      <div class="w-8 shrink-0"></div>
+      <h1 class="shrink-0 px-2 text-md text-gray-800 font-semibold"><%= @page_title %></h1>
+      <div class="flex-1"></div>
     </div>
   </header>
 <% end %>

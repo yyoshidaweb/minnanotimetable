@@ -127,22 +127,25 @@ class PerformancesController < ApplicationController
       case action_name
       when "new", "create"
         @page_title = "出演情報を作成"
-        @back_path = performance_form_back_path
+        set_performance_form_back
       when "show"
         @page_title = "出演情報詳細"
       when "edit", "update"
         @page_title = "出演情報を編集"
         @back_path = event_performer_path(@event.event_key, @performance.performer)
+        @back_label = "詳細へ"
       end
     end
 
     # 出演情報作成フォームの戻り先（出演者詳細経由なら詳細、それ以外はタイムテーブル）
-    def performance_form_back_path
+    def set_performance_form_back
       performer_id = params[:performer_id].presence || session[:fixed_performer_id]
       if performer_id.present?
-        event_performer_path(@event.event_key, performer_id)
+        @back_path = event_performer_path(@event.event_key, performer_id)
+        @back_label = "詳細へ"
       else
-        show_timetable_path(@event.event_key)
+        @back_path = show_timetable_path(@event.event_key)
+        @back_label = "タイムテーブルへ"
       end
     end
 

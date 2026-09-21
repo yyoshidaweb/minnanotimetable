@@ -171,12 +171,15 @@ class PerformersController < ApplicationController
       when "new", "create"
         @page_title = "出演者を作成"
         @back_path = event_performers_path(@event.event_key)
+        @back_label = "一覧へ"
       when "show"
         @page_title = "出演者詳細"
         @back_path = event_performers_path(@event.event_key)
+        @back_label = "一覧へ"
       when "edit", "update"
         @page_title = "出演者を編集"
         @back_path = event_performer_path(@event.event_key, @performer)
+        @back_label = "詳細へ"
       end
     end
 

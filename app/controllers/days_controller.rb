@@ -62,9 +62,11 @@ class DaysController < ApplicationController
       when "index"
         @page_title = "開催日一覧"
         @back_path = event_path(@event.event_key)
+        @back_label = "概要へ"
       when "new", "create"
         @page_title = "開催日を追加"
         @back_path = event_days_path(@event.event_key)
+        @back_label = "一覧へ"
       end
     end
 

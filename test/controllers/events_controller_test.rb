@@ -26,15 +26,16 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   test "show does not include back link" do
     get event_url(@event.event_key)
     assert_response :success
-    assert_select "a[aria-label=戻る]", count: 0
+    assert_select "a[aria-label$=戻る]", count: 0
   end
 
   # 編集ページには概要への戻るボタンがある
   test "edit includes back link to event show" do
     get edit_event_url(@event.event_key)
     assert_response :success
-    assert_select "a[href=?][aria-label=戻る]", event_path(@event.event_key) do
+    assert_select "a[href=?][aria-label=?]", event_path(@event.event_key), "概要へ戻る" do
       assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "概要へ"
     end
   end
 
@@ -42,8 +43,9 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   test "index includes back link to root" do
     get events_path
     assert_response :success
-    assert_select "a[href=?][aria-label=戻る]", root_path do
+    assert_select "a[href=?][aria-label=?]", root_path, "トップへ戻る" do
       assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "トップへ"
     end
   end
 

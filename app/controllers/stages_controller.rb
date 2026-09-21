@@ -173,15 +173,19 @@ class StagesController < ApplicationController
       when "new", "create"
         @page_title = "ステージを作成"
         @back_path = event_stages_path(@event.event_key)
+        @back_label = "一覧へ"
       when "show"
         @page_title = "ステージ詳細"
         @back_path = event_stages_path(@event.event_key)
+        @back_label = "一覧へ"
       when "edit", "update"
         @page_title = "ステージを編集"
         @back_path = event_stage_path(@event.event_key, @stage)
+        @back_label = "詳細へ"
       when "sort", "update_sort"
         @page_title = "ステージを並び替え"
         @back_path = event_stages_path(@event.event_key)
+        @back_label = "一覧へ"
       end
     end
 

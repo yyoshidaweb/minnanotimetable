@@ -15,16 +15,18 @@ class StaticPagesControllerTest < ActionDispatch::IntegrationTest
   test "terms includes back link to root" do
     get terms_path
     assert_response :success
-    assert_select "a[href=?][aria-label=戻る]", root_path do
+    assert_select "a[href=?][aria-label=?]", root_path, "トップへ戻る" do
       assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "トップへ"
     end
   end
 
   test "privacy includes back link to root" do
     get privacy_path
     assert_response :success
-    assert_select "a[href=?][aria-label=戻る]", root_path do
+    assert_select "a[href=?][aria-label=?]", root_path, "トップへ戻る" do
       assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "トップへ"
     end
   end
 
