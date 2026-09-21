@@ -122,17 +122,38 @@ class PerformancesController < ApplicationController
       @stages = @event.stages.includes(:stage_name_tag)
     end
 
-    # ページタイトルを設定
+    # ページタイトルと戻り先を設定
     def set_page_title
-      @page_title =
-        case action_name
-        when "new", "create"
-          "出演情報を作成"
-        when "show"
-          "出演情報詳細"
-        when "edit", "update"
-          "出演情報を編集"
+      case action_name
+      when "new", "create"
+        @page_title = "出演情報を作成"
+        set_performance_form_back
+      when "show"
+        @page_title = "出演情報詳細"
+      when "edit", "update"
+        @page_title = "出演情報を編集"
+        @back_path = event_performer_path(@event.event_key, @performance.performer)
+        @back_label = "詳細"
+      end
+    end
+
+    # 出演情報作成フォームの戻り先（出演者詳細経由なら詳細、それ以外はタイムテーブル）
+    # new は params のみ参照し、古い session の出演者IDで戻り先が誤らないようにする。
+    # create（バリデーションエラー再表示含む）は session をフォールバックに使う。
+    def set_performance_form_back
+      performer_id =
+        if action_name == "new"
+          params[:performer_id].presence
+        else
+          params[:performer_id].presence || session[:fixed_performer_id]
         end
+      if performer_id.present?
+        @back_path = event_performer_path(@event.event_key, performer_id)
+        @back_label = "詳細"
+      else
+        @back_path = show_timetable_path(@event.event_key)
+        @back_label = "タイムテーブル"
+      end
     end
 
     # イベントヘッダー表示フラグ

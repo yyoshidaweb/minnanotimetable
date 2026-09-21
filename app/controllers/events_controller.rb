@@ -31,6 +31,8 @@ class EventsController < ApplicationController
       @without_timetable_ready_index = result[:without_timetable_ready_index]
       @page_title = "みんなが作ったタイムテーブル"
     end
+    @back_path = root_path
+    @back_label = "トップ"
 
     @events = result[:events]
     @page = result[:page]
@@ -160,17 +162,20 @@ class EventsController < ApplicationController
     @days = @event.days.order(:date)
   end
 
-  # ページタイトルを設定
+  # ページタイトルと戻り先を設定（概要タブには戻るボタンを付けない）
   def set_page_title
-    @page_title =
-      case action_name
-      when "new", "create"
-        "タイムテーブルを作成"
-      when "show"
-        "概要"
-      when "edit", "update"
-        "タイムテーブルを編集"
-      end
+    case action_name
+    when "new", "create"
+      @page_title = "タイムテーブルを作成"
+      @back_path = events_path(filter: "created")
+      @back_label = "一覧"
+    when "show"
+      @page_title = "概要"
+    when "edit", "update"
+      @page_title = "タイムテーブルを編集"
+      @back_path = event_path(@event.event_key)
+      @back_label = "概要"
+    end
   end
 
   # イベントヘッダー表示フラグ

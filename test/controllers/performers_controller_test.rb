@@ -50,6 +50,24 @@ class PerformersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # 出演者詳細には一覧への戻るボタンがある
+  test "show includes back link to performers index" do
+    performer = @event.performers.first
+    get event_performer_url(@event.event_key, performer)
+    assert_response :success
+    assert_select "a[href=?][aria-label=?]", event_performers_path(@event.event_key), "一覧へ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "一覧"
+    end
+  end
+
+  # 出演者一覧タブには戻るボタンを付けない
+  test "index does not include back link" do
+    get event_performers_url(@event.event_key)
+    assert_response :success
+    assert_select "a[aria-label$=戻る]", count: 0
+  end
+
   # 未ログインでも出演者詳細にアクセス可能
   test "should get show with logout" do
     sign_out @user

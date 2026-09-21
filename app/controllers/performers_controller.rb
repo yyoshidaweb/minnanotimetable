@@ -163,19 +163,24 @@ class PerformersController < ApplicationController
       @performances = @performer.performances.ordered_for_performer_detail
     end
 
-    # ページタイトルを設定
+    # ページタイトルと戻り先を設定（一覧タブには戻るボタンを付けない）
     def set_page_title
-      @page_title =
-        case action_name
-        when "index"
-          "出演者一覧"
-        when "new", "create"
-          "出演者を作成"
-        when "show"
-          "出演者詳細"
-        when "edit", "update"
-          "出演者を編集"
-        end
+      case action_name
+      when "index"
+        @page_title = "出演者一覧"
+      when "new", "create"
+        @page_title = "出演者を作成"
+        @back_path = event_performers_path(@event.event_key)
+        @back_label = "一覧"
+      when "show"
+        @page_title = "出演者詳細"
+        @back_path = event_performers_path(@event.event_key)
+        @back_label = "一覧"
+      when "edit", "update"
+        @page_title = "出演者を編集"
+        @back_path = event_performer_path(@event.event_key, @performer)
+        @back_label = "詳細"
+      end
     end
 
     # イベントヘッダー表示フラグ

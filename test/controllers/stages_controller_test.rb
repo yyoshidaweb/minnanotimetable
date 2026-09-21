@@ -50,6 +50,24 @@ class StagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # ステージ詳細には一覧への戻るボタンがある
+  test "show includes back link to stages index" do
+    stage = @event.stages.first
+    get event_stage_url(@event.event_key, stage)
+    assert_response :success
+    assert_select "a[href=?][aria-label=?]", event_stages_path(@event.event_key), "一覧へ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "一覧"
+    end
+  end
+
+  # ステージ一覧タブには戻るボタンを付けない
+  test "index does not include back link" do
+    get event_stages_url(@event.event_key)
+    assert_response :success
+    assert_select "a[aria-label$=戻る]", count: 0
+  end
+
   # 未ログインでもステージ詳細にアクセス可能
   test "should get show stage with logout" do
     sign_out @user

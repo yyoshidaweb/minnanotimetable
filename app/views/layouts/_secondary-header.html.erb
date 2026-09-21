@@ -1,9 +1,27 @@
 <%# セカンドヘッダー共通テンプレート %>
 <% if defined?(@page_title) && @page_title.present? %>
   <header class="fixed left-0 w-full h-8 bg-white border-b border-gray-100 z-50 flex items-center
-                  <%= secondary_header_top_position %>">
-    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center">
-      <h1 class="text-md text-gray-800 font-semibold"><%= @page_title %></h1>
+                  <%= secondary_header_top_position %>"
+          data-controller="secondary-header">
+    <div class="w-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
+      <%# 左: 戻るボタン（@back_path がある場合のみ表示。左右 flex-1 でタイトルを中央に保つ） %>
+      <div class="flex-1 flex items-center justify-start min-w-8 overflow-hidden"
+           data-secondary-header-target="back">
+        <% if defined?(@back_path) && @back_path.present? %>
+          <%= link_to @back_path,
+                      class: "inline-flex items-center gap-0.5 text-gray-800 hover:text-gray-600 max-w-full",
+                      aria: { label: "#{@back_label}へ戻る" } do %>
+            <%# Material Symbolsは字形がやや下寄りなので、ラベルを1px下げて光学的に揃える %>
+            <span class="material-symbols-outlined shrink-0 leading-none" style="font-size: 1.25rem;">arrow_back</span>
+            <% if defined?(@back_label) && @back_label.present? %>
+              <span class="text-xs leading-none whitespace-nowrap translate-y-px"
+                    data-secondary-header-target="label"><%= @back_label %></span>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+      <h1 class="shrink-0 px-2 text-md text-gray-800 font-semibold"><%= @page_title %></h1>
+      <div class="flex-1 min-w-0"></div>
     </div>
   </header>
 <% end %>

@@ -22,6 +22,34 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  # 概要タブには戻るボタンを付けない
+  test "show does not include back link" do
+    get event_url(@event.event_key)
+    assert_response :success
+    assert_select "a[aria-label$=戻る]", count: 0
+  end
+
+  # 編集ページには概要への戻るボタンがある
+  test "edit includes back link to event show" do
+    get edit_event_url(@event.event_key)
+    assert_response :success
+    assert_select "a[href=?][aria-label=?]", event_path(@event.event_key), "概要へ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "概要"
+    end
+  end
+
+  # 一覧ページにはトップへの戻るボタンがある
+  test "index includes back link to root" do
+    get events_path
+    assert_response :success
+    assert_select "a[href=?][aria-label=?]", root_path, "トップへ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "トップ"
+    end
+  end
+
+
   test "should not show unpublished event with logout" do
     sign_out @user
     get event_url(events(:unpublished).event_key)
@@ -245,6 +273,16 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   test "should new event" do
     get new_event_url
     assert_response :success
+  end
+
+  # タイムテーブル作成には作成した一覧への戻るボタンがある
+  test "new includes back link to created events index" do
+    get new_event_url
+    assert_response :success
+    assert_select "a[href=?][aria-label=?]", events_path(filter: "created"), "一覧へ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "一覧"
+    end
   end
 
   # イベント作成処理（タグ未存在の場合にイベント作成と同時にタグも作成されることを確認）

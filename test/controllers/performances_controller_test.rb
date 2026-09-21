@@ -27,6 +27,47 @@ class PerformancesControllerTest < ActionDispatch::IntegrationTest
     assert_select 'select[name="performance[stage_id]"][data-controller="searchable-select"]'
   end
 
+  # new は古い session の出演者IDを戻り先に使わない
+  test "new without performer_id ignores stale fixed_performer_id for back link" do
+    performer = @event.performers.first
+    get new_event_performance_url(@event.event_key, performer_id: performer.id)
+    assert_response :success
+
+    get new_event_performance_url(@event.event_key)
+    assert_response :success
+    assert_select "a[href=?][aria-label=?]",
+                  show_timetable_path(@event.event_key),
+                  "タイムテーブルへ戻る"
+    assert_select "a[href=?][aria-label=?]",
+                  event_performer_path(@event.event_key, performer),
+                  "詳細へ戻る",
+                  count: 0
+  end
+
+  # create のバリデーションエラー再表示では session の出演者へ戻る
+  test "create failure keeps back link to performer from session" do
+    performer = @event.performers.first
+    get new_event_performance_url(@event.event_key, performer_id: performer.id)
+    assert_response :success
+
+    assert_no_difference("Performance.for_event(@event).count") do
+      post event_performances_path(@event.event_key), params: {
+        performance: {
+          performer_id: performer.id,
+          day_id: @event.days.first.id,
+          stage_id: @event.stages.first.id,
+          start_time_hour: "10",
+          start_time_minute: "",
+          duration: "30"
+        }
+      }
+    end
+    assert_response :unprocessable_entity
+    assert_select "a[href=?][aria-label=?]",
+                  event_performer_path(@event.event_key, performer),
+                  "詳細へ戻る"
+  end
+
   # 他者の出演情報作成ページはアクセスできない
   test "should not get new of other user's event" do
     get new_event_performance_url(@other_event.event_key)

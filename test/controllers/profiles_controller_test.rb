@@ -18,10 +18,30 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success # 成功レスポンスを期待
   end
 
+  # プロフィール詳細にはトップへの戻るボタンがある
+  test "show includes back link to root" do
+    get profile_url
+    assert_response :success
+    assert_select "a[href=?][aria-label=?]", root_path, "トップへ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "トップ"
+    end
+  end
+
   # プロフィール編集アクションのテスト
   test "should get edit when logged in" do
     get edit_profile_url(@user) # ログインユーザーのプロフィール編集ページ
     assert_response :success # 成功レスポンスを期待
+  end
+
+  # プロフィール編集には詳細への戻るボタンがある
+  test "edit includes back link to profile show" do
+    get edit_profile_url
+    assert_response :success
+    assert_select "a[href=?][aria-label=?]", profile_path, "詳細へ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "詳細"
+    end
   end
 
   # プロフィール更新アクションのテスト
@@ -42,6 +62,16 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     assert_not_equal "two", @user.username
     # HTTPステータスが422（バリデーションエラー）であることを確認
     assert_response :unprocessable_entity
+  end
+
+  # 更新失敗時も詳細への戻るボタンがある
+  test "update failure keeps back link to profile show" do
+    patch profile_url, params: { user: { username: "two" } }
+    assert_response :unprocessable_entity
+    assert_select "a[href=?][aria-label=?]", profile_path, "詳細へ戻る" do
+      assert_select "span.material-symbols-outlined", text: "arrow_back"
+      assert_select "span", text: "詳細"
+    end
   end
 
   # usernameが予約語の場合のプロフィール更新テスト
