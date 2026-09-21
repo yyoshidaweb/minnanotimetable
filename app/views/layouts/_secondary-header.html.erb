@@ -9,9 +9,10 @@
           <%= link_to @back_path,
                       class: "inline-flex items-center gap-0.5 text-gray-800 hover:text-gray-600 min-w-0",
                       aria: { label: "#{@back_label}へ戻る" } do %>
-            <span class="material-symbols-outlined shrink-0" style="font-size: 1.25rem;">arrow_back</span>
+            <%# Material Symbolsは字形がやや下寄りなので、ラベルを1px下げて光学的に揃える %>
+            <span class="material-symbols-outlined shrink-0 leading-none" style="font-size: 1.25rem;">arrow_back</span>
             <% if defined?(@back_label) && @back_label.present? %>
-              <span class="text-xs truncate"><%= @back_label %></span>
+              <span class="text-xs leading-none truncate translate-y-px"><%= @back_label %></span>
             <% end %>
           <% end %>
         <% end %>
