@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: weekly         # 毎週実行
       day: friday              # 金曜日
-      time: "19:00"            # 19:00
+      time: "00:00"            # 00:00
       timezone: Asia/Tokyo
     open-pull-requests-limit: 1  # PR上限を1に制限
     groups:
@@ -23,7 +23,7 @@ updates:
     schedule:
       interval: weekly
       day: friday
-      time: "19:00"
+      time: "00:00"
       timezone: Asia/Tokyo
     open-pull-requests-limit: 1
     groups:
