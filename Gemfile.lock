@@ -246,7 +246,7 @@ GEM
     omniauth-rails_csrf_protection (2.0.1)
       actionpack (>= 4.2)
       omniauth (~> 2.0)
-    openai (0.90.0)
+    openai (0.93.0)
       connection_pool (>= 2.2.3)
       logger
     openssl (4.0.2)
