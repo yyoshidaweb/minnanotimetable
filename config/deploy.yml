@@ -85,8 +85,8 @@ builder:
   # remote: ssh://docker@docker-builder-server
   #
   # # Pass arguments and secrets to the Docker build process
-  # args:
-  #   RUBY_VERSION: ruby-3.4.1
+  args:
+    RUBY_VERSION: <%= File.read(".ruby-version").strip.delete_prefix("ruby-") %>
   # secrets:
   #   - GITHUB_TOKEN
   #   - RAILS_MASTER_KEY
