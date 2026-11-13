@@ -7,6 +7,9 @@ updates:
       day: friday              # 金曜日
       time: "00:00"            # 00:00
       timezone: Asia/Tokyo
+    ignore:
+      - dependency-name: "minitest"
+        versions: [">= 6.0.0"] # minitest6系以上は使用しない
     open-pull-requests-limit: 1  # PR上限を1に制限
     groups:
       bundler-updates:          # すべてのGem更新を1つにまとめる
