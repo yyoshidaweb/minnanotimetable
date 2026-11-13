@@ -92,7 +92,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   # minitest5.2系を使用
-  gem "minitest", "~> 6.1"
+  gem "minitest", "~> 5.2"
 
   # N+1クエリを検出する [https://github.com/flyerhzm/bullet]
   gem "bullet"
