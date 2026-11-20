@@ -475,6 +475,7 @@ PLATFORMS
   arm-linux-musl
   arm64-darwin-23
   arm64-darwin-25
+  arm64-darwin-27
   x86_64-linux
   x86_64-linux-gnu
   x86_64-linux-musl
@@ -521,7 +522,7 @@ DEPENDENCIES
   web-console
 
 RUBY VERSION
-   ruby 3.4.12p148
+   ruby 3.4.13p195
 
 BUNDLED WITH
    2.6.9
