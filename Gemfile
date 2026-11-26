@@ -74,7 +74,7 @@ gem "openai"
 gem "sitemap_generator"
 
 # エラー監視（本番のみ有効）
-gem "sentry-ruby", "~> 7.2"
+gem "sentry-ruby", "~> 7.3"
 gem "sentry-rails", "~> 7.0"
 
 
