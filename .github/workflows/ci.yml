@@ -125,7 +125,7 @@ jobs:
         run: |
           wget -q -O chrome.deb \
             https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_157.0.8103.38-1_amd64.deb
-          sudo apt-get install -y ./chrome.deb
+          sudo apt-get install -y --allow-downgrades ./chrome.deb
           google-chrome --version
 
       - name: Run System Tests
